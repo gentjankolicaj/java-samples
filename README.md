@@ -1,2 +1,2 @@
-# java-lang-samples
-Samples with java core packages.
+# java-samples
+Java samples with core packages & principles.
