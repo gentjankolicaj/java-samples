@@ -1,6 +1,7 @@
 package org.sample.bytecode.cmd;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -26,14 +27,15 @@ public class CmdUtil {
     }
 
      static CmdOutput execute(String preparedCmd){
-        CmdOutput cmdOutput=new CmdOutput();
+        CmdOutput cmdOutput=new CmdOutput(preparedCmd,null);
+        BufferedReader br=null;
         try{
             StringBuilder stringBuilder=new StringBuilder();
             Process process=runtime.exec(preparedCmd);
             InputStream inputStream=process.getInputStream();
-            BufferedReader bufferedReader=new BufferedReader(new InputStreamReader(inputStream));
+            br=new BufferedReader(new InputStreamReader(inputStream));
             String line;
-            while((line=bufferedReader.readLine())!=null){
+            while((line=br.readLine())!=null){
                 stringBuilder.append(line);
                 stringBuilder.append(",");
             }
@@ -41,10 +43,16 @@ public class CmdUtil {
             process.destroy();
 
             //prepare return object
-            cmdOutput.setCmd(preparedCmd);
-            cmdOutput.setOutputArray(stringBuilder.toString().split(","));
+            cmdOutput.setOutput(stringBuilder.toString().split(","));
         }catch (Exception e){
             e.printStackTrace();
+        }finally {
+            try{
+                if(br!=null)
+                    br.close();
+            }catch (IOException io){
+                io.printStackTrace();
+            }
         }
         return cmdOutput;
     }

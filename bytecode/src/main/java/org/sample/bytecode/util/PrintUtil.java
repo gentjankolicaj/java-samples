@@ -18,8 +18,8 @@ public class PrintUtil {
         if(list!=null && list.size()!=0){
             for(CmdOutput output:list){
                 System.out.println("Command : "+output.getCmd());
-                print(output.getOutputArray());
-                System.out.println("\n\n\n");
+                print(output.getOutput());
+                System.out.println("\n\n");
             }
         }
     }

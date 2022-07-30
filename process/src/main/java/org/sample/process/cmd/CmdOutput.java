@@ -1,4 +1,4 @@
-package org.sample.bytecode.cmd;
+package org.sample.process.cmd;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class CmdOutput {
     private String cmd;
     private String[] output;
+
 }
