@@ -18,14 +18,21 @@ import java.util.TreeSet;
 
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class Spartan extends Human implements Augmentation {
     private Long counter;
     private String name;
     private String tag;
     private String rank;
     private String affiliation;
+
+    public Spartan(Long counter, String name, String tag, String rank, String affiliation) {
+        this.counter = counter;
+        this.name = name;
+        this.tag = tag;
+        this.rank = rank;
+        this.affiliation = affiliation;
+    }
+
     private List<Procedure> procedures;
 
 

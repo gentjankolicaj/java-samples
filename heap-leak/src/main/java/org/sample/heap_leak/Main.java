@@ -27,7 +27,7 @@ public class Main {
        Thread halo1=new SpartanThread("halo_1");
 
        //Start threads
-        startThreads(halo0,halo1);
+       startThreads(halo0,halo1);
 
 
        //Create main object
@@ -59,7 +59,7 @@ public class Main {
                          Thread.sleep(3);
                      }
                 }catch (Exception e){
-
+                  e.printStackTrace();
                 }finally {
                     index+=2;
                 }
