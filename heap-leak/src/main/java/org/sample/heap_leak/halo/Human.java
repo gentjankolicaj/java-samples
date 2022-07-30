@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.Set;
 
 public class Human {
-    protected Set<? extends Ability> abilities;
+    protected Set<Ability> abilities;
 
 
-    public Set<? extends Ability> getAbilities(){
+    public Set<Ability> getAbilities(){
         return abilities;
     }
 }

@@ -26,15 +26,17 @@ public class Spartan extends Human implements Augmentation {
     private String tag;
     private String rank;
     private String affiliation;
-    private List<? extends Procedure> procedures;
+    private List<Procedure> procedures;
 
 
     //INSTANCE BLOCK => is executed before constructor
     {
         //Add augmentation procedures
-        procedures=new ArrayList<>();
-        procedures.add(new BioChemical());
-        procedures.add(new BioMechanical());
+        if(procedures==null) {
+            procedures = new ArrayList<>();
+            procedures.add(new BioChemical());
+            procedures.add(new BioMechanical());
+        }
 
         if(abilities==null){
             abilities=new TreeSet<>();
@@ -48,12 +50,12 @@ public class Spartan extends Human implements Augmentation {
 
 
     @Override
-    public List<? extends Procedure> getProcedures() {
+    public List<Procedure> getProcedures() {
         return procedures;
     }
 
     @Override
-    public Set<? extends Ability> getAbilities() {
+    public Set<Ability> getAbilities() {
         return super.getAbilities();
     }
 }

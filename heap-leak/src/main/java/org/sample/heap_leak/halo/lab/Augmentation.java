@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface Augmentation {
 
-    List<? extends Procedure> getProcedures();
+    List<Procedure> getProcedures();
 
 }
