@@ -1,4 +1,4 @@
-package org.sample.heap_leak.halo.augmentation;
+package org.sample.heap_leak.halo.lab.procedure;
 
 public interface Procedure<T> {
 

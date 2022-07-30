@@ -1,4 +1,6 @@
-package org.sample.heap_leak.halo.augmentation;
+package org.sample.heap_leak.halo.lab;
+
+import org.sample.heap_leak.halo.lab.procedure.Procedure;
 
 import java.util.List;
 
