@@ -20,9 +20,7 @@ public class Main {
         String humanClassFile=ClassFileUtil.getClassFilePath("Human.class");
 
         List<CmdOutput> cmdOutputs= CmdUtil.readBytecode(cmd,new String[]{spartanClassFile,humanClassFile});
-
         PrintUtil.print(cmdOutputs);
     }
-
 
 }
