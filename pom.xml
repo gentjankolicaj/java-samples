@@ -20,6 +20,7 @@
       <module>bytecode</module>
       <module>javassist</module>
       <module>liquibase</module>
+      <module>parser</module>
   </modules>
 
 
