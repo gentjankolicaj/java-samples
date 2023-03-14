@@ -12,8 +12,6 @@
     <groupId>org.sample</groupId>
     <artifactId>heap-leak</artifactId>
     <name>heap-leak</name>
-    <url>http://www.example.com</url>
-
 
 
     <build>

@@ -6,9 +6,9 @@ import java.util.Random;
 
 public class SpartanThread extends Thread{
 
-    final Random random=new Random();
-    final long maxIndex=10000000L;
-     long index=0;
+    static final long MAX_INDEX = 10000000L;
+    final Random random = new Random();
+    long index = 0;
 
      static final Object lock=new Object();
     static final List<Spartan> STATIC_SPARTANS=new ArrayList<>();
@@ -23,13 +23,13 @@ public class SpartanThread extends Thread{
 
     @Override
     public void run(){
-        while(index<maxIndex){
-            try{
-                Spartan john117=new Spartan(index,"john","117","Master Chief Petty Officer","UNSC");
-                Spartan kai125=new Spartan(index+1,"kai","125","Petty Officer, First Class","UNSC");
+        while (index < MAX_INDEX) {
+            try {
+                Spartan john117 = new Spartan(index, "john", "117", "Master Chief Petty Officer", "UNSC");
+                Spartan kai125 = new Spartan(index + 1, "kai", "125", "Petty Officer, First Class", "UNSC");
 
                 //Add references to static collection
-                //Since we have static collection & multithreading => we need object sincronization
+                //Since we have static collection & multithreading => we need object synchronization
 
                 synchronized (lock) {
                     STATIC_SPARTANS.add(john117);

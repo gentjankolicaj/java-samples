@@ -3,7 +3,7 @@ package org.sample.liquibase;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class Application {
+public class App {
 
     public static void main(String[] args) throws SQLException {
         Connection connection = HikariCPDatasource.getConnection();

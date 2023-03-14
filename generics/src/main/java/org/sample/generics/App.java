@@ -1,5 +1,6 @@
 package org.sample.generics;
 
+import lombok.extern.slf4j.Slf4j;
 import org.sample.generics.core.*;
 import org.sample.generics.extendz.AnimalPrinter;
 import org.sample.generics.extendz.CarPrinter;
@@ -11,20 +12,17 @@ import org.sample.generics.wildcard.TypeWildcards;
 
 import java.util.ArrayList;
 
-/**
- * Hello world!
- *
- */
-public class Main {
-    public static void main( String[] args ) {
+
+@Slf4j
+public class App {
+    public static void main(String[] args) {
         //Type parameters
         callTypes();
 
         callMethods();
 
         callTypeExtends();
-
-          callWildcards();
+        callWildcards();
     }
 
 
@@ -43,7 +41,7 @@ public class Main {
 
         doubleTypeMethods.print0(3.142324234);
         double value=doubleTypeMethods.print1(3.14);
-        System.out.println(value);
+        log.info("{}", value);
 
 
         //========================================================
@@ -59,7 +57,6 @@ public class Main {
         genericMethods.print1a(value);
 
 
-
         //Generic static extends methods
         GenericExtendsMethods.processAnimal0(new Dog());
         GenericExtendsMethods.processCar0(new BMW());
@@ -68,8 +65,6 @@ public class Main {
         GenericExtendsMethods genericExtendsMethods=new GenericExtendsMethods();
         genericExtendsMethods.processAnimal1(new Cat());
         genericExtendsMethods.processCar1(new Tesla());
-
-
 
     }
 

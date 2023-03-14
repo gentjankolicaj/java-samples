@@ -1,7 +1,10 @@
 package org.sample.parser;
 
 
-public class Application {
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+public class App {
 
     static String JSON_INPUT = "{\"menu\": {\n" +
             "  \"id\": \"file\",\n" +
@@ -23,31 +26,31 @@ public class Application {
 
     private static void runParser() {
         Parser parser = new Parser(JSON_INPUT);
-        System.out.println("Parser : ");
+        log.info("Parser : ");
         if (parser.parseValue()) {
-            System.out.println("Value correct");
+            log.info("Value correct");
         } else {
-            System.out.println("Value wrong");
+            log.info("Value wrong");
         }
     }
 
     private static void runParserAst() {
         ParserAST parserAST = new ParserAST(JSON_INPUT);
-        System.out.println("ParserAST : ");
+        log.info("ParserAST : ");
         if (parserAST.parseValue()) {
-            System.out.println("Value correct");
+            log.info("Value correct");
         } else {
-            System.out.println("Value wrong");
+            log.info("Value wrong");
         }
     }
 
     private static void runParserCombinators() {
         ParserCombinators parserCombinators = new ParserCombinators(JSON_INPUT);
-        System.out.println("ParserCombinators : ");
+        log.info("ParserCombinators : ");
         if (parserCombinators.parseValue()) {
-            System.out.println("Value correct");
+            log.info("Value correct");
         } else {
-            System.out.println("Value wrong");
+            log.info("Value wrong");
         }
     }
 }

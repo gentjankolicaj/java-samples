@@ -1,7 +1,7 @@
 # heap-leak
 
 ##	Introduction
-The project's purpose is to create conditions for heap leak on threads like : main[] an other non-daemon.
+The project's purpose is to create conditions for heap leak on threads like : app[] an other non-daemon.
 
 
 

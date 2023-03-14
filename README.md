@@ -4,14 +4,17 @@
 Java samples with packages/libs & principles.
 
 ### Projects :
-- [annotation](/annotation) 
+- [annotation](/annotation)
 - [bytecode](/bytecode)
-- [core](/core)
+- [future](/future)
 - [generics](/generics)
 - [heap-leak](/heap-leak)
 - [java-agent](/java-agent)
 - [javassist](/javassist)
+- [liquibase](/liquibase)
+- [parser](/parser)
 - [process](/process)
+- [virtual-thread (loom-project)](/virtual-thread)
 
 
 
