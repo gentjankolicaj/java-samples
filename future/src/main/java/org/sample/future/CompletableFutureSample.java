@@ -10,11 +10,12 @@ public class CompletableFutureSample {
 
     static final String THREAD_MSG = "Thread : ";
 
-    public static void main(String[] args) throws ExecutionException, InterruptedException {
+    public static void main(String[] args) throws Exception {
         log.info(THREAD_MSG + Thread.currentThread());
         sample0();
         sample1();
         sample2();
+        sample3();
     }
 
     static void sample0() throws ExecutionException, InterruptedException {
@@ -23,9 +24,9 @@ public class CompletableFutureSample {
         log.info(stringCF.get());
     }
 
-    static void sample1() throws ExecutionException, InterruptedException {
+    static void sample1() {
         CompletableFuture<Integer> completableFuture = create();
-        completableFuture.thenAccept(data -> print(data));
+        completableFuture.thenAccept(CompletableFutureSample::print);
     }
 
     private static Integer calc() {
@@ -47,6 +48,15 @@ public class CompletableFutureSample {
         future.thenApply(d -> d + 1)
                 .thenApply(d -> d + 6)
                 .thenAccept(d -> log.info("{}", d));
+    }
+
+    static void sample3() throws Exception {
+        CompletableFuture<Double> doubleCF = new CompletableFuture<>();
+        doubleCF.complete(12.2);
+        doubleCF.thenApply(i -> i * 3)
+                .thenApply(i -> i * 3)
+                .thenAccept(i -> log.info("sample3 : {}", i));
+
     }
 
 
