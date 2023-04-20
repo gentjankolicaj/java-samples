@@ -9,7 +9,7 @@ import java.util.List;
 
 public class CmdUtil {
 
-  static Runtime runtime = Runtime.getRuntime();
+  static final Runtime runtime = Runtime.getRuntime();
 
   static String buildCmd(String[] cmdArray) {
     StringBuilder cmdOutput = new StringBuilder();

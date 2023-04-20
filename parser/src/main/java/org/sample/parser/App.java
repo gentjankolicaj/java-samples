@@ -6,17 +6,17 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class App {
 
-    static String JSON_INPUT = "{\"menu\": {\n" +
-            "  \"id\": \"file\",\n" +
-            "  \"value\": \"File\",\n" +
-            "  \"popup\": {\n" +
-            "    \"menuitem\": [\n" +
-            "      {\"value\": \"New\", \"onclick\": \"CreateNewDoc()\"},\n" +
-            "      {\"value\": \"Open\", \"onclick\": \"OpenDoc()\"},\n" +
-            "      {\"value\": \"Close\", \"onclick\": \"CloseDoc()\"}\n" +
-            "    ]\n" +
-            "  }\n" +
-            "}}";
+    static final String JSON_INPUT = "{\"menu\": {\n" +
+        "  \"id\": \"file\",\n" +
+        "  \"value\": \"File\",\n" +
+        "  \"popup\": {\n" +
+        "    \"menuitem\": [\n" +
+        "      {\"value\": \"New\", \"onclick\": \"CreateNewDoc()\"},\n" +
+        "      {\"value\": \"Open\", \"onclick\": \"OpenDoc()\"},\n" +
+        "      {\"value\": \"Close\", \"onclick\": \"CloseDoc()\"}\n" +
+        "    ]\n" +
+        "  }\n" +
+        "}}";
 
     public static void main(String[] args) {
         runParser();
