@@ -1,4 +1,5 @@
 package org.sample.generics.core;
 
-public class Dog extends Animal{
+public class Dog extends Animal {
+
 }

@@ -1,7 +1,7 @@
 # java-samples
 
 ##	Introduction
-Java samples with packages/libs & principles.
+Java samples with packages/libs.
 
 ### Projects :
 - [annotation](/annotation)
@@ -15,6 +15,7 @@ Java samples with packages/libs & principles.
 - [parser](/parser)
 - [process](/process)
 - [virtual-thread (loom-project)](/virtual-thread)
+- [socket](/socket)
 
 
 

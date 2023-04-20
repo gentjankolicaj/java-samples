@@ -8,16 +8,16 @@ volumes:
   mysql_volume: { }
 
 services:
-  mysql-service:
-    container_name: mysql-service
+  mysql-server:
+    container_name: mysql-server
     image: mysql:8.0.31
     ports:
       - "3306:3306"
     environment:
       - MYSQL_ROOT_USER=root
-      - MYSQL_ROOT_PASSWORD=P4ssw0rd
+      - MYSQL_ROOT_PASSWORD=P@ssw0rd123
       - MYSQL_USER=admin
-      - MYSQL_PASSWORD=P4ssw0rd
+      - MYSQL_PASSWORD=P@ssw0rd123
     networks:
       - internal_network
     volumes:

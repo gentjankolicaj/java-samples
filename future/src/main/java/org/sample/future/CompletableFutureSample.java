@@ -1,9 +1,8 @@
 package org.sample.future;
 
-import lombok.extern.slf4j.Slf4j;
-
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class CompletableFutureSample {
@@ -20,7 +19,8 @@ public class CompletableFutureSample {
 
     static void sample0() throws ExecutionException, InterruptedException {
         CompletableFuture<String> stringCF = new CompletableFuture<>();
-        CompletableFuture.runAsync(() -> stringCF.complete("Testing stringCF : " + Thread.currentThread()));
+        CompletableFuture.runAsync(
+            () -> stringCF.complete("Testing stringCF : " + Thread.currentThread()));
         log.info(stringCF.get());
     }
 
@@ -46,16 +46,16 @@ public class CompletableFutureSample {
     static void sample2() {
         CompletableFuture<Double> future = new CompletableFuture<>();
         future.thenApply(d -> d + 1)
-                .thenApply(d -> d + 6)
-                .thenAccept(d -> log.info("{}", d));
+            .thenApply(d -> d + 6)
+            .thenAccept(d -> log.info("{}", d));
     }
 
     static void sample3() throws Exception {
         CompletableFuture<Double> doubleCF = new CompletableFuture<>();
         doubleCF.complete(12.2);
         doubleCF.thenApply(i -> i * 3)
-                .thenApply(i -> i * 3)
-                .thenAccept(i -> log.info("sample3 : {}", i));
+            .thenApply(i -> i * 3)
+            .thenAccept(i -> log.info("sample3 : {}", i));
 
     }
 

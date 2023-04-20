@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CmdOutput {
-    private String cmd;
-    private String[] output;
+
+  private String cmd;
+  private String[] output;
 }

@@ -23,6 +23,7 @@
       <module>liquibase</module>
       <module>parser</module>
       <module>virtual-thread</module>
+      <module>socket</module>
   </modules>
 
 

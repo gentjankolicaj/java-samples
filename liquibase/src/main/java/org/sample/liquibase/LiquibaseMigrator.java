@@ -1,5 +1,7 @@
 package org.sample.liquibase;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import liquibase.Contexts;
 import liquibase.LabelExpression;
 import liquibase.Liquibase;
@@ -9,13 +11,10 @@ import liquibase.database.jvm.JdbcConnection;
 import liquibase.resource.ClassLoaderResourceAccessor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-
 @Slf4j
 public final class LiquibaseMigrator {
 
-    private static final String MASTER_CHANGELOG_FILE = "liquibase/master-changelog.xml";
+    private static final String MASTER_CHANGELOG_FILE = "db/changelog/db.changelog-master.xml";
 
     private LiquibaseMigrator() {
     }
@@ -36,4 +35,5 @@ public final class LiquibaseMigrator {
             }
         }
     }
+
 }

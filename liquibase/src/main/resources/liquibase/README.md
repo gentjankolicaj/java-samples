@@ -1,1 +1,0 @@
-On this directory we place migrations and update master-changelog.xml

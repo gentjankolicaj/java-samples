@@ -1,13 +1,13 @@
 # heap-leak
 
-##	Introduction
-The project's purpose is to create conditions for heap leak on threads like : app[] an other non-daemon.
+## Introduction
 
-
+The project's purpose is to create conditions for heap leak on threads like : app [] and other
+non-daemon.
 
 ### Heap dump analysis (Eclipse Memory Analyzer) :
 
-**Overview :** 
+**Overview :**
 ![](img/overview.png)
 
 **Stack :**

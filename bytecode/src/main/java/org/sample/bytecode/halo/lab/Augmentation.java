@@ -1,12 +1,11 @@
 package org.sample.bytecode.halo.lab;
 
 
-import org.sample.bytecode.halo.lab.procedure.Procedure;
-
 import java.util.List;
+import org.sample.bytecode.halo.lab.procedure.Procedure;
 
 public interface Augmentation {
 
-    List<Procedure> getProcedures();
+  List<Procedure> getProcedures();
 
 }

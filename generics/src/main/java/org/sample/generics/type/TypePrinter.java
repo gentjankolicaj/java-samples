@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TypePrinter<T> {
 
-    public void print(T t) {
-        log.info("{}", t);
-    }
+  public void print(T t) {
+    log.info("{}", t);
+  }
 }

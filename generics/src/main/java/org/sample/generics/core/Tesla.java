@@ -1,4 +1,5 @@
 package org.sample.generics.core;
 
-public class Tesla extends Car{
+public class Tesla extends Car {
+
 }
