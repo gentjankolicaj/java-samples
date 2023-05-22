@@ -2,15 +2,14 @@ package org.sample.socket.listeners;
 
 import org.sample.socket.api.Request;
 import org.sample.socket.api.Response;
-import org.sample.socket.exceptions.WaitException;
 
 public interface ServerSocketListener {
 
-  void onRequest(Request request);
+  void onRequest(Request request) throws Exception;
 
-  void onResponse(Response response);
+  void onResponse(Response response) throws Exception;
 
-  void onWait() throws WaitException;
+  void onWait(Runnable runnable) throws Exception;
 
   void onClose() throws Exception;
 }
