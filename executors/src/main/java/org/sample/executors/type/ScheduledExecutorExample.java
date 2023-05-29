@@ -21,6 +21,20 @@ public class ScheduledExecutorExample {
         //calls StockTask every 2000 millis
         executor.scheduleAtFixedRate(new StockTask(1), 500L, 2000L, TimeUnit.MILLISECONDS);
 
+        //prevent new tasks & initiate orderly shutdown
+        executor.shutdown();
+
+        //terminate actual/running tasks
+        try {
+            if (executor.awaitTermination(5, TimeUnit.SECONDS)) {
+                //immediately to stop all active tasks
+                // executor.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+            log.error("", e);
+            executor.shutdownNow();
+        }
+
 
     }
 
@@ -38,6 +52,7 @@ public class ScheduledExecutorExample {
                 TimeUnit.MILLISECONDS.sleep(10);
             } catch (InterruptedException e) {
                 e.printStackTrace();
+                Thread.currentThread().interrupt();
             }
         }
     }

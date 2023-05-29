@@ -20,6 +20,20 @@ public class SingleThreadExecutorExample {
             executor.execute(new Task(i));
         }
 
+        //prevent new tasks & initiate orderly shutdown
+        executor.shutdown();
+
+        //terminate actual/running tasks
+        try {
+            if (executor.awaitTermination(5, TimeUnit.SECONDS)) {
+                //immediately to stop all active tasks
+                // executor.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+            log.error("", e);
+            executor.shutdownNow();
+        }
+
     }
 
     static class Task implements Runnable {
@@ -36,6 +50,7 @@ public class SingleThreadExecutorExample {
                 TimeUnit.MILLISECONDS.sleep(10);
             } catch (InterruptedException e) {
                 e.printStackTrace();
+                Thread.currentThread().interrupt();
             }
         }
     }
