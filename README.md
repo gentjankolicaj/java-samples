@@ -6,6 +6,7 @@ Java samples with packages/libs.
 ### Projects :
 - [annotation](/annotation)
 - [bytecode](/bytecode)
+- [executors](/executors)
 - [future](/future)
 - [generics](/generics)
 - [heap-leak](/heap-leak)
@@ -14,8 +15,10 @@ Java samples with packages/libs.
 - [liquibase](/liquibase)
 - [parser](/parser)
 - [process](/process)
-- [virtual-thread (loom-project)](/virtual-thread)
 - [socket](/socket)
+- [thread](/thread)
+- [virtual-thread (loom-project)](/virtual-thread)
+
 
 
 
