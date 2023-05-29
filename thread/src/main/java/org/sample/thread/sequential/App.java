@@ -3,14 +3,14 @@ package org.sample.thread.sequential;
 
 public class App {
 
-  public static void main(String[] args) {
+    public static void main(String[] args) {
 
-    Runner logRunner = new LogRunner();
-    Runner printRunner = new PrintlnRunner();
+      Runner logRunner = new LogRunner();
+      Runner printRunner = new PrintlnRunner();
 
-    logRunner.execute();
-    printRunner.execute();
+      logRunner.execute();
+      printRunner.execute();
 
-  }
+    }
 }
 

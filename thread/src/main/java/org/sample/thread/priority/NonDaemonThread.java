@@ -8,19 +8,19 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class NonDaemonThread extends Thread {
 
-  public NonDaemonThread() {
-    super("NonDaemonThread");
-    setDaemon(
-        false); //set this thread to non-daemon=> worker thread=>JVM can't terminate without non-daemon finish execution
-  }
-
-  @Override
-  public void run() {
-    for (int i = 0; i < 300; i++) {
-      log.info("NonDaemonThread: {}", i);
+    public NonDaemonThread() {
+        super("NonDaemonThread");
+        setDaemon(
+                false); //set this thread to non-daemon=> worker thread=>JVM can't terminate without non-daemon finish execution
     }
-    log.info("NonDaemonThread is terminated.");
-  }
+
+    @Override
+    public void run() {
+        for (int i = 0; i < 300; i++) {
+            log.info("NonDaemonThread: {}", i);
+        }
+        log.info("NonDaemonThread is terminated.");
+    }
 
 
 }
