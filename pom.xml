@@ -30,6 +30,7 @@
     <modules>
         <module>annotation</module>
         <module>bytecode</module>
+        <module>concurrent-collections</module>
         <module>executors</module>
         <module>future</module>
         <module>generics</module>

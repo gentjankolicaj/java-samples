@@ -6,6 +6,7 @@ Java samples with packages/libs.
 ### Projects :
 - [annotation](/annotation)
 - [bytecode](/bytecode)
+- [concurrent-collections](/concurrent-collections)
 - [executors](/executors)
 - [future](/future)
 - [generics](/generics)
