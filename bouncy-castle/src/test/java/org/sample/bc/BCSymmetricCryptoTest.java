@@ -3,19 +3,19 @@ package org.sample.bc;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.security.GeneralSecurityException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
-import org.sample.bc.exception.CipherException;
 
 @Slf4j
 class BCSymmetricCryptoTest {
 
   @Test
-  void ecbNoPadding() {
+  void ecbNoPadding() throws GeneralSecurityException {
     String plainText = "Hello world ~!#@#$@!$@#%$%^%$*^&*(*))_(*&^%$@#@!~`122234536890-=";
-    SecretKey secretKey = BCUtils.generateSecretKey("AES");
+    SecretKey secretKey = BCJceUtils.generateSecretKey("AES");
 
     //positive test case
     BCSymmetricCrypto symmetricCrypto0 = new BCSymmetricCrypto("AES/ECB/NoPadding", secretKey);
@@ -26,22 +26,23 @@ class BCSymmetricCryptoTest {
     log.debug("ecbNoPadding decryptedInput0 : {}", new String(decryptedInput0));
 
     //negative test case
-    IvParameterSpec iv = BCUtils.generateIvParameterSpec("SHA1PRNG", 16);
+    IvParameterSpec iv = BCJceUtils.generateIvParameterSpec("SHA1PRNG", 16);
     assertThatThrownBy(() -> new BCSymmetricCrypto("AES/ECB/NoPadding", secretKey, iv)).isInstanceOf(
-        CipherException.class);
+        GeneralSecurityException.class);
   }
 
 
   @Test
-  void cbcNoPadding() {
+  void cbcNoPadding() throws GeneralSecurityException {
     String plainText = "Hello world ~!#@#$@!$@#%$%^%$*^&*(*))_(*&^%$@#@!~`122234536890-=";
-    SecretKey secretKey = BCUtils.generateSecretKey("AES");
+    SecretKey secretKey = BCJceUtils.generateSecretKey("AES");
 
     //negative test case
-    assertThatThrownBy(() -> new BCSymmetricCrypto("AES/CBC/NoPadding", secretKey)).isInstanceOf(CipherException.class);
+    assertThatThrownBy(() -> new BCSymmetricCrypto("AES/CBC/NoPadding", secretKey)).isInstanceOf(
+        GeneralSecurityException.class);
 
     //positive test case
-    IvParameterSpec ivParameterSpec = BCUtils.generateIvParameterSpec("SHA1PRNG", 16);
+    IvParameterSpec ivParameterSpec = BCJceUtils.generateIvParameterSpec("SHA1PRNG", 16);
     BCSymmetricCrypto symmetricCrypto0 = new BCSymmetricCrypto("AES/CBC/NoPadding", secretKey, ivParameterSpec);
     byte[] encryptedInput0 = symmetricCrypto0.encrypt(plainText.getBytes());
     byte[] decryptedInput0 = symmetricCrypto0.decrypt(encryptedInput0);
@@ -51,16 +52,16 @@ class BCSymmetricCryptoTest {
   }
 
   @Test
-  void cbcPKCS5Padding() {
+  void cbcPKCS5Padding() throws GeneralSecurityException {
     String plainText = "Hello world ~!#@#$@!$@#%$%^%$*^&*(*))_(*&^%$@#@!~`122234536890-=";
-    SecretKey secretKey = BCUtils.generateSecretKey("AES");
+    SecretKey secretKey = BCJceUtils.generateSecretKey("AES");
 
     //negative test case
     assertThatThrownBy(() -> new BCSymmetricCrypto("AES/CBC/PKCS5Padding", secretKey)).isInstanceOf(
-        CipherException.class);
+        GeneralSecurityException.class);
 
     //positive test case
-    IvParameterSpec ivParameterSpec = BCUtils.generateIvParameterSpec("SHA1PRNG", 16);
+    IvParameterSpec ivParameterSpec = BCJceUtils.generateIvParameterSpec("SHA1PRNG", 16);
     BCSymmetricCrypto symmetricCrypto0 = new BCSymmetricCrypto("AES/CBC/PKCS5Padding", secretKey, ivParameterSpec);
     byte[] encryptedInput0 = symmetricCrypto0.encrypt(plainText.getBytes());
     byte[] decryptedInput0 = symmetricCrypto0.decrypt(encryptedInput0);
@@ -70,16 +71,16 @@ class BCSymmetricCryptoTest {
   }
 
   @Test
-  void cbcCTSPadding() {
+  void cbcCTSPadding() throws GeneralSecurityException {
     String plainText = "Hello world ~!#@#$@!$@#%$%^%$*^&*(*))_(*&^%$@#@!~`122234536890-=";
-    SecretKey secretKey = BCUtils.generateSecretKey("AES");
+    SecretKey secretKey = BCJceUtils.generateSecretKey("AES");
 
     //negative test case
     assertThatThrownBy(() -> new BCSymmetricCrypto("AES/CBC/CTSPadding", secretKey)).isInstanceOf(
-        CipherException.class);
+        GeneralSecurityException.class);
 
     //positive test case
-    IvParameterSpec ivParameterSpec = BCUtils.generateIvParameterSpec("SHA1PRNG", 16);
+    IvParameterSpec ivParameterSpec = BCJceUtils.generateIvParameterSpec("SHA1PRNG", 16);
     BCSymmetricCrypto symmetricCrypto0 = new BCSymmetricCrypto("AES/CBC/CTSPadding", secretKey, ivParameterSpec);
     byte[] encryptedInput0 = symmetricCrypto0.encrypt(plainText.getBytes());
     byte[] decryptedInput0 = symmetricCrypto0.decrypt(encryptedInput0);
@@ -89,15 +90,16 @@ class BCSymmetricCryptoTest {
   }
 
   @Test
-  void ctrNoPadding() {
+  void ctrNoPadding() throws GeneralSecurityException {
     String plainText = "Hello world ~!#@#$@!$@#%$%^%$*^&*(*))_(*&^%$@#@!~`122234536890-=";
-    SecretKey secretKey = BCUtils.generateSecretKey("AES");
+    SecretKey secretKey = BCJceUtils.generateSecretKey("AES");
 
     //negative test case
-    assertThatThrownBy(() -> new BCSymmetricCrypto("AES/CTR/NoPadding", secretKey)).isInstanceOf(CipherException.class);
+    assertThatThrownBy(() -> new BCSymmetricCrypto("AES/CTR/NoPadding", secretKey)).isInstanceOf(
+        GeneralSecurityException.class);
 
     //positive test case
-    IvParameterSpec ivParameterSpec = BCUtils.generateIvParameterSpec("SHA1PRNG", 16);
+    IvParameterSpec ivParameterSpec = BCJceUtils.generateIvParameterSpec("SHA1PRNG", 16);
     BCSymmetricCrypto symmetricCrypto0 = new BCSymmetricCrypto("AES/CTR/NoPadding", secretKey, ivParameterSpec);
     byte[] encryptedInput0 = symmetricCrypto0.encrypt(plainText.getBytes());
     byte[] decryptedInput0 = symmetricCrypto0.decrypt(encryptedInput0);
@@ -107,15 +109,16 @@ class BCSymmetricCryptoTest {
   }
 
   @Test
-  void chacha7539() {
+  void chacha7539() throws GeneralSecurityException {
     String plainText = "Hello world ~!#@#$@!$@#%$%^%$*^&*(*))_(*&^%$@#@!~`122234536890-=";
-    SecretKey secretKey = BCUtils.generateSecretKey("ChaCha7539");
+    SecretKey secretKey = BCJceUtils.generateSecretKey("ChaCha7539");
 
     //negative test case
-    assertThatThrownBy(() -> new BCSymmetricCrypto("ChaCha7539", secretKey)).isInstanceOf(CipherException.class);
+    assertThatThrownBy(() -> new BCSymmetricCrypto("ChaCha7539", secretKey)).isInstanceOf(
+        GeneralSecurityException.class);
 
     //positive test case
-    IvParameterSpec ivParameterSpec = BCUtils.generateIvParameterSpec("SHA1PRNG", 12);
+    IvParameterSpec ivParameterSpec = BCJceUtils.generateIvParameterSpec("SHA1PRNG", 12);
     BCSymmetricCrypto symmetricCrypto0 = new BCSymmetricCrypto("ChaCha7539", secretKey, ivParameterSpec);
     byte[] encryptedInput0 = symmetricCrypto0.encrypt(plainText.getBytes());
     byte[] decryptedInput0 = symmetricCrypto0.decrypt(encryptedInput0);
