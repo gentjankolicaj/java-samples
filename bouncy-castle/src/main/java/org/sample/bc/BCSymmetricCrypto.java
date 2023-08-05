@@ -29,9 +29,9 @@ public class BCSymmetricCrypto {
    * Block cipher modes of operation supported only :
    * <br>ECB
    *
-   * @param transformation
-   * @param key
-   * @throws GeneralSecurityException
+   * @param transformation cipher transformation
+   * @param key symmetric key
+   * @throws GeneralSecurityException wrapper exception
    */
   public BCSymmetricCrypto(String transformation, Key key) throws GeneralSecurityException {
     this.transformation = transformation;
@@ -44,10 +44,10 @@ public class BCSymmetricCrypto {
    * <br>CBC
    * <br>CTR
    *
-   * @param transformation
-   * @param key
-   * @param algorithmParameterSpec
-   * @throws GeneralSecurityException
+   * @param transformation cipher transformation
+   * @param key symmetric key
+   * @param algorithmParameterSpec algorithm parameter specs at cipher init
+   * @throws GeneralSecurityException wrapper exception
    */
   public BCSymmetricCrypto(String transformation, Key key, AlgorithmParameterSpec algorithmParameterSpec)
       throws GeneralSecurityException {
@@ -62,10 +62,10 @@ public class BCSymmetricCrypto {
    * <br>CBC
    * <br>CTR
    *
-   * @param transformation
-   * @param key
-   * @param algorithmParameters
-   * @throws GeneralSecurityException
+   * @param transformation cipher transformation
+   * @param key symmetric key
+   * @param algorithmParameters algorithm parameters at cipher init
+   * @throws GeneralSecurityException wrapper exception
    */
   public BCSymmetricCrypto(String transformation, Key key, AlgorithmParameters algorithmParameters)
       throws GeneralSecurityException {

@@ -25,9 +25,9 @@ public class BCAsymmetricCrypto {
    * Instance is used for encrypt/decrypt with public-private keys.
    *
    * @param transformation cipher transformation
-   * @param encryptKey     encryption key
-   * @param decryptKey     decryption key
-   * @throws GeneralSecurityException exception
+   * @param encryptKey     encryption key (public | private key)
+   * @param decryptKey     decryption key (public | private key)
+   * @throws GeneralSecurityException wrapper exception
    */
   public BCAsymmetricCrypto(String transformation, Key encryptKey, Key decryptKey) throws GeneralSecurityException {
     this.transformation = transformation;
@@ -41,7 +41,7 @@ public class BCAsymmetricCrypto {
    *
    * @param transformation cipher transformation
    * @param keyPair        public-private key pair
-   * @throws GeneralSecurityException exception
+   * @throws GeneralSecurityException wrapper exception
    */
   public BCAsymmetricCrypto(String transformation, KeyPair keyPair) throws GeneralSecurityException {
     this.transformation = transformation;
