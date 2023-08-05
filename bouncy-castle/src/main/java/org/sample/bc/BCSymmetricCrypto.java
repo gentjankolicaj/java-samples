@@ -5,11 +5,13 @@ import java.security.GeneralSecurityException;
 import java.security.Key;
 import java.security.spec.AlgorithmParameterSpec;
 import javax.crypto.Cipher;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
 import org.sample.bc.exception.CryptException;
 
 @Slf4j
+@Getter
 public class BCSymmetricCrypto {
 
   /**
@@ -17,7 +19,6 @@ public class BCSymmetricCrypto {
    */
   static final String BC_SECURITY_PROVIDER = "BC";
   private final String transformation;
-  private final Key key;
   private final Cipher encryptCipher;
   private final Cipher decryptCipher;
   private AlgorithmParameterSpec algorithmParameterSpec;
@@ -34,7 +35,6 @@ public class BCSymmetricCrypto {
    */
   public BCSymmetricCrypto(String transformation, Key key) throws GeneralSecurityException {
     this.transformation = transformation;
-    this.key = key;
     this.encryptCipher = createCipher(transformation, Cipher.ENCRYPT_MODE, key);
     this.decryptCipher = createCipher(transformation, Cipher.DECRYPT_MODE, key);
   }
@@ -52,7 +52,6 @@ public class BCSymmetricCrypto {
   public BCSymmetricCrypto(String transformation, Key key, AlgorithmParameterSpec algorithmParameterSpec)
       throws GeneralSecurityException {
     this.transformation = transformation;
-    this.key = key;
     this.algorithmParameterSpec = algorithmParameterSpec;
     this.encryptCipher = createCipher(transformation, Cipher.ENCRYPT_MODE, key, algorithmParameterSpec);
     this.decryptCipher = createCipher(transformation, Cipher.DECRYPT_MODE, key, algorithmParameterSpec);
@@ -71,7 +70,6 @@ public class BCSymmetricCrypto {
   public BCSymmetricCrypto(String transformation, Key key, AlgorithmParameters algorithmParameters)
       throws GeneralSecurityException {
     this.transformation = transformation;
-    this.key = key;
     this.algorithmParameters = algorithmParameters;
     this.encryptCipher = createCipher(transformation, Cipher.ENCRYPT_MODE, key, algorithmParameters);
     this.decryptCipher = createCipher(transformation, Cipher.DECRYPT_MODE, key, algorithmParameters);

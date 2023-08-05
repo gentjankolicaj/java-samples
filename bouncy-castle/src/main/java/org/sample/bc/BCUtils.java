@@ -5,8 +5,11 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.nio.file.Path;
 import java.security.AlgorithmParameterGenerator;
+import java.security.AlgorithmParameters;
 import java.security.GeneralSecurityException;
 import java.security.Key;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
 import java.security.MessageDigest;
 import java.security.Provider;
 import java.security.SecureRandom;
@@ -29,6 +32,11 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
 import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
+import org.bouncycastle.crypto.Digest;
+import org.bouncycastle.crypto.PBEParametersGenerator;
+import org.bouncycastle.crypto.generators.PKCS5S2ParametersGenerator;
+import org.bouncycastle.crypto.generators.SCrypt;
+import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.openssl.PEMKeyPair;
 import org.bouncycastle.openssl.PEMParser;
@@ -41,7 +49,7 @@ import org.bouncycastle.operator.OperatorException;
 import org.bouncycastle.operator.jcajce.JcaDigestCalculatorProviderBuilder;
 
 @Slf4j
-public class BCJceUtils {
+public class BCUtils {
 
 
   /**
@@ -59,7 +67,7 @@ public class BCJceUtils {
   }
 
 
-  private BCJceUtils() {
+  private BCUtils() {
   }
 
   private static void init() {
@@ -132,7 +140,7 @@ public class BCJceUtils {
   }
 
   /**
-   * Load X509Certificate from cert path
+   * Load X509Certificate from cert path.
    *
    * @param certPath certification path
    * @return X509 certificate
@@ -160,6 +168,18 @@ public class BCJceUtils {
     }
     KeyGenerator keyGenerator = KeyGenerator.getInstance(algorithm, BC_SECURITY_PROVIDER);
     return keyGenerator.generateKey();
+  }
+
+  public static KeyPair generateKeyPair(String algorithm, int keySize) throws GeneralSecurityException {
+    if (StringUtils.isEmpty(algorithm)) {
+      throw new IllegalArgumentException(ALGORITHM_CAN_T_BE_EMPTY);
+    }
+    if (keySize <= 0) {
+      throw new IllegalArgumentException("Key size can't be smaller than 0");
+    }
+    KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(algorithm, BC_SECURITY_PROVIDER);
+    keyPairGenerator.initialize(keySize);
+    return keyPairGenerator.generateKeyPair();
   }
 
   public static SecretKeySpec createSecretKeySpec(String algorithm, byte[] keyBytes) {
@@ -196,7 +216,7 @@ public class BCJceUtils {
   }
 
   /**
-   * Return a MAC computed over input using the passed in MAC algorithm name
+   * Return a MAC computed over input using the passed in MAC algorithm name.
    *
    * @param algorithm the name of the MAC algorithm.
    * @param key       an appropriate secret key for the MAC algorithm.
@@ -230,6 +250,46 @@ public class BCJceUtils {
       throw new IllegalArgumentException(ALGORITHM_CAN_T_BE_EMPTY);
     }
     return AlgorithmParameterGenerator.getInstance(algorithm, BC_SECURITY_PROVIDER);
+  }
+
+  public static AlgorithmParameters generateAlgorithmParameters(String algorithm) throws GeneralSecurityException {
+    return getAlgorithmParamGen(algorithm).generateParameters();
+  }
+
+  /**
+   * Calculate a derived key using PBKDF2 based on digest using BC low-level api.
+   *
+   * @param password       password input
+   * @param salt           salt parameter
+   * @param iterationCount iteration count parameter
+   * @param digest         Digest type
+   * @param keySize        key size
+   * @return Password-Based key derived 2
+   */
+  public static byte[] generatePKCS5Scheme2(char[] password, byte[] salt, int iterationCount, Digest digest,
+      int keySize) {
+    PBEParametersGenerator generator = new PKCS5S2ParametersGenerator(digest);
+    generator.init(PBEParametersGenerator.PKCS5PasswordToUTF8Bytes(password), salt, iterationCount);
+    return ((KeyParameter) generator.generateDerivedParameters(keySize)).getKey();
+  }
+
+  /**
+   * Calculate a derived key using SCRYPT using BC low-level api.
+   *
+   * @param password                 password input
+   * @param salt                     salt parameter
+   * @param costParameter            N – CPU/Memory cost parameter. Must be larger than 1, a power of 2 and less than
+   *                                 2^(128 * r / 8).
+   * @param blockSize                the block size, must be >= 1.
+   * @param parallelizationParameter Parallelization parameter. Must be a positive integer less than or equal to
+   *                                 Integer.MAX_VALUE / (128 * r * 8).
+   * @param keyLength                the length of the key to generate.
+   * @return
+   */
+  public static byte[] generateSCRYPT(char[] password, byte[] salt, int costParameter, int blockSize,
+      int parallelizationParameter, int keyLength) {
+    return SCrypt.generate(PBEParametersGenerator.PKCS5PasswordToUTF8Bytes(password), salt, costParameter, blockSize,
+        parallelizationParameter, keyLength);
   }
 
 
