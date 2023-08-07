@@ -8,17 +8,22 @@ import java.security.AlgorithmParameterGenerator;
 import java.security.AlgorithmParameters;
 import java.security.GeneralSecurityException;
 import java.security.Key;
+import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.MessageDigest;
+import java.security.PrivateKey;
 import java.security.Provider;
+import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.Security;
+import java.security.Signature;
+import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
-import java.security.interfaces.RSAPrivateKey;
-import java.security.interfaces.RSAPublicKey;
+import java.security.spec.AlgorithmParameterSpec;
+import java.security.spec.KeySpec;
 import java.util.Objects;
 import java.util.Optional;
 import javax.crypto.Cipher;
@@ -106,14 +111,14 @@ public class BCUtils {
    * href="https://en.wikipedia.org/wiki/PKCS_8">PKCS8 format standard</a>
    *
    * @param pemPath Path of PEM file containing private key.
-   * @return optional RSA private key
+   * @return Optional private key , (it can be RSAPrivateKey)
    */
-  public static Optional<RSAPrivateKey> loadRSAPrivateKeyPem(Path pemPath) {
+  public static Optional<PrivateKey> loadPrivateKeyPem(Path pemPath) {
     try (FileReader fileReader = new FileReader(pemPath.toFile())) {
       PEMParser pemParser = new PEMParser(fileReader);
       PEMKeyPair pemKeyPair = (PEMKeyPair) pemParser.readObject();
       PrivateKeyInfo privateKeyInfo = PrivateKeyInfo.getInstance(pemKeyPair.getPrivateKeyInfo());
-      return Optional.of((RSAPrivateKey) jcaPEMKeyConverter.getPrivateKey(privateKeyInfo));
+      return Optional.of(jcaPEMKeyConverter.getPrivateKey(privateKeyInfo));
     } catch (Exception e) {
       log.error("Error loading PEM private key : ", e);
       return Optional.empty();
@@ -126,15 +131,32 @@ public class BCUtils {
    * href="https://en.wikipedia.org/wiki/X.509">X509 format standard</a>
    *
    * @param pemPath Path of pem file containing public key
-   * @return RSA public key
+   * @return Optional public key , (it can be RSAPublicKey)
    */
-  public static Optional<RSAPublicKey> loadRSAPublicKeyPem(Path pemPath) {
+  public static Optional<PublicKey> loadPublicKeyPem(Path pemPath) {
     try (FileReader fileReader = new FileReader(pemPath.toFile())) {
       PEMParser pemParser = new PEMParser(fileReader);
       SubjectPublicKeyInfo subjectPublicKeyInfo = SubjectPublicKeyInfo.getInstance(pemParser.readObject());
-      return Optional.of((RSAPublicKey) jcaPEMKeyConverter.getPublicKey(subjectPublicKeyInfo));
+      return Optional.of(jcaPEMKeyConverter.getPublicKey(subjectPublicKeyInfo));
     } catch (Exception e) {
       log.error("Error loading PEM public key : ", e);
+      return Optional.empty();
+    }
+  }
+
+  /**
+   * Load KeyPair (public-private) contained in pem file.
+   *
+   * @param pemPath Path of pem file containing key pair
+   * @return Optional key pair
+   */
+  public static Optional<KeyPair> loadKeyPairPem(Path pemPath) {
+    try (FileReader fileReader = new FileReader(pemPath.toFile())) {
+      PEMParser pemParser = new PEMParser(fileReader);
+      PEMKeyPair pemKeyPair = (PEMKeyPair) pemParser.readObject();
+      return Optional.of(jcaPEMKeyConverter.getKeyPair(pemKeyPair));
+    } catch (Exception e) {
+      log.error("Error loading PEM private key : ", e);
       return Optional.empty();
     }
   }
@@ -170,6 +192,14 @@ public class BCUtils {
     return keyGenerator.generateKey();
   }
 
+  public static KeyPair generateKeyPair(String algorithm) throws GeneralSecurityException {
+    if (StringUtils.isEmpty(algorithm)) {
+      throw new IllegalArgumentException(ALGORITHM_CAN_T_BE_EMPTY);
+    }
+    KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(algorithm, BC_SECURITY_PROVIDER);
+    return keyPairGenerator.generateKeyPair();
+  }
+
   public static KeyPair generateKeyPair(String algorithm, int keySize) throws GeneralSecurityException {
     if (StringUtils.isEmpty(algorithm)) {
       throw new IllegalArgumentException(ALGORITHM_CAN_T_BE_EMPTY);
@@ -182,6 +212,19 @@ public class BCUtils {
     return keyPairGenerator.generateKeyPair();
   }
 
+  public static KeyPair generateKeyPair(String algorithm, AlgorithmParameterSpec algorithmParameterSpec)
+      throws GeneralSecurityException {
+    if (StringUtils.isEmpty(algorithm)) {
+      throw new IllegalArgumentException(ALGORITHM_CAN_T_BE_EMPTY);
+    }
+    if (Objects.isNull(algorithmParameterSpec)) {
+      throw new IllegalArgumentException("Algorithm parameter spec can't be null.");
+    }
+    KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(algorithm, BC_SECURITY_PROVIDER);
+    keyPairGenerator.initialize(algorithmParameterSpec);
+    return keyPairGenerator.generateKeyPair();
+  }
+
   public static SecretKeySpec createSecretKeySpec(String algorithm, byte[] keyBytes) {
     if (StringUtils.isEmpty(algorithm)) {
       throw new IllegalArgumentException(ALGORITHM_CAN_T_BE_EMPTY);
@@ -190,6 +233,30 @@ public class BCUtils {
       throw new IllegalArgumentException("Key bytes can't be empty.");
     }
     return new SecretKeySpec(keyBytes, algorithm);
+  }
+
+  /**
+   * Return a private key for algorithm built from the details in keySpec.
+   *
+   * @param algorithm the algorithm the key specification is for.
+   * @param keySpec   a key specification holding details of the private key.
+   * @return a PrivateKey for algorithm
+   */
+  public static PrivateKey createPrivateKey(String algorithm, KeySpec keySpec) throws GeneralSecurityException {
+    KeyFactory keyFactory = KeyFactory.getInstance(algorithm, BC_SECURITY_PROVIDER);
+    return keyFactory.generatePrivate(keySpec);
+  }
+
+  /**
+   * Return a public key for algorithm built from the details in keySpec.
+   *
+   * @param algorithm the algorithm the key specification is for.
+   * @param keySpec   a key specification holding details of the public key.
+   * @return a PublicKey for algorithm
+   */
+  public static PublicKey createPublicKey(String algorithm, KeySpec keySpec) throws GeneralSecurityException {
+    KeyFactory keyFactory = KeyFactory.getInstance(algorithm, BC_SECURITY_PROVIDER);
+    return keyFactory.generatePublic(keySpec);
   }
 
   public static byte[] computeDigest(String algorithm, byte[] input) throws GeneralSecurityException {
@@ -264,7 +331,7 @@ public class BCUtils {
    * @param iterationCount iteration count parameter
    * @param digest         Digest type
    * @param keySize        key size
-   * @return Password-Based key derived 2
+   * @return Password based key derived 2
    */
   public static byte[] generatePKCS5Scheme2(char[] password, byte[] salt, int iterationCount, Digest digest,
       int keySize) {
@@ -284,13 +351,105 @@ public class BCUtils {
    * @param parallelizationParameter Parallelization parameter. Must be a positive integer less than or equal to
    *                                 Integer.MAX_VALUE / (128 * r * 8).
    * @param keyLength                the length of the key to generate.
-   * @return
+   * @return Password based key derived SCRYPT
    */
   public static byte[] generateSCRYPT(char[] password, byte[] salt, int costParameter, int blockSize,
       int parallelizationParameter, int keyLength) {
     return SCrypt.generate(PBEParametersGenerator.PKCS5PasswordToUTF8Bytes(password), salt, costParameter, blockSize,
         parallelizationParameter, keyLength);
   }
+
+  /**
+   * Signing input with algorithm and private key.
+   *
+   * @param algorithm  signing algorithm
+   * @param privateKey signing key
+   * @param input      input
+   * @return signed input
+   * @throws GeneralSecurityException wrapper exception
+   */
+  public static byte[] sign(String algorithm, PrivateKey privateKey, byte[] input) throws GeneralSecurityException {
+    Signature signature = Signature.getInstance(algorithm, BC_SECURITY_PROVIDER);
+    signature.initSign(privateKey);
+    signature.update(input);
+    return signature.sign();
+  }
+
+  /**
+   * Signing input with algorithm and private key.
+   *
+   * @param algorithm              signing algorithm
+   * @param privateKey             signing key
+   * @param algorithmParameterSpec algorithm param specs
+   * @param input                  input
+   * @return signed input
+   * @throws GeneralSecurityException wrapper exception
+   */
+  public static byte[] sign(String algorithm, PrivateKey privateKey, AlgorithmParameterSpec algorithmParameterSpec,
+      byte[] input) throws GeneralSecurityException {
+    Signature signature = Signature.getInstance(algorithm, BC_SECURITY_PROVIDER);
+    signature.setParameter(algorithmParameterSpec);
+    signature.initSign(privateKey);
+    signature.update(input);
+    return signature.sign();
+  }
+
+  /**
+   * Verify signed input by algorithm using public key , input
+   *
+   * @param algorithm   signing algorithm
+   * @param publicKey   corresponding public key of private key used for signing
+   * @param input       unsigned input
+   * @param signedInput signed input
+   * @return verification result (true|false)
+   * @throws GeneralSecurityException wrapper exception
+   */
+  public static boolean verifySign(String algorithm, PublicKey publicKey, byte[] input, byte[] signedInput)
+      throws GeneralSecurityException {
+    Signature signature = Signature.getInstance(algorithm, BC_SECURITY_PROVIDER);
+    signature.initVerify(publicKey);
+    signature.update(input);
+    return signature.verify(signedInput);
+  }
+
+  /**
+   * Verify signed input by algorithm using certificate , input
+   *
+   * @param algorithm   signing algorithm
+   * @param certificate certificate form private key used to for signing
+   * @param input       unsigned input
+   * @param signedInput signed input
+   * @return verification result (true|false)
+   * @throws GeneralSecurityException wrapper exception
+   */
+  public static boolean verifySign(String algorithm, Certificate certificate, byte[] input, byte[] signedInput)
+      throws GeneralSecurityException {
+    Signature signature = Signature.getInstance(algorithm, BC_SECURITY_PROVIDER);
+    signature.initVerify(certificate);
+    signature.update(input);
+    return signature.verify(signedInput);
+  }
+
+  /**
+   * Verify signed input by algorithm using public key , input
+   *
+   * @param algorithm              signing algorithm
+   * @param publicKey              corresponding public key of private key used for signing
+   * @param algorithmParameterSpec algorithm param specs
+   * @param input                  unsigned input
+   * @param signedInput            signed input
+   * @return verification result (true|false)
+   * @throws GeneralSecurityException wrapper exception
+   */
+  public static boolean verifySign(String algorithm, PublicKey publicKey, AlgorithmParameterSpec algorithmParameterSpec,
+      byte[] input, byte[] signedInput) throws GeneralSecurityException {
+    Signature signature = Signature.getInstance(algorithm, BC_SECURITY_PROVIDER);
+    signature.setParameter(algorithmParameterSpec);
+    signature.initVerify(publicKey);
+    signature.update(input);
+    return signature.verify(signedInput);
+  }
+
 
 
 }
