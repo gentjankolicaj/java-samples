@@ -24,6 +24,7 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.Objects;
 import java.util.Optional;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.DHParameterSpec;
 import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.crypto.digests.SHA256Digest;
 import org.bouncycastle.jcajce.spec.SM2ParameterSpec;
@@ -213,6 +214,21 @@ class BCUtilsTest {
     assertThat(dstu4145KeyPair).isNotNull();
     assertThat(dstu4145KeyPair.getPrivate()).isNotNull();
     assertThat(dstu4145KeyPair.getPublic()).isNotNull();
+  }
+
+  @Test
+  void DHGenerateKeyPair() throws GeneralSecurityException {
+    KeyPair dhKeyPair0 = BCUtils.generateKeyPair("DH", 1024);
+    assertThat(dhKeyPair0).isNotNull();
+    assertThat(dhKeyPair0.getPrivate()).isNotNull();
+    assertThat(dhKeyPair0.getPublic()).isNotNull();
+
+    //second key pair with algorithm parameter specs
+    AlgorithmParameters dhAlgorithmParams = BCUtils.generateAlgorithmParameters("DH");
+    KeyPair dhKeyPair1 = BCUtils.generateKeyPair("DH", dhAlgorithmParams.getParameterSpec(DHParameterSpec.class));
+    assertThat(dhKeyPair1).isNotNull();
+    assertThat(dhKeyPair1.getPrivate()).isNotNull();
+    assertThat(dhKeyPair1.getPublic()).isNotNull();
   }
 
   @Test

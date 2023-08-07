@@ -225,6 +225,20 @@ public class BCUtils {
     return keyPairGenerator.generateKeyPair();
   }
 
+  public static KeyPair generateKeyPair(String algorithm, AlgorithmParameterSpec algorithmParameterSpec,
+      SecureRandom secureRandom)
+      throws GeneralSecurityException {
+    if (StringUtils.isEmpty(algorithm)) {
+      throw new IllegalArgumentException(ALGORITHM_CAN_T_BE_EMPTY);
+    }
+    if (Objects.isNull(algorithmParameterSpec)) {
+      throw new IllegalArgumentException("Algorithm parameter spec can't be null.");
+    }
+    KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(algorithm, BC_SECURITY_PROVIDER);
+    keyPairGenerator.initialize(algorithmParameterSpec, secureRandom);
+    return keyPairGenerator.generateKeyPair();
+  }
+
   public static SecretKeySpec createSecretKeySpec(String algorithm, byte[] keyBytes) {
     if (StringUtils.isEmpty(algorithm)) {
       throw new IllegalArgumentException(ALGORITHM_CAN_T_BE_EMPTY);
