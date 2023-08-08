@@ -11,6 +11,7 @@ import java.nio.file.Path;
 import java.security.AlgorithmParameterGenerator;
 import java.security.AlgorithmParameters;
 import java.security.GeneralSecurityException;
+import java.security.Key;
 import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -23,10 +24,13 @@ import java.security.spec.PSSParameterSpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Objects;
 import java.util.Optional;
+import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.DHParameterSpec;
 import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.crypto.digests.SHA256Digest;
+import org.bouncycastle.jcajce.spec.DHUParameterSpec;
+import org.bouncycastle.jcajce.spec.MQVParameterSpec;
 import org.bouncycastle.jcajce.spec.SM2ParameterSpec;
 import org.bouncycastle.operator.DigestCalculator;
 import org.bouncycastle.operator.OperatorException;
@@ -176,6 +180,55 @@ class BCUtilsTest {
   }
 
   @Test
+  void getAlgorithmParameterWithKeySize() throws GeneralSecurityException {
+    AlgorithmParameterGenerator algorithmParamGen = BCUtils.getAlgorithmParamGen("GCM", 256);
+    AlgorithmParameters algParamsGCM = algorithmParamGen.generateParameters();
+
+    String input = "Hello world223fqwerwqrwqrw{}{qre|'/.,~wq~!@#$(*)-=-+_";
+    SecretKey secretKey = BCUtils.generateSecretKey("AES");
+
+    BCSymmetricCrypto bcSymmetricCrypto = new BCSymmetricCrypto("AES/GCM/NoPadding", secretKey, algParamsGCM);
+    byte[] encryptedInput0 = bcSymmetricCrypto.encrypt(input.getBytes());
+    byte[] decryptedInput0 = bcSymmetricCrypto.decrypt(encryptedInput0);
+    assertThat(decryptedInput0).containsExactly(input.getBytes());
+    log.debug("getAlgorithmParameterWithKeySize encryptedInput0 : {}", new String(encryptedInput0));
+    log.debug("getAlgorithmParameterWithKeySize decryptedInput0 : {}", new String(decryptedInput0));
+  }
+
+  @Test
+  void generateAlgorithmParametersWithKeySize() throws GeneralSecurityException {
+    AlgorithmParameters algParamsGCM = BCUtils.generateAlgorithmParameters("GCM", 256);
+
+    String input = "Hello world223fqwerwqrwqrw{}{qre|'/.,~wq~!@#$(*)-=-+_";
+    SecretKey secretKey = BCUtils.generateSecretKey("AES");
+
+    BCSymmetricCrypto bcSymmetricCrypto = new BCSymmetricCrypto("AES/GCM/NoPadding", secretKey, algParamsGCM);
+    byte[] encryptedInput0 = bcSymmetricCrypto.encrypt(input.getBytes());
+    byte[] decryptedInput0 = bcSymmetricCrypto.decrypt(encryptedInput0);
+    assertThat(decryptedInput0).containsExactly(input.getBytes());
+    log.debug("getAlgorithmParameterWithKeySize encryptedInput0 : {}", new String(encryptedInput0));
+    log.debug("getAlgorithmParameterWithKeySize decryptedInput0 : {}", new String(decryptedInput0));
+  }
+
+  @Test
+  void generateAlgorithmParameterSpec() throws GeneralSecurityException {
+    DHParameterSpec dhParameterSpec = BCUtils.generateAlgorithmParameterSpec("DH", DHParameterSpec.class);
+    KeyPair dhKeyPair = BCUtils.generateKeyPair("DH", dhParameterSpec);
+    assertThat(dhKeyPair).isNotNull();
+    assertThat(dhKeyPair.getPrivate()).isNotNull();
+    assertThat(dhKeyPair.getPublic()).isNotNull();
+  }
+
+  @Test
+  void generateAlgorithmParameterSpecWithKeySize() throws GeneralSecurityException {
+    DHParameterSpec dhParameterSpec = BCUtils.generateAlgorithmParameterSpec("DH", 256, DHParameterSpec.class);
+    KeyPair dhKeyPair = BCUtils.generateKeyPair("DH", dhParameterSpec);
+    assertThat(dhKeyPair).isNotNull();
+    assertThat(dhKeyPair.getPrivate()).isNotNull();
+    assertThat(dhKeyPair.getPublic()).isNotNull();
+  }
+
+  @Test
   void RSAGenerateKeyPair() throws GeneralSecurityException {
     KeyPair keyPair0 = BCUtils.generateKeyPair("RSA", 2048);
     assertThat(keyPair0).isNotNull();
@@ -218,7 +271,7 @@ class BCUtilsTest {
 
   @Test
   void DHGenerateKeyPair() throws GeneralSecurityException {
-    KeyPair dhKeyPair0 = BCUtils.generateKeyPair("DH", 1024);
+    KeyPair dhKeyPair0 = BCUtils.generateKeyPair("DH", 256);
     assertThat(dhKeyPair0).isNotNull();
     assertThat(dhKeyPair0.getPrivate()).isNotNull();
     assertThat(dhKeyPair0.getPublic()).isNotNull();
@@ -417,5 +470,137 @@ class BCUtilsTest {
             + "TwIDAQAB")
     );
     assertThat(BCUtils.createPublicKey("RSA", publicKeyEncodedSpec)).isNotNull();
+  }
+
+
+  @Test
+  void keyAgreementGenerateSecret() throws GeneralSecurityException {
+    KeyPair aDHKeyPair = BCUtils.generateKeyPair("DH", 256);
+    KeyPair bDHKeyPair = BCUtils.generateKeyPair("DH", 256);
+    assertThat(BCUtils.generateSecret("DH", aDHKeyPair.getPrivate(), bDHKeyPair.getPublic()))
+        .isNotNull().hasSize(32);
+    log.debug("generateSecret() , key agreement secret {}",
+        new String(BCUtils.generateSecret("DH", aDHKeyPair.getPrivate(), bDHKeyPair.getPublic())));
+  }
+
+  @Test
+  void keyAgreementGenerateSecretKey() throws GeneralSecurityException {
+    KeyPair aDHKeyPair = BCUtils.generateKeyPair("DH", 256);
+    KeyPair bDHKeyPair = BCUtils.generateKeyPair("DH", 256);
+    byte[] agreedSecret = BCUtils.generateSecret("DH", aDHKeyPair.getPrivate(), bDHKeyPair.getPublic());
+    SecretKey secretKey = BCUtils.generateSecretKey("DH", "AES", aDHKeyPair.getPrivate(), bDHKeyPair.getPublic());
+    assertThat(secretKey.getEncoded()).containsExactly(agreedSecret);
+  }
+
+  @Test
+  void keyAgreementGenerateSecretKeyWithKeyMaterial() throws GeneralSecurityException {
+    byte[] keyMaterial = "Hello world for AES Key".getBytes();
+    KeyPair aECKeyPair = BCUtils.generateKeyPair("EC", new ECGenParameterSpec("P-256"));
+    KeyPair bECKeyPair = BCUtils.generateKeyPair("EC", new ECGenParameterSpec("P-256"));
+
+    //generate first secret key with key material
+    SecretKey aKey = BCUtils.generateSecretKey("ECCDHwithSHA256KDF", "AES", aECKeyPair.getPrivate(),
+        bECKeyPair.getPublic(), keyMaterial);
+
+    //generate second secret key with key material
+    SecretKey bKey = BCUtils.generateSecretKey("ECCDHwithSHA256KDF", "AES", bECKeyPair.getPrivate(),
+        aECKeyPair.getPublic(), keyMaterial);
+    assertThat(aKey.getEncoded()).containsExactly(bKey.getEncoded());
+    assertThat(aKey.getAlgorithm()).isEqualTo(bKey.getAlgorithm());
+  }
+
+  /**
+   * Basic Unified Diffie-Hellman example showing use of two key pairs per party in the protocol, with one set being
+   * regarded as ephemeral.
+   */
+  @Test
+  void DHUGenerateSecretKey() throws GeneralSecurityException {
+    byte[] keyMaterial = "Hello world for AES Key".getBytes();
+    KeyPair aDHKeyPair = BCUtils.generateKeyPair("DH", 256);
+    KeyPair bDHKeyPair = BCUtils.generateKeyPair("DH", 256);
+
+    //Ephemeral key pairs
+    KeyPair aDHKeyPairEph = BCUtils.generateKeyPair("DH", 256);
+    KeyPair bDHKeyPairEph = BCUtils.generateKeyPair("DH", 256);
+
+    //generate first secret key with key material
+    DHUParameterSpec aDHUParameterSpec = new DHUParameterSpec(aDHKeyPairEph.getPublic(), aDHKeyPairEph.getPrivate(),
+        bDHKeyPairEph.getPublic(), keyMaterial);
+    SecretKey aKey = BCUtils.generateSecretKey("DHUwithSHA256KDF", "AES", aDHKeyPair.getPrivate(),
+        bDHKeyPair.getPublic(), aDHUParameterSpec);
+
+    //generate second secret key with key material
+    DHUParameterSpec bDHUParameterSpec = new DHUParameterSpec(bDHKeyPairEph.getPublic(), bDHKeyPairEph.getPrivate(),
+        aDHKeyPairEph.getPublic(), keyMaterial);
+    SecretKey bKey = BCUtils.generateSecretKey("DHUwithSHA256KDF", "AES", bDHKeyPair.getPrivate(),
+        aDHKeyPair.getPublic(), bDHUParameterSpec);
+
+    assertThat(aKey.getEncoded()).containsExactly(bKey.getEncoded());
+    assertThat(aKey.getAlgorithm()).isEqualTo(bKey.getAlgorithm());
+  }
+
+  /**
+   * Basic Diffie-Hellman MQV example showing use of two key pairs per party in the protocol, with one set being
+   * regarded as ephemeral.
+   */
+  @Test
+  void MQVGenerateSecretKey() throws GeneralSecurityException {
+    byte[] keyMaterial = "Hello world for AES Key".getBytes();
+    KeyPair aDHKeyPair = BCUtils.generateKeyPair("DH", 256);
+    KeyPair bDHKeyPair = BCUtils.generateKeyPair("DH", 256);
+
+    //Ephemeral key pairs
+    KeyPair aDHKeyPairEph = BCUtils.generateKeyPair("DH", 256);
+    KeyPair bDHKeyPairEph = BCUtils.generateKeyPair("DH", 256);
+
+    //generate first secret key with key material
+    MQVParameterSpec aDHUParameterSpec = new MQVParameterSpec(aDHKeyPairEph.getPublic(), aDHKeyPairEph.getPrivate(),
+        bDHKeyPairEph.getPublic(), keyMaterial);
+    SecretKey aKey = BCUtils.generateSecretKey("MQVwithSHA256KDF", "AES", aDHKeyPair.getPrivate(),
+        bDHKeyPair.getPublic(), aDHUParameterSpec);
+
+    //generate second secret key with key material
+    MQVParameterSpec bDHUParameterSpec = new MQVParameterSpec(bDHKeyPairEph.getPublic(), bDHKeyPairEph.getPrivate(),
+        aDHKeyPairEph.getPublic(), keyMaterial);
+    SecretKey bKey = BCUtils.generateSecretKey("MQVwithSHA256KDF", "AES", bDHKeyPair.getPrivate(),
+        aDHKeyPair.getPublic(), bDHUParameterSpec);
+
+    assertThat(aKey.getEncoded()).containsExactly(bKey.getEncoded());
+    assertThat(aKey.getAlgorithm()).isEqualTo(bKey.getAlgorithm());
+  }
+
+
+  @Test
+  void wrapKey() throws GeneralSecurityException {
+    KeyPair rsaKeyPair = BCUtils.generateKeyPair("RSA", 2048);
+    SecretKey aesKey = BCUtils.generateSecretKey("AES");
+
+    assertThat(BCUtils.wrapKey("RSA/NONE/OAEPwithSHA256andMGF1Padding", rsaKeyPair.getPublic(), aesKey))
+        .isNotNull().hasSizeGreaterThan(0);
+  }
+
+  @Test
+  void unwrapKey() throws GeneralSecurityException {
+    KeyPair rsaKeyPair = BCUtils.generateKeyPair("RSA", 2048);
+    SecretKey aesKey = BCUtils.generateSecretKey("AES");
+    byte[] wrappedKey = BCUtils.wrapKey("RSA/NONE/OAEPwithSHA256andMGF1Padding", rsaKeyPair.getPublic(), aesKey);
+    Key key = BCUtils.unwrapKey("RSA/NONE/OAEPwithSHA256andMGF1Padding", rsaKeyPair.getPrivate(), wrappedKey, "AES",
+        Cipher.SECRET_KEY);
+
+    assertThat(key.getAlgorithm()).isEqualTo(aesKey.getAlgorithm());
+    assertThat(key.getEncoded()).containsExactly(aesKey.getEncoded());
+  }
+
+  @Test
+  void unwrapKeyElGamal() throws GeneralSecurityException {
+    KeyPair dhKeyPair = BCUtils.generateKeyPair("DH", 2048);
+    SecretKey aesKey = BCUtils.generateSecretKey("AES");
+
+    byte[] wrappedKey = BCUtils.wrapKey("ElGamal/NONE/OAEPwithSHA256andMGF1Padding", dhKeyPair.getPublic(), aesKey);
+    Key key = BCUtils.unwrapKey("ElGamal/NONE/OAEPwithSHA256andMGF1Padding", dhKeyPair.getPrivate(), wrappedKey, "AES",
+        Cipher.SECRET_KEY);
+
+    assertThat(key.getAlgorithm()).isEqualTo(aesKey.getAlgorithm());
+    assertThat(key.getEncoded()).containsExactly(aesKey.getEncoded());
   }
 }

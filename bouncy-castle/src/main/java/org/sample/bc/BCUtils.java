@@ -27,6 +27,7 @@ import java.security.spec.KeySpec;
 import java.util.Objects;
 import java.util.Optional;
 import javax.crypto.Cipher;
+import javax.crypto.KeyAgreement;
 import javax.crypto.KeyGenerator;
 import javax.crypto.Mac;
 import javax.crypto.SecretKey;
@@ -42,6 +43,7 @@ import org.bouncycastle.crypto.PBEParametersGenerator;
 import org.bouncycastle.crypto.generators.PKCS5S2ParametersGenerator;
 import org.bouncycastle.crypto.generators.SCrypt;
 import org.bouncycastle.crypto.params.KeyParameter;
+import org.bouncycastle.jcajce.spec.UserKeyingMaterialSpec;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.openssl.PEMKeyPair;
 import org.bouncycastle.openssl.PEMParser;
@@ -52,6 +54,7 @@ import org.bouncycastle.operator.DigestCalculator;
 import org.bouncycastle.operator.DigestCalculatorProvider;
 import org.bouncycastle.operator.OperatorException;
 import org.bouncycastle.operator.jcajce.JcaDigestCalculatorProviderBuilder;
+import org.bouncycastle.util.Arrays;
 
 @Slf4j
 public class BCUtils {
@@ -333,8 +336,38 @@ public class BCUtils {
     return AlgorithmParameterGenerator.getInstance(algorithm, BC_SECURITY_PROVIDER);
   }
 
+  /**
+   * @param algorithm name
+   * @return Algorithm parameter generator
+   * @throws GeneralSecurityException exception
+   */
+  public static AlgorithmParameterGenerator getAlgorithmParamGen(String algorithm, int keySize)
+      throws GeneralSecurityException {
+    if (StringUtils.isEmpty(algorithm)) {
+      throw new IllegalArgumentException(ALGORITHM_CAN_T_BE_EMPTY);
+    }
+    AlgorithmParameterGenerator generator = AlgorithmParameterGenerator.getInstance(algorithm, BC_SECURITY_PROVIDER);
+    generator.init(keySize);
+    return generator;
+  }
+
   public static AlgorithmParameters generateAlgorithmParameters(String algorithm) throws GeneralSecurityException {
     return getAlgorithmParamGen(algorithm).generateParameters();
+  }
+
+  public static AlgorithmParameters generateAlgorithmParameters(String algorithm, int keySize)
+      throws GeneralSecurityException {
+    return getAlgorithmParamGen(algorithm, keySize).generateParameters();
+  }
+
+  public static <T extends AlgorithmParameterSpec> T generateAlgorithmParameterSpec(String algorithm,
+      Class<T> paramSpec) throws GeneralSecurityException {
+    return generateAlgorithmParameters(algorithm).getParameterSpec(paramSpec);
+  }
+
+  public static <T extends AlgorithmParameterSpec> T generateAlgorithmParameterSpec(String algorithm, int keySize,
+      Class<T> paramSpec) throws GeneralSecurityException {
+    return generateAlgorithmParameters(algorithm, keySize).getParameterSpec(paramSpec);
   }
 
   /**
@@ -463,6 +496,116 @@ public class BCUtils {
     signature.update(input);
     return signature.verify(signedInput);
   }
+
+
+  /**
+   * Generate an agreed secret byte value .
+   *
+   * @param keyAgreementAlgorithm Key agreement algorithm
+   * @param aPrivateKey           Party A's private key.
+   * @param bPublicKey            Party B's public key.
+   * @return bytes of the generated secret.
+   */
+  public static byte[] generateSecret(String keyAgreementAlgorithm, PrivateKey aPrivateKey, PublicKey bPublicKey)
+      throws GeneralSecurityException {
+    KeyAgreement agreement = KeyAgreement.getInstance(keyAgreementAlgorithm, BC_SECURITY_PROVIDER);
+    agreement.init(aPrivateKey);
+    agreement.doPhase(bPublicKey, true);
+    byte[] secretBuffer = agreement.generateSecret();
+    return Arrays.copyOfRange(secretBuffer, 0, secretBuffer.length);
+  }
+
+  /**
+   * Generate an agreed secret key value .
+   *
+   * @param keyAgreementAlgorithm Key agreement algorithm
+   * @param secretKeyAlgorithm    algorithm for secret key
+   * @param aPrivateKey           Party A's private key.
+   * @param bPublicKey,           Party B's public key.
+   * @return the generated secret key .
+   */
+  public static SecretKey generateSecretKey(String keyAgreementAlgorithm, String secretKeyAlgorithm,
+      PrivateKey aPrivateKey, PublicKey bPublicKey) throws GeneralSecurityException {
+    KeyAgreement agreement = KeyAgreement.getInstance(keyAgreementAlgorithm, BC_SECURITY_PROVIDER);
+    agreement.init(aPrivateKey);
+    agreement.doPhase(bPublicKey, true);
+    return agreement.generateSecret(secretKeyAlgorithm);
+  }
+
+
+  /**
+   * Generate an agreed secret key value .
+   *
+   * @param keyAgreementAlgorithm Key agreement algorithm
+   * @param secretKeyAlgorithm    algorithm for secret key
+   * @param aPrivateKey           Party A's private key.
+   * @param bPublicKey,           Party B's public key.
+   * @param keyMaterial           key material
+   * @return the generated secret key.
+   */
+  public static SecretKey generateSecretKey(String keyAgreementAlgorithm, String secretKeyAlgorithm,
+      PrivateKey aPrivateKey, PublicKey bPublicKey, byte[] keyMaterial) throws GeneralSecurityException {
+    KeyAgreement agreement = KeyAgreement.getInstance(keyAgreementAlgorithm, BC_SECURITY_PROVIDER);
+    agreement.init(aPrivateKey, new UserKeyingMaterialSpec(keyMaterial));
+    agreement.doPhase(bPublicKey, true);
+    return agreement.generateSecret(secretKeyAlgorithm);
+  }
+
+
+  /**
+   * Generate an agreed secret key value using the Unified Diffie-Hellman model.
+   *
+   * @param keyAgreementAlgorithm  Key agreement algorithm
+   * @param secretKeyAlgorithm     algorithm for secret key
+   * @param aPrivateKey            Party A's private key.
+   * @param bPublicKey             Party B's public key.
+   * @param algorithmParameterSpec Algorithm parameter spec (Maybe it can be DHUParameterSpec | MQVParameterSpec...)
+   * @return the generated secret key.
+   */
+  public static SecretKey generateSecretKey(String keyAgreementAlgorithm, String secretKeyAlgorithm,
+      PrivateKey aPrivateKey, PublicKey bPublicKey, AlgorithmParameterSpec algorithmParameterSpec)
+      throws GeneralSecurityException {
+    KeyAgreement agreement = KeyAgreement.getInstance(keyAgreementAlgorithm, BC_SECURITY_PROVIDER);
+    agreement.init(aPrivateKey, algorithmParameterSpec);
+    agreement.doPhase(bPublicKey, true);
+    return agreement.generateSecret(secretKeyAlgorithm);
+  }
+
+  /**
+   * Wraps a key using a public key as base.
+   *
+   * @param transformation cipher transformation
+   * @param publicKey      public key to base for wrapping
+   * @param key            key to be encrypted/wrapped
+   * @return wrapped key
+   * @throws GeneralSecurityException generic exception
+   */
+  public static byte[] wrapKey(String transformation, PublicKey publicKey, Key key) throws GeneralSecurityException {
+    Cipher cipher = Cipher.getInstance(transformation, BC_SECURITY_PROVIDER);
+    cipher.init(Cipher.WRAP_MODE, publicKey);
+    return cipher.wrap(key);
+  }
+
+  /**
+   * Unwraps a key using private key.
+   *
+   * @param transformation      cipher transformation
+   * @param privateKey          private key for unwrapping
+   * @param wrappedKey          wrapped key
+   * @param wrappedKeyAlgorithm algorithm of key wrapped
+   * @param wrappedKeyType      wrapped key type
+   * @return key unwrapped
+   * @throws GeneralSecurityException generic exception
+   */
+  public static Key unwrapKey(String transformation, PrivateKey privateKey, byte[] wrappedKey,
+      String wrappedKeyAlgorithm, int wrappedKeyType) throws GeneralSecurityException {
+    Cipher cipher = Cipher.getInstance(transformation, BC_SECURITY_PROVIDER);
+    cipher.init(Cipher.UNWRAP_MODE, privateKey);
+    return cipher.unwrap(wrappedKey, wrappedKeyAlgorithm, wrappedKeyType);
+  }
+
+
+
 
 
 
