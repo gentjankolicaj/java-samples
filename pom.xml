@@ -71,6 +71,7 @@
       <module>bouncy-castle</module>
         <module>bytecode</module>
         <module>concurrent-collections</module>
+      <module>cryptography</module>
         <module>executors</module>
         <module>future</module>
         <module>generics</module>
