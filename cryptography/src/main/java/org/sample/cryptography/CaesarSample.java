@@ -10,7 +10,7 @@ import org.sample.cryptography.impl.Key;
 public class CaesarSample {
 
     public static void main(String[] args) {
-        byte[] plainText = "Hello World".getBytes();
+        byte[] plainText = "Hello World !!@#$%^&&*(*(+_)(*&=-0".getBytes();
 
         Algorithm algorithm = Algorithm.CAESAR;
         Cipher caearCipher = algorithm.getCipher();

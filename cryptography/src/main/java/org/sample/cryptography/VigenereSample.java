@@ -10,7 +10,7 @@ import org.sample.cryptography.impl.Key;
 public class VigenereSample {
 
   public static void main(String[] args) {
-    byte[] plainText = "Hello World".getBytes();
+    byte[] plainText = "Hello World !!@#$%^&&*(*(+_)(*&=-0".getBytes();
 
     Algorithm algorithm = Algorithm.VIGENERE;
     Cipher caearCipher = algorithm.getCipher();

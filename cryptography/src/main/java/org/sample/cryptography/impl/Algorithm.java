@@ -7,8 +7,10 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum Algorithm {
-  CAESAR(new CaesarCipher(), new PseudoCaesarKey(3)), AUTOKEY(new AutokeyCipher(), new PseudoAutoKey()), VIGENERE(
-      new VigenereCipher(), new PseudoVigenereKey()), VERNAM(new VernamCipher(), new PseudoVernamKey());
+  CAESAR(new CaesarCipher(), new PseudoCaesarKey(3)),
+  VIGENERE(new VigenereCipher(), new PseudoVigenereKey("ARSFDA#$r45gvasfc34")),
+  AUTOKEY(new AutokeyCipher(), new PseudoAutoKey()),
+  VERNAM(new VernamCipher(), new PseudoVernamKey());
 
   private final Cipher cipher;
   private final Key key;

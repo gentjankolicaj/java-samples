@@ -1,14 +1,19 @@
 package org.sample.cryptography.impl;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 public class PseudoVigenereKey implements Key {
+
+  private final String keyContent;
 
   @Override
   public String getAlgorithm() {
-    return null;
+    return "VIGENERE";
   }
 
   @Override
   public byte[] getEncoded() {
-    return new byte[0];
+    return keyContent.getBytes();
   }
 }

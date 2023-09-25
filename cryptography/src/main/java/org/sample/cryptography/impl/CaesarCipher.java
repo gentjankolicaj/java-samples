@@ -6,14 +6,18 @@ import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
 
-
+/**
+ * Caesar cipher implementation, work only for UTF-8; For more read <a
+ * href="https://en.wikipedia.org/wiki/Caesar_cipher">Caesar cipher</a> * Encryption : ( plaintext + shift )
+ * mod(charset-size) => ciphertext * Decryption : ( ciphertext - shift ) mod(charset-size) => plaintext
+ */
 @Slf4j
 public final class CaesarCipher implements Cipher {
 
   private static final int UTF_8_CHARSET_BASE = 1_112_064;
 
   public CaesarCipher() {
-    log.info("Using Charset : {}", Charset.defaultCharset());
+    log.warn("Caesar cipher implemented for charset : {}", Charset.defaultCharset());
   }
 
   @Override
