@@ -3,16 +3,17 @@ package org.sample.cryptography.impl;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public final class PseudoAutoKey implements Key {
-  private final String primer;
+public class PseudoTrithemiusKey implements Key {
+
+  private final String keyContent;
 
   @Override
   public String getAlgorithm() {
-    return "AUTOKEY";
+    return "TRITHEMIUS";
   }
 
   @Override
   public byte[] getEncoded() {
-    return primer.getBytes();
+    return keyContent.getBytes();
   }
 }

@@ -8,18 +8,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
 
 /**
- * Vigenere cipher implementation, works only for UTF-8.
- * <br>For more check <a href="https://en.wikipedia.org/wiki/Vigen%C3%A8re_cipher">Vigenere cipher</a>
- * <br>Encryption : ( plaintext + key ) mod(charset-size) => ciphertext
- * <br>Decryption : ( ciphertext - key ) mod(charset-size) => plaintext
+ * Trithemius cipher implementation for UTF-8;
+ * <br> For more <a href="https://en.wikipedia.org/wiki/Tabula_recta">Tabula recta</a>
  */
 @Slf4j
-public final class VigenereCipher implements Cipher {
-
+public final class TrithemiusCipher implements Cipher{
   private static final int UTF_8_CHARSET_SIZE = 1_112_064;
 
-  public VigenereCipher() {
-    log.warn("Vigenere cipher implemented for charset : {}", Charset.defaultCharset());
+  public TrithemiusCipher() {
+    log.warn("Trithemius cipher implemented for charset : {}", Charset.defaultCharset());
   }
 
 

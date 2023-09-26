@@ -5,19 +5,22 @@ import org.assertj.core.api.Assertions;
 import org.sample.cryptography.impl.Algorithm;
 import org.sample.cryptography.impl.Cipher;
 import org.sample.cryptography.impl.Key;
+import org.sample.cryptography.impl.TabulaRecta;
 
 
 @Slf4j
-public class VigenereSample {
+public class AutokeySample {
 
   public static void main(String[] args) {
     byte[] plainText = "Hello World !!@#$%^&&*(*(+_)(*&=-0".getBytes();
 
-    Algorithm algorithm = Algorithm.VIGENERE;
+    Algorithm algorithm = Algorithm.AUTOKEY;
     Cipher cipher = algorithm.getCipher();
     Key key = algorithm.getKey();
 
-    log.info("Using VIGENERE cipher ...");
+    log.error("{}",TabulaRecta.getCrossCharacterDec(25,25));
+
+    log.info("Using AUTOKEY cipher ...");
     log.info("PlainText '{}'", new String(plainText));
     log.info("Key '{}'", new String(key.getEncoded()));
 

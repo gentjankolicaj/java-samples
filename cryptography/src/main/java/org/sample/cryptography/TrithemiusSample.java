@@ -8,7 +8,7 @@ import org.sample.cryptography.impl.Key;
 
 
 @Slf4j
-public class VigenereSample {
+public class TrithemiusSample {
 
   public static void main(String[] args) {
     byte[] plainText = "Hello World !!@#$%^&&*(*(+_)(*&=-0".getBytes();
@@ -17,7 +17,7 @@ public class VigenereSample {
     Cipher cipher = algorithm.getCipher();
     Key key = algorithm.getKey();
 
-    log.info("Using VIGENERE cipher ...");
+    log.info("Using Trithemius cipher ...");
     log.info("PlainText '{}'", new String(plainText));
     log.info("Key '{}'", new String(key.getEncoded()));
 
@@ -27,7 +27,6 @@ public class VigenereSample {
 
     //Just in case assertion
     Assertions.assertThat(cipher.decrypt(cipherText, key)).containsExactly(plainText);
-
   }
 
 }
