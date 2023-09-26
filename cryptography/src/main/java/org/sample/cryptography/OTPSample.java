@@ -5,22 +5,20 @@ import org.assertj.core.api.Assertions;
 import org.sample.cryptography.cipher.Algorithm;
 import org.sample.cryptography.cipher.Cipher;
 import org.sample.cryptography.cipher.Key;
-import org.sample.cryptography.cipher.TabulaRecta;
+import org.sample.cryptography.cipher.NoSecureKey;
 
 
 @Slf4j
-public class AutokeySample {
+public class OTPSample {
 
   public static void main(String[] args) {
     byte[] plainText = "Hello World !!@#$%^&&*(*(+_)(*&=-0".getBytes();
 
-    Algorithm algorithm = Algorithm.AUTOKEY;
+    Algorithm algorithm = Algorithm.OTP;
     Cipher cipher = algorithm.getCipher();
-    Key key = algorithm.getKey();
+    Key key=new NoSecureKey("This is my random key @$##R#FASCSV BZXDVBZ");
 
-    log.error("{}",TabulaRecta.getCrossCharacterDec(25,25));
-
-    log.info("Using AUTOKEY cipher ...");
+    log.info("Using OTP cipher ...");
     log.info("PlainText '{}'", new String(plainText));
     log.info("Key '{}'", new String(key.getEncoded()));
 

@@ -1,7 +1,7 @@
 package org.sample.cryptography;
 
 import lombok.extern.slf4j.Slf4j;
-import org.sample.cryptography.impl.TabulaRecta;
+import org.sample.cryptography.cipher.TabulaRecta;
 
 
 @Slf4j

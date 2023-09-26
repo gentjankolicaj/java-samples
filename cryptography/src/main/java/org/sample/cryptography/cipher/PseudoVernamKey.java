@@ -1,15 +1,15 @@
-package org.sample.cryptography.impl;
+package org.sample.cryptography.cipher;
 
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class PseudoVigenereKey implements Key {
+public class PseudoVernamKey implements Key {
 
   private final String keyContent;
 
   @Override
   public String getAlgorithm() {
-    return "VIGENERE";
+    return "VERNAM";
   }
 
   @Override

@@ -8,6 +8,7 @@ Java samples with packages/libs.
 - [bytecode](/bytecode)
 - [bouncy-castle](/bouncy-castle)
 - [concurrent-collections](/concurrent-collections)
+- [cryptography](/cryptography)
 - [executors](/executors)
 - [future](/future)
 - [generics](/generics)

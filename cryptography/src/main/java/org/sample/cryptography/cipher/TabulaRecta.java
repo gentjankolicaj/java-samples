@@ -1,4 +1,4 @@
-package org.sample.cryptography.impl;
+package org.sample.cryptography.cipher;
 
 import java.nio.ByteBuffer;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +25,7 @@ public abstract class TabulaRecta {
   }
 
   /**
-   * Prints tabula recta content on console without row & column coordinates.
+   * Prints tabula recta keyContent on console without row & column coordinates.
    * @param leftShift shifting
    * @param lowerBound UTF-8 encoding lower bound
    * @param upperBound UTF-8 encoding upper bound

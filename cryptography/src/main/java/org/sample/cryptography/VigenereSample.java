@@ -2,9 +2,9 @@ package org.sample.cryptography;
 
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
-import org.sample.cryptography.impl.Algorithm;
-import org.sample.cryptography.impl.Cipher;
-import org.sample.cryptography.impl.Key;
+import org.sample.cryptography.cipher.Algorithm;
+import org.sample.cryptography.cipher.Cipher;
+import org.sample.cryptography.cipher.Key;
 
 
 @Slf4j

@@ -1,4 +1,4 @@
-package org.sample.cryptography.impl;
+package org.sample.cryptography.cipher;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
@@ -8,15 +8,18 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
 
 /**
- * Trithemius cipher implementation for UTF-8;
- * <br> For more <a href="https://en.wikipedia.org/wiki/Tabula_recta">Tabula recta</a>
+ * Vigenere cipher implementation, works only for UTF-8.
+ * <br>For more check <a href="https://en.wikipedia.org/wiki/Vigen%C3%A8re_cipher">Vigenere cipher</a>
+ * <br>Encryption : ( plaintext + key ) mod(charset-size) => ciphertext
+ * <br>Decryption : ( ciphertext - key ) mod(charset-size) => plaintext
  */
 @Slf4j
-public final class TrithemiusCipher implements Cipher{
+public final class VigenereCipher implements Cipher {
+
   private static final int UTF_8_CHARSET_SIZE = 1_112_064;
 
-  public TrithemiusCipher() {
-    log.warn("Trithemius cipher implemented for charset : {}", Charset.defaultCharset());
+  public VigenereCipher() {
+    log.warn("Vigenere cipher implemented for charset : {}", Charset.defaultCharset());
   }
 
 
@@ -55,8 +58,8 @@ public final class TrithemiusCipher implements Cipher{
     for (int i = 0; i < cipherText.length; i++) {
       byte cipherChar = cipherText[i];
       byte[] keyCharacterArray = Arrays.copyOfRange(keyContent, i % key4ByteCharsNumber, (i % key4ByteCharsNumber) + 4);
-      int keyCharacter = ByteBuffer.wrap(keyCharacterArray).getInt();
-      byte plainChar = (byte) ((cipherChar - keyCharacter) % UTF_8_CHARSET_SIZE);
+      int keyChar = ByteBuffer.wrap(keyCharacterArray).getInt();
+      byte plainChar = (byte) ((cipherChar - keyChar) % UTF_8_CHARSET_SIZE);
       plainText[i] = plainChar;
     }
     return plainText;

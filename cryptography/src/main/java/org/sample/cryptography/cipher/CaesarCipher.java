@@ -1,4 +1,4 @@
-package org.sample.cryptography.impl;
+package org.sample.cryptography.cipher;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;

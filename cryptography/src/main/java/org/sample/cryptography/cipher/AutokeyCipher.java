@@ -1,4 +1,4 @@
-package org.sample.cryptography.impl;
+package org.sample.cryptography.cipher;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
@@ -68,8 +68,8 @@ public final class AutokeyCipher implements Cipher {
     for (int i = 0; i < cipherText.length; i++) {
       byte cipherChar = cipherText[i];
       byte[] keyCharacterArray = Arrays.copyOfRange(finalKeyContent, i % key4ByteCharsNumber, (i % key4ByteCharsNumber) + 4);
-      int keyCharacter = ByteBuffer.wrap(keyCharacterArray).getInt();
-      byte plainChar = (byte) ((cipherChar - keyCharacter) % UTF_8_CHARSET_SIZE);
+      int keyChar = ByteBuffer.wrap(keyCharacterArray).getInt();
+      byte plainChar = (byte) ((cipherChar - keyChar) % UTF_8_CHARSET_SIZE);
       plainText[i] = plainChar;
     }
     return plainText;

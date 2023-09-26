@@ -5,22 +5,19 @@ import org.assertj.core.api.Assertions;
 import org.sample.cryptography.cipher.Algorithm;
 import org.sample.cryptography.cipher.Cipher;
 import org.sample.cryptography.cipher.Key;
-import org.sample.cryptography.cipher.TabulaRecta;
 
 
 @Slf4j
-public class AutokeySample {
+public class VernamSample {
 
   public static void main(String[] args) {
     byte[] plainText = "Hello World !!@#$%^&&*(*(+_)(*&=-0".getBytes();
 
-    Algorithm algorithm = Algorithm.AUTOKEY;
+    Algorithm algorithm = Algorithm.VIGENERE;
     Cipher cipher = algorithm.getCipher();
     Key key = algorithm.getKey();
 
-    log.error("{}",TabulaRecta.getCrossCharacterDec(25,25));
-
-    log.info("Using AUTOKEY cipher ...");
+    log.info("Using Vernam cipher ...");
     log.info("PlainText '{}'", new String(plainText));
     log.info("Key '{}'", new String(key.getEncoded()));
 
