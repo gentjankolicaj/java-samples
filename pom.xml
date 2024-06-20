@@ -38,6 +38,7 @@
           <module>java-agent</module>
           <module>javassist</module>
           <module>liquibase</module>
+          <module>multithread</module>
           <module>parser</module>
           <module>process</module>
           <module>socket</module>

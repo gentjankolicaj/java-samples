@@ -9,9 +9,9 @@
     <version>1.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>annotation</artifactId>
+  <artifactId>multithread</artifactId>
   <version>1.0-SNAPSHOT</version>
-  <name>annotation</name>
+  <name>multithread</name>
 
   <properties>
     <java.version>11</java.version>
