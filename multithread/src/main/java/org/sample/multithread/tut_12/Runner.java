@@ -3,14 +3,16 @@ package org.sample.multithread.tut_12;
 import java.util.Random;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class Runner {
 
-  private Account acc1 = new Account();
-  private Account acc2 = new Account();
+  private final Account acc1 = new Account();
+  private final Account acc2 = new Account();
 
-  private Lock lock1 = new ReentrantLock();
-  private Lock lock2 = new ReentrantLock();
+  private final Lock lock1 = new ReentrantLock();
+  private final Lock lock2 = new ReentrantLock();
 
   public static void transfer(Account from, Account to, int amount) {
     int fromBalance = from.getBalance();
@@ -19,8 +21,8 @@ public class Runner {
     to.setBalance(toBalance + amount);
   }
 
-  // In order to avoid deadlock i write this method
-  public void aquireLocks(Lock first, Lock second) throws InterruptedException {
+  // In order to avoid README.md i write this method
+  public void acquireLocks(Lock first, Lock second) throws InterruptedException {
 
     while (true) {
       boolean gotFirstLock = false;
@@ -31,7 +33,7 @@ public class Runner {
         gotSecondLock = second.tryLock();
 
       } catch (Exception e) {
-
+        log.error("", e);
       } finally {
 
         if (gotFirstLock && gotSecondLock) {
@@ -55,14 +57,14 @@ public class Runner {
     for (int i = 0; i < 10000; i++) {
 
       // In order for thread to call secondThread method thread must aquire both locks
-      aquireLocks(lock1, lock2);
+      acquireLocks(lock1, lock2);
 
       try {
 
         transfer(acc1, acc2, random.nextInt(100));
 
       } catch (Exception e) {
-
+        log.error("", e);
       } finally {
 
         lock1.unlock();
@@ -77,14 +79,14 @@ public class Runner {
     for (int i = 0; i < 10000; i++) {
 
       // In order for thread to call secondThread method thread must aquire both locks
-      aquireLocks(lock1, lock2);
+      acquireLocks(lock1, lock2);
 
       try {
 
         transfer(acc1, acc2, random.nextInt(100));
 
       } catch (Exception e) {
-
+        log.error("", e);
       } finally {
 
         lock1.unlock();
@@ -95,8 +97,8 @@ public class Runner {
   }
 
   public void finished() {
-    System.out.println("Account 1:" + acc1.getBalance());
-    System.out.println("Account 2:" + acc2.getBalance());
-    System.out.println("Total balance :" + (acc1.getBalance() + acc2.getBalance()));
+    log.info("Account 1:{}", acc1.getBalance());
+    log.info("Account 2:{}", acc2.getBalance());
+    log.info("Total balance :{}", acc1.getBalance() + acc2.getBalance());
   }
 }

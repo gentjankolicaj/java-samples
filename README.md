@@ -18,6 +18,7 @@ Java samples with packages/libs.
 - [java-agent](/java-agent)
 - [javassist](/javassist)
 - [liquibase](/liquibase)
+- [multithread](/multithread)
 - [parser](/parser)
 - [process](/process)
 - [socket](/socket)
