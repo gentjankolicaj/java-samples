@@ -13,8 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author gentjan kolicaj
- * @Date: 11/5/24
- * @Time: 1:30 PM
+ * @Date: 11/5/24 1:30 PM
  */
 @Slf4j
 public class EchoEndpoint extends Endpoint {

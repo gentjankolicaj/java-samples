@@ -7,10 +7,9 @@ import java.util.Set;
 
 /**
  * @author gentjan kolicaj
- * @Date: 11/7/24
- * @Time: 11:47 AM
+ * @Date: 11/7/24 11:47 AM
  */
-public class EchoEndpointConfiguration implements ServerApplicationConfig {
+public class EchoEndpointAConfiguration implements ServerApplicationConfig {
 
   @Override
   public Set<ServerEndpointConfig> getEndpointConfigs(Set<Class<? extends Endpoint>> set) {
