@@ -1,4 +1,4 @@
-package org.sample.websocket;
+package org.sample.socket;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
