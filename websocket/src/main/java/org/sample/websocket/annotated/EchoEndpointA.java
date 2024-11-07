@@ -20,8 +20,8 @@ import lombok.extern.slf4j.Slf4j;
  * @Time: 1:30 PM
  */
 @Slf4j
-@ServerEndpoint(Echo2Endpoint.ENDPOINT_URI)
-public class Echo2Endpoint {
+@ServerEndpoint(EchoEndpointA.ENDPOINT_URI)
+public class EchoEndpointA {
 
   /**
    * As opposed to servlets, WebSocket endpoints are instantiated multiple times. The container
@@ -31,7 +31,7 @@ public class Echo2Endpoint {
    * an endpoint instance at any given time. This is why I store session references,
    */
   public static final Map<String, Session> SESSION_MAP = new ConcurrentHashMap<>();
-  public static final String ENDPOINT_URI = "/echo2";
+  public static final String ENDPOINT_URI = "/echoA";
 
 
   @OnOpen

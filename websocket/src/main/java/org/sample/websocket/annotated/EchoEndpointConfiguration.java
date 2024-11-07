@@ -19,6 +19,6 @@ public class EchoEndpointConfiguration implements ServerApplicationConfig {
 
   @Override
   public Set<Class<?>> getAnnotatedEndpointClasses(Set<Class<?>> set) {
-    return Set.of(Echo2Endpoint.class);
+    return Set.of(EchoEndpointA.class);
   }
 }
