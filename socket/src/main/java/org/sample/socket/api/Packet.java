@@ -1,4 +1,4 @@
-package org.sample.socket.api;
+package org.sample.websocket.api;
 
 import java.io.Serializable;
 

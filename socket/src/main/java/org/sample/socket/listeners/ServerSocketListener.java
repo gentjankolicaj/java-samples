@@ -1,7 +1,7 @@
-package org.sample.socket.listeners;
+package org.sample.websocket.listeners;
 
-import org.sample.socket.api.Request;
-import org.sample.socket.api.Response;
+import org.sample.websocket.api.Request;
+import org.sample.websocket.api.Response;
 
 //todo: to integrate into sample
 public interface ServerSocketListener {

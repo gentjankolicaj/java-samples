@@ -1,4 +1,4 @@
-package org.sample.socket.exceptions;
+package org.sample.websocket.exception;
 
 import lombok.experimental.StandardException;
 
