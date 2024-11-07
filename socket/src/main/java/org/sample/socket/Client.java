@@ -6,10 +6,10 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
-import org.sample.websocket.api.Packet;
-import org.sample.websocket.api.Request;
-import org.sample.websocket.api.Response;
-import org.sample.websocket.api.Status;
+import org.sample.socket.api.Packet;
+import org.sample.socket.api.Request;
+import org.sample.socket.api.Response;
+import org.sample.socket.api.Status;
 
 
 @Slf4j
