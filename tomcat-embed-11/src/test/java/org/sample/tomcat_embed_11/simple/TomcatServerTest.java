@@ -1,4 +1,4 @@
-package org.sample.websocket;
+package org.sample.tomcat_embed_11.simple;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -24,8 +24,8 @@ class TomcatServerTest {
   public static final String TOMCAT_SERVER_STOP_CALLED = "tomcatServer.stop() called.";
 
   @Test
-  void withoutServlet() throws LifecycleException, IOException, InterruptedException {
-    TomcatServer tomcatServer = new TomcatServer(8081);
+  void simpleTest() throws LifecycleException, IOException, InterruptedException {
+    TomcatServer tomcatServer = new TomcatServer(8080);
     tomcatServer.start();
 
     //Send test http request
@@ -34,11 +34,13 @@ class TomcatServerTest {
 
     // Create an HttpRequest
     HttpRequest request = HttpRequest.newBuilder()
-        .uri(URI.create("http://localhost:8081"))
+        .uri(URI.create("http://localhost:8080"))
         .GET()
         .build();
     HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
     assertThat(response.statusCode()).isEqualTo(404);
+    assertThat(response.body()).contains(
+        "The origin server did not find a current representation for the target resource or is not willing to disclose that one exists.");
 
     Awaitility.await()
         .timeout(Duration.ofSeconds(11))
@@ -52,35 +54,5 @@ class TomcatServerTest {
     tomcatServer.join();
   }
 
-  @Test
-  void withServlet() throws LifecycleException, IOException, InterruptedException {
-    TomcatServer tomcatServer = new TomcatServer(8080, true);
-    tomcatServer.start();
-
-    //Send test http request
-    // Create an HttpClient instance
-    HttpClient client = HttpClient.newHttpClient();
-
-    // Create an HttpRequest
-    HttpRequest request = HttpRequest.newBuilder()
-        .uri(URI.create("http://localhost:8080/welcome"))
-        .GET()
-        .build();
-    HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-    assertThat(response.statusCode()).isEqualTo(200);
-    assertThat(response.body()).contains("Have a great day !!!");
-
-    //async await
-    Awaitility.await()
-        .timeout(Duration.ofSeconds(5))
-        .pollDelay(Duration.ofSeconds(4))
-        .untilAsserted(() -> {
-          tomcatServer.stop();
-          log.warn(TOMCAT_SERVER_STOP_CALLED);
-        });
-
-    //blocking join until close is called.
-    tomcatServer.join();
-  }
 
 }
