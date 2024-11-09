@@ -1,6 +1,7 @@
 package org.sample.websocket.chat_json.message;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
  */
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 public class ChatMessage extends Message {
 
   protected String message;

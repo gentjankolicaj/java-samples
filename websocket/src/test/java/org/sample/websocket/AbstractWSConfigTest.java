@@ -37,7 +37,7 @@ class AbstractWSConfigTest {
 
     wsSession.getBasicRemote().sendText("Client test message.");
 
-    //stop tomcat after 11 seconds
+    //stop tomcat after 6 seconds
     Awaitility.await()
         .timeout(Duration.ofSeconds(15))
         .pollDelay(Duration.ofSeconds(14))

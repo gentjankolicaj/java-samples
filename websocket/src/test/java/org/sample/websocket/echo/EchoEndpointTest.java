@@ -39,7 +39,7 @@ class EchoEndpointTest {
 
     wsSession.getBasicRemote().sendText("'client message: echo'");
 
-    //stop tomcat after 11 seconds
+    //stop tomcat after 6 seconds
     Awaitility.await()
         .timeout(Duration.ofSeconds(6))
         .pollDelay(Duration.ofSeconds(5))

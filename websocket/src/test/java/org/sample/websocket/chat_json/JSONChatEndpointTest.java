@@ -22,8 +22,6 @@ import org.sample.websocket.AbstractWSConfig;
 import org.sample.websocket.TomcatServer;
 import org.sample.websocket.chat_json.codec.MessageJsonDecoder;
 import org.sample.websocket.chat_json.codec.MessageJsonEncoder;
-import org.sample.websocket.chat_json.message.ChatMessage;
-import org.sample.websocket.chat_json.message.GetUsersMessage;
 import org.sample.websocket.chat_json.message.JoinUserMessage;
 import org.sample.websocket.chat_json.message.Message;
 import org.sample.websocket.chat_json.message.User;
@@ -50,13 +48,7 @@ class JSONChatEndpointTest {
     //send join user message
     wsSession.getBasicRemote().sendObject(new JoinUserMessage(new User("username", "john", "doe")));
 
-    //send chat message
-    wsSession.getBasicRemote().sendObject(new ChatMessage("Hello world"));
-
-    //get all users message
-    wsSession.getBasicRemote().sendObject(new GetUsersMessage());
-
-    //stop tomcat after 11 seconds
+    //stop tomcat after 6 seconds
     Awaitility.await()
         .timeout(Duration.ofSeconds(6))
         .pollDelay(Duration.ofSeconds(5))

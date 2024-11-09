@@ -3,6 +3,7 @@ package org.sample.websocket.chat_json;
 import jakarta.websocket.CloseReason;
 import jakarta.websocket.EncodeException;
 import jakarta.websocket.OnClose;
+import jakarta.websocket.OnError;
 import jakarta.websocket.OnMessage;
 import jakarta.websocket.OnOpen;
 import jakarta.websocket.SendHandler;
@@ -58,6 +59,11 @@ public class JSONChatEndpoint {
     this.session = session;
     this.config = config;
     clientEndpoints.add(this);
+  }
+
+  @OnError
+  public void onError(Session session, Throwable error) {
+    log.error("error", error);
   }
 
   @OnClose

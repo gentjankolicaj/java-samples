@@ -1,7 +1,10 @@
 package org.sample.websocket.chat_json.message;
 
+import java.io.Serializable;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * @author gentjan kolicaj
@@ -9,7 +12,9 @@ import lombok.NoArgsConstructor;
  */
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+@Getter
+@Setter
+public class User implements Serializable {
 
   private String username;
   private String firstname;
