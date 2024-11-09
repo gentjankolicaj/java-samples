@@ -2,7 +2,6 @@ package org.sample.websocket;
 
 import jakarta.servlet.ServletContextEvent;
 import jakarta.websocket.DeploymentException;
-import jakarta.websocket.Endpoint;
 import jakarta.websocket.server.ServerContainer;
 import jakarta.websocket.server.ServerEndpointConfig;
 import java.util.Set;
@@ -20,7 +19,7 @@ import org.apache.tomcat.websocket.server.WsContextListener;
 public class AbstractWSConfig extends WsContextListener {
 
   protected final Set<Class<?>> annotatedEndpoints;
-  protected final Set<org.sample.websocket.ProgrammaticEndpoint> programmaticEndpoints;
+  protected final Set<ProgrammaticEndpoint> programmaticEndpoints;
 
   public AbstractWSConfig() {
     this.annotatedEndpoints = Set.of();
@@ -62,14 +61,6 @@ public class AbstractWSConfig extends WsContextListener {
         }
       });
     }
-  }
-
-
-  /**
-   * @author gentjan kolicaj
-   * @Date: 11/9/24 9:56 AM
-   */
-  public record ProgrammaticEndpoint(String path, Class<? extends Endpoint> endpointClass) {
   }
 
 }

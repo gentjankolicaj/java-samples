@@ -1,4 +1,4 @@
-package org.sample.websocket.string;
+package org.sample.websocket.programatic;
 
 import jakarta.websocket.ClientEndpoint;
 import jakarta.websocket.ContainerProvider;
@@ -9,6 +9,7 @@ import jakarta.websocket.Session;
 import jakarta.websocket.WebSocketContainer;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.ByteBuffer;
 import java.time.Duration;
 import java.util.Set;
 import lombok.Getter;
@@ -17,26 +18,28 @@ import org.apache.catalina.LifecycleException;
 import org.awaitility.Awaitility;
 import org.junit.jupiter.api.Test;
 import org.sample.websocket.AbstractWSConfig;
+import org.sample.websocket.ProgrammaticEndpoint;
 import org.sample.websocket.TomcatServer;
 
 /**
  * @author gentjan kolicaj
  * @Date: 11/9/24 4:20 PM
  */
-class StringEndpointTest {
-
+class BinaryEndpointTest {
 
   @Test
-  void stringEndpoint() throws LifecycleException, IOException, DeploymentException {
+  void endpoint() throws LifecycleException, IOException, DeploymentException {
     TomcatServer tomcatServer = new TomcatServer(8080, WSConfig.class);
     tomcatServer.start();
 
     //websocket client request
     WebSocketContainer wsContainer = ContainerProvider.getWebSocketContainer();
     Session wsSession = wsContainer.connectToServer(CurrentClientEndpoint.class,
-        URI.create("ws://localhost:8080/" + StringEndpoint.ENDPOINT_URI));
+        URI.create("ws://localhost:8080/" + BinaryEndpoint.ENDPOINT_URI));
 
-    wsSession.getBasicRemote().sendText("'client message: string'");
+    //use session to send byte buffer to server.
+    ByteBuffer buffer = ByteBuffer.wrap("987654321".getBytes());
+    wsSession.getBasicRemote().sendBinary(buffer);
 
     //stop tomcat after 11 seconds
     Awaitility.await()
@@ -54,8 +57,7 @@ class StringEndpointTest {
 
     public WSConfig() {
       super(Set.of(),
-          Set.of(new org.sample.websocket.ProgrammaticEndpoint(StringEndpoint.class,
-              StringEndpoint.ENDPOINT_URI)));
+          Set.of(new ProgrammaticEndpoint(BinaryEndpoint.class, BinaryEndpoint.ENDPOINT_URI)));
     }
   }
 
@@ -75,7 +77,12 @@ class StringEndpointTest {
 
     @OnMessage
     public void onMessage(Session session, String message) {
-      log.info("client received : {}", message);
+      log.info("client received string : {}", message);
+    }
+
+    @OnMessage
+    public void onMessage(Session session, ByteBuffer buffer) {
+      log.info("client received buffer : {}", buffer.array());
     }
   }
 

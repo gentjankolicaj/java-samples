@@ -17,26 +17,27 @@ import org.apache.catalina.LifecycleException;
 import org.awaitility.Awaitility;
 import org.junit.jupiter.api.Test;
 import org.sample.websocket.AbstractWSConfig;
+import org.sample.websocket.ProgrammaticEndpoint;
 import org.sample.websocket.TomcatServer;
 
 /**
  * @author gentjan kolicaj
  * @Date: 11/9/24 4:20 PM
  */
-class EchoEndpointTest {
+class StringEndpointTest {
 
 
   @Test
-  void echoEndpoint() throws LifecycleException, IOException, DeploymentException {
+  void stringEndpoint() throws LifecycleException, IOException, DeploymentException {
     TomcatServer tomcatServer = new TomcatServer(8080, WSConfig.class);
     tomcatServer.start();
 
     //websocket client request
     WebSocketContainer wsContainer = ContainerProvider.getWebSocketContainer();
     Session wsSession = wsContainer.connectToServer(CurrentClientEndpoint.class,
-        URI.create("ws://localhost:8080/" + EchoEndpoint.ENDPOINT_URI));
+        URI.create("ws://localhost:8080/" + StringEndpoint.ENDPOINT_URI));
 
-    wsSession.getBasicRemote().sendText("'client message: echo'");
+    wsSession.getBasicRemote().sendText("'client message: string'");
 
     //stop tomcat after 11 seconds
     Awaitility.await()
@@ -54,8 +55,7 @@ class EchoEndpointTest {
 
     public WSConfig() {
       super(Set.of(),
-          Set.of(new org.sample.websocket.ProgrammaticEndpoint(EchoEndpoint.class,
-              EchoEndpoint.ENDPOINT_URI)));
+          Set.of(new ProgrammaticEndpoint(StringEndpoint.class, StringEndpoint.ENDPOINT_URI)));
     }
   }
 

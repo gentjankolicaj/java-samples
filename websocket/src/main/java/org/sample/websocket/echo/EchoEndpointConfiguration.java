@@ -1,4 +1,4 @@
-package org.sample.websocket.string;
+package org.sample.websocket.echo;
 
 import jakarta.websocket.Endpoint;
 import jakarta.websocket.server.ServerApplicationConfig;
@@ -12,15 +12,14 @@ import java.util.Set;
  *
  * This implementation is used when war is deployed in tomcat.Tomcat uses this to find Endpoint classes.
  */
-public class StringEndpointConfiguration implements ServerApplicationConfig {
+public class EchoEndpointConfiguration implements ServerApplicationConfig {
 
   @Override
   public Set<ServerEndpointConfig> getEndpointConfigs(Set<Class<? extends Endpoint>> set) {
     Set<ServerEndpointConfig> configs = new HashSet<>();
-    if (set.contains(StringEndpoint.class)) {
-      configs.add(
-          ServerEndpointConfig.Builder.create(StringEndpoint.class, StringEndpoint.ENDPOINT_URI)
-              .build());
+    if (set.contains(EchoEndpoint.class)) {
+      configs.add(ServerEndpointConfig.Builder.create(EchoEndpoint.class, EchoEndpoint.ENDPOINT_URI)
+          .build());
     }
     return configs;
   }

@@ -1,4 +1,4 @@
-package org.sample.websocket.string;
+package org.sample.websocket.programatic;
 
 import jakarta.websocket.CloseReason;
 import jakarta.websocket.Endpoint;
@@ -39,14 +39,14 @@ public class StringEndpoint extends Endpoint {
    */
   @Override
   public void onOpen(Session session, EndpointConfig config) {
-    log.info("server: session opened, onOpen() invoked.");
+    log.info("StringEndpoint: session opened, onOpen() invoked.");
     //store session
     SESSION_MAP.putIfAbsent(session.getId(), session);
 
-    //handles all message
-    session.addMessageHandler(new WholeMessageHandler(session.getBasicRemote()));
+    //handles whole string messages
+    session.addMessageHandler(new WholeStringMessageHandler(session.getBasicRemote()));
 
-    //handles parts of messages
+    //handles parts string messages , commented because a message handler already set.
     //session.addMessageHandler(new PartialMessageHandler(session.getBasicRemote()));
   }
 
@@ -62,7 +62,7 @@ public class StringEndpoint extends Endpoint {
   }
 
   @RequiredArgsConstructor
-  static class WholeMessageHandler implements MessageHandler.Whole<String> {
+  static class WholeStringMessageHandler implements MessageHandler.Whole<String> {
 
     private final RemoteEndpoint.Basic remoteEndpoint;
 
@@ -79,7 +79,7 @@ public class StringEndpoint extends Endpoint {
   }
 
   @RequiredArgsConstructor
-  static class PartialMessageHandler implements MessageHandler.Partial<String> {
+  static class PartialStringMessageHandler implements MessageHandler.Partial<String> {
 
     private final RemoteEndpoint.Basic remoteEndpoint;
 

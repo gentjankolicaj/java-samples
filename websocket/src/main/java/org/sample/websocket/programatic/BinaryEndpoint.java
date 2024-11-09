@@ -1,4 +1,4 @@
-package org.sample.websocket.binary;
+package org.sample.websocket.programatic;
 
 import jakarta.websocket.CloseReason;
 import jakarta.websocket.Endpoint;
@@ -40,15 +40,16 @@ public class BinaryEndpoint extends Endpoint {
    */
   @Override
   public void onOpen(Session session, EndpointConfig config) {
-    log.info("onOpen() invoked.");
+    log.info("BinaryEndpoint: session opened, onOpen() invoked.");
+
     //store session
     SESSION_MAP.putIfAbsent(session.getId(), session);
 
-    //handles all message
-    session.addMessageHandler(new WholeMessageHandler(session.getBasicRemote()));
+    //handles whole binary messages
+    session.addMessageHandler(new WholeBinaryMessageHandler(session.getBasicRemote()));
 
-    //handles parts of messages
-    session.addMessageHandler(new PartialMessageHandler(session.getBasicRemote()));
+    //handles part binary messages , commented because a message handler already set.
+    // session.addMessageHandler(new PartialMessageHandler(session.getBasicRemote()));
   }
 
   /**
@@ -64,15 +65,14 @@ public class BinaryEndpoint extends Endpoint {
 
 
   @RequiredArgsConstructor
-  static class WholeMessageHandler implements MessageHandler.Whole<String> {
+  static class WholeBinaryMessageHandler implements MessageHandler.Whole<ByteBuffer> {
 
     private final RemoteEndpoint.Basic remoteEndpoint;
 
     @Override
-    public void onMessage(String message) {
+    public void onMessage(ByteBuffer buffer) {
       try {
-        ByteBuffer buffer = ByteBuffer.wrap(
-            "BinaryEndpoint: Whole message received remote Peer !!!".getBytes());
+        log.info("BinaryEndpoint: Whole message received remote Peer !!! {}", buffer.array());
         remoteEndpoint.sendBinary(buffer);
       } catch (IOException ioe) {
         log.error("", ioe);
@@ -81,20 +81,20 @@ public class BinaryEndpoint extends Endpoint {
   }
 
   @RequiredArgsConstructor
-  static class PartialMessageHandler implements MessageHandler.Partial<String> {
+  static class PartialBinaryMessageHandler implements MessageHandler.Partial<ByteBuffer> {
 
     private final RemoteEndpoint.Basic remoteEndpoint;
 
 
     @Override
-    public void onMessage(String partialMessage, boolean last) {
+    public void onMessage(ByteBuffer buffer, boolean last) {
       try {
         if (last) {
-          log.info("BinaryEndpoint: last message part: {}", partialMessage);
+          log.info("BinaryEndpoint: last message part: {}", buffer);
           remoteEndpoint.sendBinary(ByteBuffer.wrap(
               "BinaryEndpoint: Last part message received remote Peer !!!".getBytes()));
         } else {
-          log.info("BinaryEndpoint: message part: {}", partialMessage);
+          log.info("BinaryEndpoint: message part: {}", buffer);
           remoteEndpoint.sendBinary(
               ByteBuffer.wrap("BinaryEndpoint: Part message received remote Peer !!!".getBytes()));
         }

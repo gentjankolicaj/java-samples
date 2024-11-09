@@ -27,7 +27,7 @@ import org.sample.websocket.TomcatServer;
 class EchoEndpointATest {
 
   @Test
-  void echoEndpointA() throws LifecycleException, IOException, DeploymentException {
+  void endpoint() throws LifecycleException, IOException, DeploymentException {
     TomcatServer tomcatServer = new TomcatServer(8080, WSConfig.class);
     tomcatServer.start();
 

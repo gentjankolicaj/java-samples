@@ -1,4 +1,4 @@
-package org.sample.websocket.binary;
+package org.sample.websocket.programatic;
 
 import jakarta.websocket.Endpoint;
 import jakarta.websocket.server.ServerApplicationConfig;
@@ -9,8 +9,10 @@ import java.util.Set;
 /**
  * @author gentjan kolicaj
  * @Date: 11/7/24 11:47 AM
+ *
+ * This implementation is used when war is deployed in tomcat.Tomcat uses this to find Endpoint classes.
  */
-public class BinaryEndpointConfiguration implements ServerApplicationConfig {
+public class EndpointsConfiguration implements ServerApplicationConfig {
 
   @Override
   public Set<ServerEndpointConfig> getEndpointConfigs(Set<Class<? extends Endpoint>> set) {
@@ -18,6 +20,11 @@ public class BinaryEndpointConfiguration implements ServerApplicationConfig {
     if (set.contains(BinaryEndpoint.class)) {
       configs.add(
           ServerEndpointConfig.Builder.create(BinaryEndpoint.class, BinaryEndpoint.ENDPOINT_URI)
+              .build());
+    }
+    if (set.contains(StringEndpoint.class)) {
+      configs.add(
+          ServerEndpointConfig.Builder.create(StringEndpoint.class, StringEndpoint.ENDPOINT_URI)
               .build());
     }
     return configs;

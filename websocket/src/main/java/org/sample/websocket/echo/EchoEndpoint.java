@@ -1,4 +1,4 @@
-package org.sample.websocket.programatic;
+package org.sample.websocket.echo;
 
 import jakarta.websocket.Endpoint;
 import jakarta.websocket.EndpointConfig;
@@ -45,7 +45,7 @@ public class EchoEndpoint extends Endpoint {
     //handles all message
     session.addMessageHandler(new WholeMessageHandler(session.getBasicRemote()));
 
-    //handles parts of messages commented because a message handler already set.
+    //handles parts of messages , commented because a message handler already set.
     //session.addMessageHandler(new PartialMessageHandler(session.getBasicRemote()));
   }
 
