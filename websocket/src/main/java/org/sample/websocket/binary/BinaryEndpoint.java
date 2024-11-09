@@ -28,7 +28,7 @@ public class BinaryEndpoint extends Endpoint {
    * an endpoint instance at any given time. This is why I store session references,
    */
   public static final Map<String, Session> SESSION_MAP = new ConcurrentHashMap<>();
-  public static final String ENDPOINT_URI = "/websocket/binary";
+  public static final String ENDPOINT_URI = "/ws/binary";
 
 
   /**

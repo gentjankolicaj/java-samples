@@ -1,4 +1,4 @@
-package org.sample.websocket.programatic;
+package org.sample.websocket.annotated;
 
 import jakarta.websocket.ClientEndpoint;
 import jakarta.websocket.ContainerProvider;
@@ -9,6 +9,7 @@ import jakarta.websocket.Session;
 import jakarta.websocket.WebSocketContainer;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.ByteBuffer;
 import java.time.Duration;
 import java.util.Set;
 import lombok.Getter;
@@ -23,20 +24,21 @@ import org.sample.websocket.TomcatServer;
  * @author gentjan kolicaj
  * @Date: 11/9/24 4:20 PM
  */
-class EchoEndpointTest {
-
+class EchoEndpointBTest {
 
   @Test
-  void echoEndpoint() throws LifecycleException, IOException, DeploymentException {
+  void echoEndpointB() throws LifecycleException, IOException, DeploymentException {
     TomcatServer tomcatServer = new TomcatServer(8080, WSConfig.class);
     tomcatServer.start();
 
     //websocket client request
     WebSocketContainer wsContainer = ContainerProvider.getWebSocketContainer();
     Session wsSession = wsContainer.connectToServer(CurrentClientEndpoint.class,
-        URI.create("ws://localhost:8080/" + EchoEndpoint.ENDPOINT_URI));
+        URI.create("ws://localhost:8080/" + EchoEndpointB.ENDPOINT_URI));
 
-    wsSession.getBasicRemote().sendText("'client message: echo'");
+    //use session to send byte buffer to server.
+    ByteBuffer buffer = ByteBuffer.wrap("123345678".getBytes());
+    wsSession.getBasicRemote().sendBinary(buffer);
 
     //stop tomcat after 11 seconds
     Awaitility.await()
@@ -53,9 +55,7 @@ class EchoEndpointTest {
   public static class WSConfig extends AbstractWSConfig {
 
     public WSConfig() {
-      super(Set.of(),
-          Set.of(new org.sample.websocket.ProgrammaticEndpoint(EchoEndpoint.class,
-              EchoEndpoint.ENDPOINT_URI)));
+      super(Set.of(EchoEndpointB.class), Set.of());
     }
   }
 
@@ -75,7 +75,12 @@ class EchoEndpointTest {
 
     @OnMessage
     public void onMessage(Session session, String message) {
-      log.info("client received : {}", message);
+      log.info("client received string : {}", message);
+    }
+
+    @OnMessage
+    public void onMessage(Session session, ByteBuffer buffer) {
+      log.info("client received buffer : {}", buffer.array());
     }
   }
 

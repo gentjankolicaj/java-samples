@@ -18,7 +18,7 @@ public class TomcatServer {
   private Tomcat tomcat;
   private int port = 80;
   private boolean welcomeServlet;
-  private Class<? extends WSConfig> wsConfig;
+  private Class<? extends AbstractWSConfig> wsConfig;
   private HttpServlet[] servlets;
 
   public TomcatServer(int port) {
@@ -31,7 +31,7 @@ public class TomcatServer {
     this.welcomeServlet = welcomeServlet;
   }
 
-  public TomcatServer(int port, Class<? extends WSConfig> wsConfig) {
+  public TomcatServer(int port, Class<? extends AbstractWSConfig> wsConfig) {
     this.port = port;
     this.wsConfig = wsConfig;
   }

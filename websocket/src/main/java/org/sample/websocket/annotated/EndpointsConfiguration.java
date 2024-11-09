@@ -8,8 +8,10 @@ import java.util.Set;
 /**
  * @author gentjan kolicaj
  * @Date: 11/7/24 11:47 AM
+ *
+ * This implementation of interface is used when war is deployed in tomcat.Tomcat uses this to find Endpoint classes.
  */
-public class EchoEndpointAConfiguration implements ServerApplicationConfig {
+public class EndpointsConfiguration implements ServerApplicationConfig {
 
   @Override
   public Set<ServerEndpointConfig> getEndpointConfigs(Set<Class<? extends Endpoint>> set) {
@@ -18,6 +20,6 @@ public class EchoEndpointAConfiguration implements ServerApplicationConfig {
 
   @Override
   public Set<Class<?>> getAnnotatedEndpointClasses(Set<Class<?>> set) {
-    return Set.of(EchoEndpointA.class);
+    return Set.of(EchoEndpointA.class, EchoEndpointB.class);
   }
 }

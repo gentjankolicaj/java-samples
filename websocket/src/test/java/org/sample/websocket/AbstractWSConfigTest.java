@@ -23,11 +23,11 @@ import org.junit.jupiter.api.Test;
  * @Date: 11/8/24 5:23 PM
  */
 @Slf4j
-class WSConfigTest {
+class AbstractWSConfigTest {
 
   @Test
   void config() throws LifecycleException, IOException, DeploymentException {
-    TomcatServer tomcatServer = new TomcatServer(8080, TestWSConfig.class);
+    TomcatServer tomcatServer = new TomcatServer(8080, TestAbstractWSConfig.class);
     tomcatServer.start();
 
     //websocket client request
@@ -90,9 +90,9 @@ class WSConfigTest {
   }
 
 
-  public static class TestWSConfig extends WSConfig {
+  public static class TestAbstractWSConfig extends AbstractWSConfig {
 
-    public TestWSConfig() {
+    public TestAbstractWSConfig() {
       super(Set.of(TestServerEndpoint.class), Set.of());
     }
 

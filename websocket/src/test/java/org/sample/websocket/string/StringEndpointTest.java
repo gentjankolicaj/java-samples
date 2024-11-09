@@ -16,8 +16,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.LifecycleException;
 import org.awaitility.Awaitility;
 import org.junit.jupiter.api.Test;
+import org.sample.websocket.AbstractWSConfig;
 import org.sample.websocket.TomcatServer;
-import org.sample.websocket.WSConfig;
 
 /**
  * @author gentjan kolicaj
@@ -28,7 +28,7 @@ class StringEndpointTest {
 
   @Test
   void stringEndpoint() throws LifecycleException, IOException, DeploymentException {
-    TomcatServer tomcatServer = new TomcatServer(8080, CurrentWSConfig.class);
+    TomcatServer tomcatServer = new TomcatServer(8080, WSConfig.class);
     tomcatServer.start();
 
     //websocket client request
@@ -50,9 +50,9 @@ class StringEndpointTest {
   }
 
 
-  public static class CurrentWSConfig extends WSConfig {
+  public static class WSConfig extends AbstractWSConfig {
 
-    public CurrentWSConfig() {
+    public WSConfig() {
       super(Set.of(),
           Set.of(new org.sample.websocket.ProgrammaticEndpoint(StringEndpoint.class,
               StringEndpoint.ENDPOINT_URI)));
