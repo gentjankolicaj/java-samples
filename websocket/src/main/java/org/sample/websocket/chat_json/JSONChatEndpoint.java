@@ -25,6 +25,7 @@ import org.sample.websocket.chat_json.message.ChatMessagesMessage;
 import org.sample.websocket.chat_json.message.GetUsersMessage;
 import org.sample.websocket.chat_json.message.JoinUserMessage;
 import org.sample.websocket.chat_json.message.Message;
+import org.sample.websocket.chat_json.message.User;
 import org.sample.websocket.chat_json.message.UserListMessage;
 
 /**
@@ -33,13 +34,13 @@ import org.sample.websocket.chat_json.message.UserListMessage;
  */
 @Slf4j
 @Getter
-@ServerEndpoint(value = ChatJsonEndpoint.ENDPOINT_URI,
+@ServerEndpoint(value = JSONChatEndpoint.ENDPOINT_URI,
     encoders = MessageJsonEncoder.class,
     decoders = MessageJsonDecoder.class)
-public class ChatJsonEndpoint {
+public class JSONChatEndpoint {
 
   protected static final String ENDPOINT_URI = "/ws/chat_json";
-  protected static List<ChatJsonEndpoint> clientEndpoints = new CopyOnWriteArrayList<>();
+  protected static List<JSONChatEndpoint> clientEndpoints = new CopyOnWriteArrayList<>();
   private static List<User> chatUsers = new CopyOnWriteArrayList<>();
   private static List<Message> chatMessages = new CopyOnWriteArrayList<>();
 
@@ -74,6 +75,7 @@ public class ChatJsonEndpoint {
    */
   @OnMessage
   public void onMessage(Message message) {
+    log.info("JSONChatEndpoint: received message-type {}", message);
     if (message instanceof GetUsersMessage) {
       processGetUsersMessage((GetUsersMessage) message);
     } else if (message instanceof JoinUserMessage) {
@@ -92,6 +94,7 @@ public class ChatJsonEndpoint {
    */
   @OnMessage
   public void onMessage(ByteBuffer byteBuffer, boolean last) {
+    log.info("JSONChatEndpoint: received buffer {}", byteBuffer);
     if (baos == null) {
       baos = new ByteArrayOutputStream();
     }
@@ -134,7 +137,7 @@ public class ChatJsonEndpoint {
   }
 
   private void broadcast(Message message) {
-    for (ChatJsonEndpoint clientEndpoint : clientEndpoints) {
+    for (JSONChatEndpoint clientEndpoint : clientEndpoints) {
       try {
         clientEndpoint.getSession().getBasicRemote().sendObject(message);
       } catch (IOException | EncodeException ioe) {
@@ -155,7 +158,7 @@ public class ChatJsonEndpoint {
     sendBuffer.put(byteBuffer.array());
     sendBuffer.rewind();
 
-    for (ChatJsonEndpoint clientEndpoint : clientEndpoints) {
+    for (JSONChatEndpoint clientEndpoint : clientEndpoints) {
       try {
         clientEndpoint.getSession().getAsyncRemote().sendBinary(sendBuffer, new SendHandler() {
           @Override
