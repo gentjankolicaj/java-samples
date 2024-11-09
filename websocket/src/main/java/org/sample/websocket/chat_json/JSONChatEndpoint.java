@@ -52,10 +52,9 @@ public class JSONChatEndpoint {
    * Method called on open connection from client.
    *
    * @param session websocket session
-   * @param config  endpoint config
    */
   @OnOpen
-  public void onOpen(Session session, ServerEndpointConfig config) {
+  public void onOpen(Session session) {
     this.session = session;
     this.config = config;
     clientEndpoints.add(this);
