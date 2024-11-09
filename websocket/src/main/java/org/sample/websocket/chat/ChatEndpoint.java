@@ -10,7 +10,6 @@ import jakarta.websocket.SendHandler;
 import jakarta.websocket.SendResult;
 import jakarta.websocket.Session;
 import jakarta.websocket.server.ServerEndpoint;
-import jakarta.websocket.server.ServerEndpointConfig;
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -30,29 +29,27 @@ import lombok.extern.slf4j.Slf4j;
 @ServerEndpoint(ENDPOINT_URI)
 public class ChatEndpoint {
 
-  protected static final String ENDPOINT_URI = "/websocket/chat";
+  protected static final String ENDPOINT_URI = "/ws/chat";
   protected static List<ChatEndpoint> clientEndpoints = new CopyOnWriteArrayList<>();
 
   private Session session;
-  private ServerEndpointConfig config;
   private ByteArrayOutputStream baos;
 
   /**
    * Method called on open connection from client.
    *
    * @param session websocket session
-   * @param config endpoint config
    */
   @OnOpen
-  public void onOpen(Session session, ServerEndpointConfig config) {
+  public void onOpen(Session session) {
     this.session = session;
-    this.config = config;
+    log.info("server: session opened.");
     clientEndpoints.add(this);
   }
 
   @OnClose
   public void onClose(Session session, CloseReason reason) {
-    log.info("Session {} closed.Reason {}", session.getId(), reason.getReasonPhrase());
+    log.info("server: session closed {}.Reason {}", session.getId(), reason.getReasonPhrase());
     clientEndpoints.remove(this);
   }
 
@@ -64,6 +61,7 @@ public class ChatEndpoint {
    */
   @OnMessage
   public void onMessage(String message) {
+    log.info("server: received string.");
     broadcastString(message);
   }
 
@@ -76,6 +74,7 @@ public class ChatEndpoint {
    */
   @OnMessage
   public void onMessage(ByteBuffer byteBuffer, boolean last) {
+    log.info("server: received buffer.");
     if (baos == null) {
       baos = new ByteArrayOutputStream();
     }

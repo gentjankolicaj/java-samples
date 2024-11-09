@@ -20,7 +20,7 @@ import org.apache.tomcat.websocket.server.WsContextListener;
 public class WSConfig extends WsContextListener {
 
   protected final Set<Class<?>> annotatedEndpoints;
-  protected final Set<EndpointWrapper> programmaticEndpoints;
+  protected final Set<org.sample.websocket.ProgrammaticEndpoint> programmaticEndpoints;
 
   public WSConfig() {
     this.annotatedEndpoints = Set.of();
@@ -28,7 +28,7 @@ public class WSConfig extends WsContextListener {
   }
 
   public WSConfig(Set<Class<?>> annotatedEndpoints,
-      Set<EndpointWrapper> programmaticEndpoints) {
+      Set<org.sample.websocket.ProgrammaticEndpoint> programmaticEndpoints) {
     this.annotatedEndpoints = annotatedEndpoints;
     this.programmaticEndpoints = programmaticEndpoints;
   }

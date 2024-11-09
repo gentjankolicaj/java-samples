@@ -38,7 +38,7 @@ import org.sample.websocket.chat_json.message.UserListMessage;
     decoders = MessageJsonDecoder.class)
 public class ChatJsonEndpoint {
 
-  protected static final String ENDPOINT_URI = "/websocket/chat_json";
+  protected static final String ENDPOINT_URI = "/ws/chat_json";
   protected static List<ChatJsonEndpoint> clientEndpoints = new CopyOnWriteArrayList<>();
   private static List<User> chatUsers = new CopyOnWriteArrayList<>();
   private static List<Message> chatMessages = new CopyOnWriteArrayList<>();

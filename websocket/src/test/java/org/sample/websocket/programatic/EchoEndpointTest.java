@@ -16,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.LifecycleException;
 import org.awaitility.Awaitility;
 import org.junit.jupiter.api.Test;
-import org.sample.websocket.EndpointWrapper;
 import org.sample.websocket.TomcatServer;
 import org.sample.websocket.WSConfig;
 
@@ -28,7 +27,7 @@ class EchoEndpointTest {
 
 
   @Test
-  void endpoint() throws LifecycleException, IOException, DeploymentException {
+  void echoEndpoint() throws LifecycleException, IOException, DeploymentException {
     TomcatServer tomcatServer = new TomcatServer(8080, CurrentWSConfig.class);
     tomcatServer.start();
 
@@ -55,7 +54,8 @@ class EchoEndpointTest {
 
     public CurrentWSConfig() {
       super(Set.of(),
-          Set.of(new EndpointWrapper(EchoEndpoint.class, EchoEndpoint.ENDPOINT_URI)));
+          Set.of(new org.sample.websocket.ProgrammaticEndpoint(EchoEndpoint.class,
+              EchoEndpoint.ENDPOINT_URI)));
     }
   }
 
