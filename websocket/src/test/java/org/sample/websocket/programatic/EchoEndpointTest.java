@@ -1,4 +1,4 @@
-package org.sample.websocket.string;
+package org.sample.websocket.programatic;
 
 import jakarta.websocket.ClientEndpoint;
 import jakarta.websocket.ContainerProvider;
@@ -24,7 +24,7 @@ import org.sample.websocket.WSConfig;
  * @author gentjan kolicaj
  * @Date: 11/9/24 4:20 PM
  */
-class StringEndpointTest {
+class EchoEndpointTest {
 
 
   @Test
@@ -35,9 +35,9 @@ class StringEndpointTest {
     //websocket client request
     WebSocketContainer wsContainer = ContainerProvider.getWebSocketContainer();
     Session wsSession = wsContainer.connectToServer(CurrentClientEndpoint.class,
-        URI.create("ws://localhost:8080/" + StringEndpoint.ENDPOINT_URI));
+        URI.create("ws://localhost:8080/" + EchoEndpoint.ENDPOINT_URI));
 
-    wsSession.getBasicRemote().sendText("'client message: string'");
+    wsSession.getBasicRemote().sendText("'client message: echo'");
 
     //stop tomcat after 11 seconds
     Awaitility.await()
@@ -55,7 +55,7 @@ class StringEndpointTest {
 
     public CurrentWSConfig() {
       super(Set.of(),
-          Set.of(new EndpointWrapper(StringEndpoint.class, StringEndpoint.ENDPOINT_URI)));
+          Set.of(new EndpointWrapper(EchoEndpoint.class, EchoEndpoint.ENDPOINT_URI)));
     }
   }
 

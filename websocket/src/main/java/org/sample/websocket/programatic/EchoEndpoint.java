@@ -38,15 +38,15 @@ public class EchoEndpoint extends Endpoint {
    */
   @Override
   public void onOpen(Session session, EndpointConfig config) {
-    log.info("onOpen() invoked.");
+    log.info("server: session opened, onOpen() invoked.");
     //store session
     SESSION_MAP.putIfAbsent(session.getId(), session);
 
     //handles all message
     session.addMessageHandler(new WholeMessageHandler(session.getBasicRemote()));
 
-    //handles parts of messages
-    session.addMessageHandler(new PartialMessageHandler(session.getBasicRemote()));
+    //handles parts of messages commented because a message handler already set.
+    //session.addMessageHandler(new PartialMessageHandler(session.getBasicRemote()));
   }
 
   @RequiredArgsConstructor
