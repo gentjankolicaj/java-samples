@@ -17,5 +17,12 @@ A maven module that contains samples related to java websocket api & tomcat.
 | Chat annotated endpoint with ( binary & string ) messages                               | [ChatEndpoint](./src/main/java/org/sample/websocket/chat/ChatEndpoint.java)              | [ChatEndpointTest](./src/test/java/org/sample/websocket/chat/ChatEndpointTest.java)              |
 | Json chat annotated endpoint with ( binary & string ) messages.Message codecs included. | [JSONChatEndpoint](./src/main/java/org/sample/websocket/chat_json/JSONChatEndpoint.java) | [JSONChatEndpointTest](./src/test/java/org/sample/websocket/chat_json/JSONChatEndpointTest.java) |
 
+### POM dependencies
 
-
+| Dependencies list                                     | version |
+|-------------------------------------------------------|---------|
+| <artifactId>jakarta.websocket-api</artifactId>        | 2.2.0   |
+| <artifactId>jakarta.websocket-client-api</artifactId> | 2.2.0   |
+| <artifactId>tomcat-embed-core</artifactId>            | 11.0.0  |
+| <artifactId>tomcat-embed-websocket</artifactId>       | 11.0.0  |
+| <artifactId>tomcat-embed-logging-juli</artifactId>    | 11.0.0  |

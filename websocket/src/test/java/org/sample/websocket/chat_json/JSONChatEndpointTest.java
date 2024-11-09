@@ -30,6 +30,7 @@ import org.sample.websocket.chat_json.message.User;
  * @author gentjan kolicaj
  * @Date: 11/9/24 4:20 PM
  */
+@SuppressWarnings("unused")
 class JSONChatEndpointTest {
 
 

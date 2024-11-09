@@ -24,6 +24,7 @@ import org.sample.websocket.TomcatServer;
  * @author gentjan kolicaj
  * @Date: 11/9/24 4:20 PM
  */
+@SuppressWarnings("unused")
 class StringEndpointTest {
 
 
