@@ -23,11 +23,11 @@ import org.junit.jupiter.api.Test;
  * @Date: 11/8/24 5:23 PM
  */
 @Slf4j
-class WebSocketConfigTest {
+class WSConfigTest {
 
   @Test
-  void websocket() throws LifecycleException, IOException, DeploymentException {
-    TomcatServer tomcatServer = new TomcatServer(8080, TestWebSocketConfig.class);
+  void config() throws LifecycleException, IOException, DeploymentException {
+    TomcatServer tomcatServer = new TomcatServer(8080, TestWSConfig.class);
     tomcatServer.start();
 
     //websocket client request
@@ -90,9 +90,9 @@ class WebSocketConfigTest {
   }
 
 
-  public static class TestWebSocketConfig extends WebSocketConfig {
+  public static class TestWSConfig extends WSConfig {
 
-    public TestWebSocketConfig() {
+    public TestWSConfig() {
       super(Set.of(TestServerEndpoint.class), Set.of());
     }
 

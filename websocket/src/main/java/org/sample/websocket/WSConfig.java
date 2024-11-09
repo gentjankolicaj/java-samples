@@ -17,18 +17,18 @@ import org.apache.tomcat.websocket.server.WsContextListener;
  */
 @Slf4j
 @Getter
-public class WebSocketConfig extends WsContextListener {
+public class WSConfig extends WsContextListener {
 
   protected final Set<Class<?>> annotatedEndpoints;
-  protected final Set<ProgrammaticEndpoint> programmaticEndpoints;
+  protected final Set<EndpointWrapper> programmaticEndpoints;
 
-  public WebSocketConfig() {
+  public WSConfig() {
     this.annotatedEndpoints = Set.of();
     this.programmaticEndpoints = Set.of();
   }
 
-  public WebSocketConfig(Set<Class<?>> annotatedEndpoints,
-      Set<ProgrammaticEndpoint> programmaticEndpoints) {
+  public WSConfig(Set<Class<?>> annotatedEndpoints,
+      Set<EndpointWrapper> programmaticEndpoints) {
     this.annotatedEndpoints = annotatedEndpoints;
     this.programmaticEndpoints = programmaticEndpoints;
   }
@@ -64,11 +64,12 @@ public class WebSocketConfig extends WsContextListener {
     }
   }
 
+
   /**
    * @author gentjan kolicaj
    * @Date: 11/9/24 9:56 AM
    */
   public record ProgrammaticEndpoint(String path, Class<? extends Endpoint> endpointClass) {
-
   }
+
 }

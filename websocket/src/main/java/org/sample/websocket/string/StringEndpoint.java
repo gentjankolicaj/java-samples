@@ -27,7 +27,7 @@ public class StringEndpoint extends Endpoint {
    * an endpoint instance at any given time. This is why I store session references,
    */
   public static final Map<String, Session> SESSION_MAP = new ConcurrentHashMap<>();
-  public static final String ENDPOINT_URI = "/websocket/string";
+  public static final String ENDPOINT_URI = "/ws/string";
 
 
   /**
@@ -39,7 +39,7 @@ public class StringEndpoint extends Endpoint {
    */
   @Override
   public void onOpen(Session session, EndpointConfig config) {
-    log.info("onOpen() invoked.");
+    log.info("server: session opened, onOpen() invoked.");
     //store session
     SESSION_MAP.putIfAbsent(session.getId(), session);
 
@@ -47,7 +47,7 @@ public class StringEndpoint extends Endpoint {
     session.addMessageHandler(new WholeMessageHandler(session.getBasicRemote()));
 
     //handles parts of messages
-    session.addMessageHandler(new PartialMessageHandler(session.getBasicRemote()));
+    //session.addMessageHandler(new PartialMessageHandler(session.getBasicRemote()));
   }
 
   /**

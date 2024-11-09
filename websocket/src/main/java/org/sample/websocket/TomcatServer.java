@@ -18,7 +18,7 @@ public class TomcatServer {
   private Tomcat tomcat;
   private int port = 80;
   private boolean welcomeServlet;
-  private Class<? extends WebSocketConfig> webSocketConfigClazz;
+  private Class<? extends WSConfig> wsConfig;
   private HttpServlet[] servlets;
 
   public TomcatServer(int port) {
@@ -31,9 +31,9 @@ public class TomcatServer {
     this.welcomeServlet = welcomeServlet;
   }
 
-  public TomcatServer(int port, Class<? extends WebSocketConfig> webSocketConfigClazz) {
+  public TomcatServer(int port, Class<? extends WSConfig> wsConfig) {
     this.port = port;
-    this.webSocketConfigClazz = webSocketConfigClazz;
+    this.wsConfig = wsConfig;
   }
 
   public TomcatServer(int port, HttpServlet... servlets) {
@@ -63,9 +63,9 @@ public class TomcatServer {
           welcomeServlet.getServletName());
     }
 
-    //add websocket support
-    if (webSocketConfigClazz != null) {
-      context.addApplicationListener(webSocketConfigClazz.getName());
+    //add websocket if config class is present
+    if (wsConfig != null) {
+      context.addApplicationListener(wsConfig.getName());
 
       //needed otherwise a default servlet is not create => not created web socket.
       tomcat.addServlet(context, "default", new DefaultServlet());
