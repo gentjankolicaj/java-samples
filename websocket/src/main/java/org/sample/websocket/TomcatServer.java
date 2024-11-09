@@ -1,13 +1,11 @@
 package org.sample.websocket;
 
 import jakarta.servlet.http.HttpServlet;
-import java.io.File;
 import lombok.Getter;
 import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleException;
+import org.apache.catalina.servlets.DefaultServlet;
 import org.apache.catalina.startup.Tomcat;
-import org.apache.tomcat.websocket.server.WsContextListener;
-import org.apache.tomcat.websocket.server.WsSci;
 
 /**
  * @author gentjan kolicaj
@@ -16,11 +14,11 @@ import org.apache.tomcat.websocket.server.WsSci;
 @Getter
 public class TomcatServer {
   protected String contextPath = "";
-  protected String docBase = new File(".").getAbsolutePath();
+  protected String docBase = null;
   private Tomcat tomcat;
   private int port = 80;
   private boolean welcomeServlet;
-  private WebSocketEndpoints webSocketEndpoints;
+  private Class<? extends WebSocketConfig> webSocketConfigClazz;
   private HttpServlet[] servlets;
 
   public TomcatServer(int port) {
@@ -33,9 +31,9 @@ public class TomcatServer {
     this.welcomeServlet = welcomeServlet;
   }
 
-  public TomcatServer(int port, WebSocketEndpoints webSocketEndpoints) {
+  public TomcatServer(int port, Class<? extends WebSocketConfig> webSocketConfigClazz) {
     this.port = port;
-    this.webSocketEndpoints = webSocketEndpoints;
+    this.webSocketConfigClazz = webSocketConfigClazz;
   }
 
   public TomcatServer(int port, HttpServlet... servlets) {
@@ -65,10 +63,13 @@ public class TomcatServer {
           welcomeServlet.getServletName());
     }
 
-    if (webSocketEndpoints != null) {
-      //add websocket support
-      context.addApplicationListener(WsContextListener.class.getName());
-      context.addServletContainerInitializer(new WsSci(), webSocketEndpoints.getEndpoints());
+    //add websocket support
+    if (webSocketConfigClazz != null) {
+      context.addApplicationListener(webSocketConfigClazz.getName());
+
+      //needed otherwise a default servlet is not create => not created web socket.
+      tomcat.addServlet(context, "default", new DefaultServlet());
+      context.addServletMappingDecoded("/", "default");
     }
 
     tomcat.start();
