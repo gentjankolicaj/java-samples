@@ -43,8 +43,8 @@ class TomcatServerTest {
         "The origin server did not find a current representation for the target resource or is not willing to disclose that one exists.");
 
     Awaitility.await()
-        .timeout(Duration.ofSeconds(11))
-        .pollDelay(Duration.ofSeconds(10))
+        .timeout(Duration.ofSeconds(5))
+        .pollDelay(Duration.ofSeconds(4))
         .untilAsserted(() -> {
           tomcatServer.stop();
           log.warn(TOMCAT_SERVER_STOP_CALLED);

@@ -12,7 +12,9 @@ connectors:
     maxParameterCount: 100
     maxPostSize: 100
     properties:
-      null: null
+      maxConnections: 10000
+      keepAliveTimeout: 50000
+      connectionTimeout: 20000
   - scheme: "http"
     secure: false
     port: 9999
@@ -27,4 +29,5 @@ connectors:
     maxPostSize: 100
     properties:
       null: null
+      maxConnections: 10000
 
