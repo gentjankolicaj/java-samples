@@ -1,0 +1,30 @@
+connectors:
+  - scheme: "http"
+    secure: false
+    port: 8888
+    asyncTimeout: 0
+    allowBackslash: true
+    allowTrace: false
+    proxyName: null
+    proxyPort: 0
+    maxSavePostSize: 100
+    maxCookieCount: 100
+    maxParameterCount: 100
+    maxPostSize: 100
+    properties:
+      null: null
+  - scheme: "http"
+    secure: false
+    port: 9999
+    asyncTimeout: 0
+    allowBackslash: true
+    allowTrace: false
+    proxyName: null
+    proxyPort: 0
+    maxSavePostSize: 100
+    maxCookieCount: 100
+    maxParameterCount: 100
+    maxPostSize: 100
+    properties:
+      null: null
+

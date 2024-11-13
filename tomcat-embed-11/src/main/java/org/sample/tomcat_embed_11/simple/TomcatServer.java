@@ -24,7 +24,9 @@ public class TomcatServer {
 
   private void setup() throws LifecycleException {
     tomcat = new Tomcat();
-    tomcat.setPort(port); // Listen on port 80, which is used by the built-in Java App Service
+
+    // Listen on port 80, which is used by the built-in Java App Service
+    tomcat.setPort(port);
 
     // As of Tomcat 9, the HTTP connector won't start without this call.
     tomcat.getConnector();
@@ -33,7 +35,7 @@ public class TomcatServer {
     Context context = tomcat.addContext(contextPath, docBase);
 
     //needed otherwise a default servlet is not create => not created web socket.
-    tomcat.addServlet(context, "default", new DefaultServlet());
+    Tomcat.addServlet(context, "default", new DefaultServlet());
     context.addServletMappingDecoded("/", "default");
 
     tomcat.start();
