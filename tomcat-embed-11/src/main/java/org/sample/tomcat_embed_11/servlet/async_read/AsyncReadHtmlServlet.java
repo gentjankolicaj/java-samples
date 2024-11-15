@@ -1,4 +1,4 @@
-package org.sample.tomcat_embed_11.servlet.html;
+package org.sample.tomcat_embed_11.servlet.async_read;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.sample.tomcat_embed_11.servlet.TomcatServlet;
@@ -19,11 +20,11 @@ import org.sample.tomcat_embed_11.servlet.TomcatServlet;
  * @Date: 11/14/24 9:13 PM
  */
 @Slf4j
-public class HtmlServlet extends TomcatServlet {
+public class AsyncReadHtmlServlet extends TomcatServlet {
 
   @Override
   public String getPattern() {
-    return "/html";
+    return "/async_read_html";
   }
 
   @Override
@@ -37,16 +38,16 @@ public class HtmlServlet extends TomcatServlet {
     Reader reader = req.getReader();
     PrintWriter writer = resp.getWriter();
 
-    //read from request
-    new ReadTask(reader).run();
+    //read async from request
+    CompletableFuture.runAsync(new ReadTask(reader));
 
-    //write  from response
+    //write from response
     new WriteTask(writer).run();
   }
 
 
   @RequiredArgsConstructor
-  static class ReadTask {
+  static class ReadTask implements Runnable {
 
     private final Reader reader;
 
@@ -63,7 +64,6 @@ public class HtmlServlet extends TomcatServlet {
       }
     }
   }
-
 
   @RequiredArgsConstructor
   static class WriteTask {
@@ -85,7 +85,7 @@ public class HtmlServlet extends TomcatServlet {
 
     public void run() {
       log.info("writing to response:");
-      String formatedHtml = String.format(html, HtmlServlet.class.getSimpleName(),
+      String formatedHtml = String.format(html, AsyncReadHtmlServlet.class.getSimpleName(),
           getClass().getSimpleName(),
           LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
       writer.println(formatedHtml);

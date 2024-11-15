@@ -1,4 +1,4 @@
-package org.sample.tomcat_embed_11.servlet.html;
+package org.sample.tomcat_embed_11.servlet.async_read;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -24,7 +24,7 @@ import org.sample.tomcat_embed_11.servlet.TomcatServer;
  */
 @SuppressWarnings("all")
 @Slf4j
-class HtmlServletTest {
+class AsyncReadHtmlServletTest {
 
   public static final String TOMCAT_SERVER_STOP_CALLED = "tomcatServer.stop() called.";
 
@@ -34,10 +34,10 @@ class HtmlServletTest {
     ConnectorProperties props = YamlConfigurations.load(ConnectorProperties.class,
         "/servlet/connector.yaml");
     int port = 8001;
-    String path = "/html";
+    String path = "/async_read_html";
     props.setPort(port);
 
-    TomcatServer tomcatServer = new TomcatServer(props, List.of(new HtmlServlet()));
+    TomcatServer tomcatServer = new TomcatServer(props, List.of(new AsyncReadHtmlServlet()));
     tomcatServer.start();
 
     // Create an HttpClient instance
@@ -60,7 +60,7 @@ class HtmlServletTest {
         .build();
     HttpResponse<String> response2 = client.send(request2, HttpResponse.BodyHandlers.ofString());
     assertThat(response2.statusCode()).isEqualTo(200);
-    assertThat(response2.body()).contains(HtmlServlet.class.getSimpleName());
+    assertThat(response2.body()).contains(AsyncReadHtmlServlet.class.getSimpleName());
     assertThat(response2.body()).contains("classname");
 
     Awaitility.await()
