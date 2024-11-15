@@ -44,6 +44,7 @@
           <module>socket</module>
           <module>thread</module>
           <module>tomcat-embed-11</module>
+          <module>jetty-12</module>
           <module>virtual-thread</module>
           <module>websocket</module>
       </modules>

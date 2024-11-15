@@ -24,6 +24,7 @@ Java samples with packages,libs or api on different maven modules.
 - [socket](/socket)
 - [thread](/thread)
 - [tomcat-embed-11](/tomcat-embed-11)
+- [jetty-12](/jetty-12)
 - [virtual-thread (loom-project)](/virtual-thread)
 - [websocket](/websocket)
 
