@@ -25,7 +25,7 @@ import org.sample.tomcat_embed_11.servlet.TomcatServer;
  */
 @SuppressWarnings("all")
 @Slf4j
-class ReadFileServletTest {
+class DownloadFileServletTest {
 
   public static final String TOMCAT_SERVER_STOP_CALLED = "tomcatServer.stop() called.";
 
@@ -34,11 +34,11 @@ class ReadFileServletTest {
       throws LifecycleException, IOException, InterruptedException, ConfigurationException {
     ConnectorProperties props = YamlConfigurations.load(ConnectorProperties.class,
         "/servlet/connector.yaml");
-    int port = 8003;
-    String path = "read_file";
+    int port = 8004;
+    String path = "download_file";
     props.setPort(port);
 
-    TomcatServer tomcatServer = new TomcatServer(props, List.of(new ReadFileServlet()));
+    TomcatServer tomcatServer = new TomcatServer(props, List.of(new DownloadFileServlet()));
     tomcatServer.start();
 
     // Create an HttpClient instance
