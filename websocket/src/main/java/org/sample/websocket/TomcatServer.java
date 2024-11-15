@@ -49,30 +49,33 @@ public class TomcatServer {
     tomcat.getConnector();
 
     //Add a context
-    Context context = tomcat.addContext(contextPath, docBase);
+    Context rootCtx = tomcat.addContext(contextPath, docBase);
 
     if (welcomeServlet) {
-      //create servlet
-      WelcomeServlet welcomeServlet = new WelcomeServlet();
-
-      //add servlet
-      tomcat.addServlet(contextPath, welcomeServlet.getServletName(), welcomeServlet);
-
-      //update context
-      context.addServletMappingDecoded(welcomeServlet.getUrlPattern(),
-          welcomeServlet.getServletName());
+      setupWelcomeServlet(rootCtx);
     }
 
     //add websocket if config class is present
     if (wsConfig != null) {
-      context.addApplicationListener(wsConfig.getName());
+      rootCtx.addApplicationListener(wsConfig.getName());
 
       //needed otherwise a default servlet is not create => not created web socket.
-      tomcat.addServlet(context, "default", new DefaultServlet());
-      context.addServletMappingDecoded("/", "default");
+      Tomcat.addServlet(rootCtx, "default", new DefaultServlet());
+      rootCtx.addServletMappingDecoded("/", "default");
     }
 
     tomcat.start();
+  }
+
+  private void setupWelcomeServlet(Context rootCtx) {
+    //create servlet
+    WelcomeServlet servlet = new WelcomeServlet();
+
+    //add servlet
+    tomcat.addServlet(contextPath, servlet.getServletName(), servlet);
+
+    //update context
+    rootCtx.addServletMappingDecoded(servlet.getUrlPattern(), servlet.getServletName());
   }
 
 
