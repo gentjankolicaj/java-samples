@@ -92,9 +92,9 @@ public class OutputStreamServlet extends TomcatServlet {
       //flush writer after finished writing.
       sos.flush();
     } catch (IOException ioe) {
-      {
-        log.error("", ioe);
-      }
+
+      log.error("", ioe);
+
     }
   }
 

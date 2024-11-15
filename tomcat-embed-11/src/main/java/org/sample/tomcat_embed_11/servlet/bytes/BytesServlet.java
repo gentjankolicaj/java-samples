@@ -88,7 +88,6 @@ public class BytesServlet extends TomcatServlet {
     writer.println(formatedHtml);
     //flush writer after finished writing.
     writer.flush();
-
   }
 
 
