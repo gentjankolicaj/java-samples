@@ -55,8 +55,8 @@ public class TomcatWebSocketConfig extends WsContextListener {
       programmaticEndpoints.forEach(endpoint -> {
         try {
           sc.addEndpoint(
-              ServerEndpointConfig.Builder.create(endpoint.endpointClass(), endpoint.path())
-                  .build());
+              ServerEndpointConfig.Builder.create(endpoint.endpointClass(),
+                  endpoint.path()).build());
         } catch (DeploymentException de) {
           log.error("ProgrammaticEndpoint deployment error: ", de);
         }

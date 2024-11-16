@@ -19,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class EchoEndpoint {
 
-  protected static final String WEBSOCKET_URI = "/basic_echo";
+  protected static final String WEBSOCKET_URI = "/annot_basic_echo";
 
   private Session session;
 
@@ -27,22 +27,22 @@ public class EchoEndpoint {
   @OnOpen
   public void onOpen(Session session) {
     this.session = session;
-    log.info("session opened.");
+    log.info("server session opened.");
   }
 
   @OnClose
   public void onClose(Session session, CloseReason closeReason) {
-    log.warn("session closed, id: {}, reason : {}", session.getId(), closeReason.toString());
+    log.warn("server session closed, id: {}, reason : {}", session.getId(), closeReason.toString());
   }
 
   @OnError
   public void onError(Session session, Throwable throwable) {
-    log.error("session error, id: {}", session.getId(), throwable);
+    log.error("server session error, id: {}", session.getId(), throwable);
   }
 
   @OnMessage
   public void onStringMessage(Session session, String message) throws IOException {
-    log.info("session id {}, received string-message: {}, sending-back: {}", session.getId(),
+    log.info("server session id {}, received string-message: {}, sending-back: {}", session.getId(),
         message, message);
 
     //sent back to client same message
@@ -52,7 +52,7 @@ public class EchoEndpoint {
 
   @OnMessage
   public void onByteMessage(Session session, ByteBuffer byteBuffer) throws IOException {
-    log.info("session id {}, received byte-message: {}, sending-back: {}", session.getId(),
+    log.info("server session id {}, received byte-message: {}, sending-back: {}", session.getId(),
         byteBuffer.array(), byteBuffer.array());
 
     //sent back to client same message
