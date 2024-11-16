@@ -15,19 +15,15 @@ import lombok.extern.slf4j.Slf4j;
  * @author gentjan kolicaj
  * @Date: 11/16/24 7:45 PM
  */
-@ServerEndpoint(EchoEndpoint.WEBSOCKET_URI)
+@ServerEndpoint(AsyncEchoEndpoint.WEBSOCKET_URI)
 @Slf4j
 @SuppressWarnings("unused")
-public class EchoEndpoint {
+public class AsyncEchoEndpoint {
 
-  protected static final String WEBSOCKET_URI = "/annot_basic_echo";
-
-  private Session session;
-
+  protected static final String WEBSOCKET_URI = "/annot_async_echo";
 
   @OnOpen
   public void onOpen(Session session) {
-    this.session = session;
     log.info("server session opened.");
   }
 
@@ -42,9 +38,9 @@ public class EchoEndpoint {
   }
 
   @OnMessage
-  public void onStringMessage(Session session, String message) throws IOException {
-    log.info("server session id {}, received string-message: {}, sending-back: {}", session.getId(),
-        message, message);
+  public void onStringMessage(Session session, String message, boolean last) throws IOException {
+    log.info("server session id {}, received string-message: {},last message: {}, sending-back: {}",
+        session.getId(), message, last, message);
 
     //sent back to client same message
     session.getBasicRemote().sendText(message);
@@ -52,9 +48,10 @@ public class EchoEndpoint {
   }
 
   @OnMessage
-  public void onByteMessage(Session session, ByteBuffer byteBuffer) throws IOException {
-    log.info("server session id {}, received byte-message: {}, sending-back: {}", session.getId(),
-        byteBuffer.array(), byteBuffer.array());
+  public void onByteMessage(Session session, ByteBuffer byteBuffer, boolean last)
+      throws IOException {
+    log.info("server session id {}, received byte-message: {},last message: {}, sending-back: {}",
+        session.getId(), byteBuffer.array(), last, byteBuffer.array());
 
     //sent back to client same message
     session.getBasicRemote().sendBinary(byteBuffer);

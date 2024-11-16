@@ -15,15 +15,14 @@ import lombok.extern.slf4j.Slf4j;
  * @author gentjan kolicaj
  * @Date: 11/16/24 7:45 PM
  */
-@ServerEndpoint(EchoEndpoint.WEBSOCKET_URI)
+@ServerEndpoint(MaxMessageSizeEchoEndpoint.WEBSOCKET_URI)
 @Slf4j
 @SuppressWarnings("unused")
-public class EchoEndpoint {
+public class MaxMessageSizeEchoEndpoint {
 
-  protected static final String WEBSOCKET_URI = "/annot_basic_echo";
-
+  protected static final String WEBSOCKET_URI = "/annot_msg_size_echo";
+  protected final long MAX_SIZE = 100;
   private Session session;
-
 
   @OnOpen
   public void onOpen(Session session) {
@@ -41,7 +40,7 @@ public class EchoEndpoint {
     log.error("server session error, id: {}", session.getId(), throwable);
   }
 
-  @OnMessage
+  @OnMessage(maxMessageSize = MAX_SIZE)
   public void onStringMessage(Session session, String message) throws IOException {
     log.info("server session id {}, received string-message: {}, sending-back: {}", session.getId(),
         message, message);
@@ -51,7 +50,7 @@ public class EchoEndpoint {
 
   }
 
-  @OnMessage
+  @OnMessage(maxMessageSize = MAX_SIZE)
   public void onByteMessage(Session session, ByteBuffer byteBuffer) throws IOException {
     log.info("server session id {}, received byte-message: {}, sending-back: {}", session.getId(),
         byteBuffer.array(), byteBuffer.array());
@@ -59,6 +58,5 @@ public class EchoEndpoint {
     //sent back to client same message
     session.getBasicRemote().sendBinary(byteBuffer);
   }
-
 
 }
