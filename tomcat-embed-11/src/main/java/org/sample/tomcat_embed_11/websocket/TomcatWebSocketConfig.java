@@ -19,8 +19,8 @@ import org.apache.tomcat.websocket.server.WsContextListener;
 @Getter
 public class TomcatWebSocketConfig extends WsContextListener {
 
-  protected final Set<Class<?>> annotatedEndpoints;
-  protected final Set<ProgrammaticEndpoint> programmaticEndpoints;
+  protected Set<Class<?>> annotatedEndpoints;
+  protected Set<ProgrammaticEndpoint> programmaticEndpoints;
 
   public TomcatWebSocketConfig() {
     this.annotatedEndpoints = Set.of();

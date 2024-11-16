@@ -18,7 +18,7 @@ import org.apache.catalina.startup.Tomcat;
 @RequiredArgsConstructor
 public class TomcatServer {
 
-  private final ConnectorProperties connectorProps;
+  private final ConnectorProperties connectorProperties;
   private final List<? extends TomcatServlet> servlets;
   protected String contextPath = "";
   protected String docBase = null;
@@ -30,24 +30,24 @@ public class TomcatServer {
 
     // As of Tomcat 9, the HTTP connector won't start without this call.
     connector = tomcat.getConnector();
-    setupConnector(connector);
+    setupConnector(connector, connectorProperties);
 
     //Add a context
     Context rootCtx = tomcat.addContext(contextPath, docBase);
 
     //setup servlets
-    setupServlets(rootCtx, servlets);
+    setupServlets(rootCtx, this.servlets);
 
     tomcat.start();
   }
 
   private void setupServlets(Context rootCtx, List<? extends TomcatServlet> servlets) {
     //needed otherwise a default servlet is not create => not created web socket.
-    Wrapper wrapper = Tomcat.addServlet(rootCtx, "default", new DefaultServlet());
-    wrapper.setAsyncSupported(true);
+    Wrapper defaultWrapper = Tomcat.addServlet(rootCtx, "default", new DefaultServlet());
+    defaultWrapper.setAsyncSupported(true);
     rootCtx.addServletMappingDecoded("/", "default");
 
-    if (this.servlets == null || this.servlets.isEmpty()) {
+    if (servlets == null || servlets.isEmpty()) {
       throw new IllegalStateException("No servlets found besides DefaultServlet.");
     }
     for (int i = 0, len = servlets.size(); i < len; i++) {
@@ -60,25 +60,25 @@ public class TomcatServer {
     }
   }
 
-  private void setupConnector(Connector connector) {
-    if (connectorProps == null) {
+  private void setupConnector(Connector connector, ConnectorProperties connectorProperties) {
+    if (connectorProperties == null) {
       throw new IllegalStateException("ConnectorProperties is null.Can't setup tomcat connector.");
     }
-    connector.setScheme(connectorProps.getScheme());
-    connector.setSecure(connectorProps.isSecure());
-    connector.setPort(connectorProps.getPort());
-    connector.setAsyncTimeout(connectorProps.getAsyncTimeout());
-    connector.setAllowBackslash(connectorProps.isAllowBackslash());
-    connector.setAllowTrace(connectorProps.isAllowTrace());
-    connector.setProxyName(connectorProps.getProxyName());
-    connector.setProxyPort(connectorProps.getProxyPort());
-    connector.setMaxSavePostSize(connectorProps.getMaxSavePostSize());
-    connector.setMaxCookieCount(connectorProps.getMaxCookieCount());
-    connector.setMaxParameterCount(connectorProps.getMaxParameterCount());
-    connector.setMaxPostSize(connectorProps.getMaxPostSize());
-
-    if (connectorProps.getProperties() != null && !connectorProps.getProperties().isEmpty()) {
-      connectorProps.getProperties().forEach((k, v) -> {
+    connector.setScheme(connectorProperties.getScheme());
+    connector.setSecure(connectorProperties.isSecure());
+    connector.setPort(connectorProperties.getPort());
+    connector.setAsyncTimeout(connectorProperties.getAsyncTimeout());
+    connector.setAllowBackslash(connectorProperties.isAllowBackslash());
+    connector.setAllowTrace(connectorProperties.isAllowTrace());
+    connector.setProxyName(connectorProperties.getProxyName());
+    connector.setProxyPort(connectorProperties.getProxyPort());
+    connector.setMaxSavePostSize(connectorProperties.getMaxSavePostSize());
+    connector.setMaxCookieCount(connectorProperties.getMaxCookieCount());
+    connector.setMaxParameterCount(connectorProperties.getMaxParameterCount());
+    connector.setMaxPostSize(connectorProperties.getMaxPostSize());
+    if (connectorProperties.getProperties() != null && !connectorProperties.getProperties()
+        .isEmpty()) {
+      connectorProperties.getProperties().forEach((k, v) -> {
         if (v != null) {
           connector.setProperty(k, v);
         }

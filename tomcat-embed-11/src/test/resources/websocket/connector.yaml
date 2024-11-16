@@ -1,0 +1,15 @@
+scheme: "http"
+secure: false
+port: 8080
+asyncTimeout: 10000
+allowBackslash: true
+allowTrace: true
+proxyName: null
+proxyPort: 0
+maxSavePostSize: 1000
+maxCookieCount: 10000
+maxParameterCount: 10000
+maxPostSize: 10000
+properties:
+  null: null
+
