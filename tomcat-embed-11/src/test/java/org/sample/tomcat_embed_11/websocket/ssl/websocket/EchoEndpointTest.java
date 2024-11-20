@@ -1,4 +1,4 @@
-package org.sample.tomcat_embed_11.websocket.annotation;
+package org.sample.tomcat_embed_11.websocket.ssl.websocket;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -11,41 +11,45 @@ import jakarta.websocket.WebSocketContainer;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.ByteBuffer;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
 import java.time.Duration;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.LifecycleException;
 import org.awaitility.Awaitility;
 import org.junit.jupiter.api.Test;
-import org.sample.tomcat_embed_11.websocket.ConnectorProperties;
-import org.sample.tomcat_embed_11.websocket.TomcatServer;
 import org.sample.tomcat_embed_11.websocket.TomcatWebSocketConfig;
-import org.sample.tomcat_embed_11.websocket.WSTest;
+import org.sample.tomcat_embed_11.websocket.WSTest.TestClientEndpoint;
+import org.sample.tomcat_embed_11.websocket.ssl.SSLConnectorProperties;
+import org.sample.tomcat_embed_11.websocket.ssl.SSLTomcatServer;
 
 
 /**
  * @author gentjan kolicaj
- * @Date: 11/16/24 8:11 PM
+ * @Date: 11/20/24 11:40 AM
  */
 @Slf4j
-class AsyncEchoEndpointTest extends WSTest {
+class EchoEndpointTest {
 
   private static final String TOMCAT_SERVER_STOP_MESSAGE = "tomcat.stop() called.";
 
   @Test
   void websocket() throws LifecycleException, ConfigurationException,
-      DeploymentException, IOException {
-    ConnectorProperties props = YamlConfigurations.load(ConnectorProperties.class,
-        "/websocket/connector.yaml");
+      DeploymentException, IOException, KeyStoreException, NoSuchAlgorithmException, CertificateException, KeyManagementException {
+    SSLConnectorProperties props = YamlConfigurations.load(SSLConnectorProperties.class,
+        "/ssl/connector.yaml");
 
-    TomcatServer tomcatServer = new TomcatServer(props, TomcatWebSocketConfigImpl.class);
-    tomcatServer.start();
+    SSLTomcatServer sslTomcatServer = new SSLTomcatServer(props, TomcatWebSocketConfigImpl.class);
+    sslTomcatServer.start();
 
     //create websocket details
-    String scheme = "ws";
+    String scheme = "wss";
     String host = "localhost";
     int port = props.getPort();
-    String websocketUri = AsyncEchoEndpoint.WEBSOCKET_URI;
+    String websocketUri = EchoEndpoint.WEBSOCKET_URI;
 
     //create websocket container
     WebSocketContainer webSocketContainer = ContainerProvider.getWebSocketContainer();
@@ -70,21 +74,20 @@ class AsyncEchoEndpointTest extends WSTest {
         .timeout(Duration.ofSeconds(4))
         .pollDelay(Duration.ofSeconds(3))
         .untilAsserted(() -> {
-          tomcatServer.stop();
+          sslTomcatServer.stop();
           log.warn(TOMCAT_SERVER_STOP_MESSAGE);
         });
 
     //blocking join until close is called.
-    tomcatServer.join();
+    sslTomcatServer.join();
   }
 
   //create a test websocket configuration class for server
   public static class TomcatWebSocketConfigImpl extends TomcatWebSocketConfig {
 
     {
-      annotatedEndpoints = Set.of(AsyncEchoEndpoint.class);
+      annotatedEndpoints = Set.of(EchoEndpoint.class);
     }
   }
-
 
 }

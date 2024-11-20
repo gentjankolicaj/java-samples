@@ -33,7 +33,7 @@ class EchoEndpointTest extends WSTest {
   private static final String TOMCAT_SERVER_STOP_MESSAGE = "tomcat.stop() called.";
 
   @Test
-  void websocketTest() throws LifecycleException, ConfigurationException,
+  void websocket() throws LifecycleException, ConfigurationException,
       DeploymentException, IOException {
     ConnectorProperties props = YamlConfigurations.load(ConnectorProperties.class,
         "/websocket/connector.yaml");

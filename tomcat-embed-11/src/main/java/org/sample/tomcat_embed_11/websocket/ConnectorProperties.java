@@ -29,4 +29,5 @@ public class ConnectorProperties {
   protected int maxParameterCount;
   protected int maxPostSize;
   protected Map<String, String> properties;
+
 }

@@ -41,7 +41,7 @@ public class TomcatServer {
     this.servlets = servlets;
   }
 
-  private void setup() throws LifecycleException {
+  protected void setup() throws LifecycleException {
     tomcat = new Tomcat();
 
     // As of Tomcat 9, the HTTP connector won't start without this call.
@@ -63,7 +63,7 @@ public class TomcatServer {
     tomcat.start();
   }
 
-  private void setupWebSocket(Context rootCtx,
+  protected void setupWebSocket(Context rootCtx,
       Class<? extends TomcatWebSocketConfig> websocketConfig) {
     if (websocketConfig != null && rootCtx != null) {
       rootCtx.addApplicationListener(websocketConfig.getName());
@@ -72,7 +72,7 @@ public class TomcatServer {
   }
 
 
-  private void setupServlets(Context rootCtx, TomcatServlet[] servlets) {
+  protected void setupServlets(Context rootCtx, TomcatServlet[] servlets) {
     //needed otherwise a default servlet is not create => not created web socket.
     Wrapper defaultWrapper = Tomcat.addServlet(rootCtx, "default", new DefaultServlet());
     defaultWrapper.setAsyncSupported(true);
@@ -98,7 +98,7 @@ public class TomcatServer {
     }
   }
 
-  private void setupConnector(Connector connector, ConnectorProperties connectorProperties) {
+  protected void setupConnector(Connector connector, ConnectorProperties connectorProperties) {
     if (connectorProperties == null) {
       throw new IllegalStateException("ConnectorProperties is null.Can't setup tomcat connector.");
     }

@@ -1,6 +1,6 @@
 scheme: "http"
-secure: false
-port: 8080
+secure: true
+port: 843
 asyncTimeout: 10000
 allowBackslash: true
 allowTrace: true
