@@ -11,10 +11,6 @@ import jakarta.websocket.WebSocketContainer;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.ByteBuffer;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
 import java.time.Duration;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +34,7 @@ class EchoEndpointTest {
 
   @Test
   void websocket() throws LifecycleException, ConfigurationException,
-      DeploymentException, IOException, KeyStoreException, NoSuchAlgorithmException, CertificateException, KeyManagementException {
+      DeploymentException, IOException {
     SSLConnectorProperties props = YamlConfigurations.load(SSLConnectorProperties.class,
         "/ssl/connector.yaml");
 
