@@ -1,5 +1,6 @@
 package org.sample.jetty_12;
 
+import java.security.Security;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -8,6 +9,7 @@ import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.conscrypt.OpenSSLProvider;
 import org.eclipse.jetty.alpn.server.ALPNServerConnectionFactory;
 import org.eclipse.jetty.http2.server.HTTP2CServerConnectionFactory;
 import org.eclipse.jetty.http2.server.HTTP2ServerConnectionFactory;
@@ -135,8 +137,8 @@ public class JettyServer {
   }
 
   private ServerConnector getConnectorHttpsConfig(Server server,
-      ConnectorProperties connectorProperties,
-      HttpConfigProperties httpConfigProperties, SSLProperties sslProperties) {
+      ConnectorProperties connectorProperties, HttpConfigProperties httpConfigProperties,
+      SSLProperties sslProperties) {
     if (sslProperties == null) {
       throw new JettyException("SSL configuration not found.");
     }
@@ -149,22 +151,23 @@ public class JettyServer {
     sslContextFactory.setKeyStorePassword(sslProperties.getKeyStorePassword());
     sslContextFactory.setKeyManagerPassword(sslProperties.getKeyPassword());
 
+    //Configure TLS
+    //Because of java.lang.IllegalStateException: Connection rejected: No ALPN Processor for sun.security.ssl.SSLEngineImpl from [org.eclipse.jetty.alpn.conscrypt.server.ConscryptServerALPNProcessor@ce5a68e]
+    configureTLS(sslContextFactory);
+
+
     // SSL HTTP Configuration
-    HttpConfiguration httpConfig = createHttpConfiguration(httpConfigProperties);
-    HttpConfiguration httpsConfig = new HttpConfiguration(httpConfig);
+    HttpConfiguration httpsConfig = createHttpConfiguration(httpConfigProperties);
     httpsConfig.addCustomizer(new SecureRequestCustomizer());
 
-    // Configure the connector to speak HTTP/1.1 and HTTP/2.
-    HttpConnectionFactory httpFactory = new HttpConnectionFactory(httpsConfig);
-    HTTP2ServerConnectionFactory http2Factory = new HTTP2ServerConnectionFactory(httpsConfig);
-    ALPNServerConnectionFactory alpnFactory = new ALPNServerConnectionFactory();
-    alpnFactory.setDefaultProtocol(httpFactory.getProtocol());
-    SslConnectionFactory ssl = new SslConnectionFactory(sslContextFactory,
-        alpnFactory.getProtocol());
+    // Configure the Connector to speak HTTP/1.1 and HTTP/2.
+    HttpConnectionFactory h1 = new HttpConnectionFactory(httpsConfig);
+    HTTP2ServerConnectionFactory h2 = new HTTP2ServerConnectionFactory(httpsConfig);
+    ALPNServerConnectionFactory alpn = new ALPNServerConnectionFactory();
+    alpn.setDefaultProtocol(h1.getProtocol());
+    SslConnectionFactory ssl = new SslConnectionFactory(sslContextFactory, alpn.getProtocol());
 
-    //ssl connector
-    ServerConnector connector = new ServerConnector(server, ssl, alpnFactory, http2Factory,
-        httpFactory);
+    ServerConnector connector = new ServerConnector(server, ssl, alpn, h2, h1);
     if (StringUtils.isNotEmpty(connectorProperties.getName())) {
       connector.setName(connectorProperties.getName());
     }
@@ -176,6 +179,12 @@ public class JettyServer {
     }
     connector.setIdleTimeout(getTimeout(connectorProperties.getIdleTimeout()));
     return connector;
+  }
+
+  protected void configureTLS(SslContextFactory.Server sslContextFactory) {
+    // https://jetty.org/docs/jetty/12/programming-guide/server/http.html#connector-protocol-tls-conscrypt
+    Security.addProvider(new OpenSSLProvider());
+    sslContextFactory.setProvider("Conscrypt");
   }
 
 

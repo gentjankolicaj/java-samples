@@ -16,7 +16,7 @@ class JettyServerTest {
   private static final String SERVER_STOPPED = "jetty stopped by calling stop() method.";
 
   @Test
-  void simpleTest() throws Exception {
+  void jettyYaml() throws Exception {
     JettyProperties jettyProperties = YamlConfigurations.load(JettyProperties.class, "/jetty.yaml");
     JettyServer jettyServer = new JettyServer(jettyProperties.getJettyServer());
 
@@ -32,7 +32,25 @@ class JettyServerTest {
 
     //blocking join until close is called.
     jettyServer.join();
-
   }
 
+  @Test
+  void jettySSLYaml() throws Exception {
+    JettyProperties jettyProperties = YamlConfigurations.load(JettyProperties.class,
+        "/jetty_ssl.yaml");
+    JettyServer jettyServer = new JettyServer(jettyProperties.getJettyServer());
+
+    jettyServer.start();
+
+    Awaitility.await()
+        .timeout(Duration.ofSeconds(24))
+        .pollDelay(Duration.ofSeconds(23))
+        .untilAsserted(() -> {
+          jettyServer.stop();
+          log.warn(SERVER_STOPPED);
+        });
+
+    //blocking join until close is called.
+    jettyServer.join();
+  }
 }
