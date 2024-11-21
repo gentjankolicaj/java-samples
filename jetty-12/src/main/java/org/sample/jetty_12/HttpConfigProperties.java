@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public class HttpConfigProperties {
 
   protected Optional<SSLProperties> ssl = Optional.empty();
