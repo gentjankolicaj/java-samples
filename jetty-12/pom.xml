@@ -21,6 +21,7 @@
     <maven.compiler.target>17</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <jetty.version>12.0.15</jetty.version>
   </properties>
 
 <repositories>
@@ -30,7 +31,23 @@
    </repository>
 </repositories>
 
+  <dependencyManagement>
+    <dependencies>
+     <dependency>
+         <groupId>org.eclipse.jetty</groupId>
+         <artifactId>jetty-bom</artifactId>
+         <version>${jetty.version}</version>
+         <scope>import</scope>
+         <type>pom</type>
+     </dependency>
+    </dependencies>
+  </dependencyManagement>
+
   <dependencies>
+  <dependency>
+    <groupId>org.eclipse.jetty</groupId>
+    <artifactId>jetty-server</artifactId>
+  </dependency>
 	<dependency>
 	    <groupId>com.github.gentjankolicaj</groupId>
 	    <artifactId>jdev-test</artifactId>
