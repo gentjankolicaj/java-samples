@@ -6,13 +6,15 @@ import lombok.NoArgsConstructor;
 
 /**
  * @author gentjan kolicaj
- * @Date: 11/15/24 10:17 PM
+ * @Date: 11/21/24 8:49 PM
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class JettyProperties {
+public class SSLProperties {
 
-  protected JettyServerProperties jettyServer;
+  protected String keyStoreFile;
+  protected String keyStorePassword;
+  protected String keyPassword;
 
 }
