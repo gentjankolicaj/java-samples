@@ -152,7 +152,8 @@ public class JettyServer {
     sslContextFactory.setKeyManagerPassword(sslProperties.getKeyPassword());
 
     //Configure TLS
-    //Because of java.lang.IllegalStateException: Connection rejected: No ALPN Processor for sun.security.ssl.SSLEngineImpl from [org.eclipse.jetty.alpn.conscrypt.server.ConscryptServerALPNProcessor@ce5a68e]
+    //Because of java.lang.IllegalStateException: Connection rejected: No ALPN Processor
+    // for sun.security.ssl.SSLEngineImpl from [org.eclipse.jetty.alpn.conscrypt.server.ConscryptServerALPNProcessor@ce5a68e]
     configureTLS(sslContextFactory);
 
 

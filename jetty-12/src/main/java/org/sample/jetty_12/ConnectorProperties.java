@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public class ConnectorProperties {
 
   protected static final String SECURE_SCHEME_KEY = "";
