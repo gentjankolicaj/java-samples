@@ -44,21 +44,45 @@
   </dependencyManagement>
 
   <dependencies>
-  <dependency>
-    <groupId>org.eclipse.jetty</groupId>
-    <artifactId>jetty-server</artifactId>
-  </dependency>
+        <!-- jetty 12 -->
+       <dependency>
+          <groupId>org.eclipse.jetty</groupId>
+          <artifactId>jetty-server</artifactId>
+       </dependency>
+       <dependency>
+            <groupId>org.eclipse.jetty.http2</groupId>
+            <artifactId>jetty-http2-server</artifactId>
+       </dependency>
+       <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-alpn-server</artifactId>
+       </dependency>
+
+    <!-- jakarta dependencies -->
+    <dependency>
+      <groupId>jakarta.servlet</groupId>
+      <artifactId>jakarta.servlet-api</artifactId>
+      <version>6.0.0</version>
+      <scope>provided</scope>
+    </dependency>
+
+  <!-- jdev dependencies -->
+		<dependency>
+  	    <groupId>com.github.gentjankolicaj</groupId>
+  	    <artifactId>jdev-jackson</artifactId>
+  	    <version>main-715465d8b9-1</version>
+  	</dependency>
+  	<dependency>
+  	    <groupId>com.github.gentjankolicaj</groupId>
+  	    <artifactId>jdev-primitive</artifactId>
+  	    <version>main-2319784550-1</version>
+  	</dependency>
 	<dependency>
 	    <groupId>com.github.gentjankolicaj</groupId>
 	    <artifactId>jdev-test</artifactId>
 	    <version>main-f4124c59ad-1</version>
 	    <scope>test</scope>
 	</dependency>
-		<dependency>
-  	    <groupId>com.github.gentjankolicaj</groupId>
-  	    <artifactId>jdev-jackson</artifactId>
-  	    <version>main-715465d8b9-1</version>
-  	</dependency>
  </dependencies>
 
 </project>
