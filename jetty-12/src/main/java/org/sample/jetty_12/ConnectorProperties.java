@@ -1,5 +1,6 @@
 package org.sample.jetty_12;
 
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,7 +20,6 @@ public class ConnectorProperties {
   protected String host;
   protected int port;
   protected TimeoutProperties idleTimeout;
-  protected HttpConfigProperties httpConfig;
-
+  protected Optional<HttpConfigProperties> httpConfig = Optional.empty();
 
 }

@@ -3,11 +3,12 @@ package org.sample.jetty_12;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jetty.alpn.server.ALPNServerConnectionFactory;
-import org.eclipse.jetty.http.HttpScheme;
 import org.eclipse.jetty.http2.server.HTTP2CServerConnectionFactory;
 import org.eclipse.jetty.http2.server.HTTP2ServerConnectionFactory;
 import org.eclipse.jetty.server.Connector;
@@ -28,28 +29,27 @@ import org.eclipse.jetty.util.thread.QueuedThreadPool;
  * @Date: 11/21/24 6:51 PM
  */
 @Slf4j
+@RequiredArgsConstructor
 public class JettyServer {
 
   private static final long DEFAULT_TIMEOUT = TimeUnit.SECONDS.toMillis(5);
-  protected JettyServerProperties jettyServerProperties;
+  protected final JettyServerProperties serverProperties;
   protected Server server;
-
 
   private void setup() {
     //Thread pool setup
-    QueuedThreadPool threadPool = createThreadPool(jettyServerProperties.getThreadPool());
+    QueuedThreadPool threadPool = createThreadPool(serverProperties.getThreadPool());
 
     //server setup
-    server = createServer(threadPool, jettyServerProperties);
+    server = createServer(threadPool, serverProperties);
 
     //connector setup
-    setupConnectors(server, jettyServerProperties.getConnectors());
+    createConnectors(server, serverProperties.getConnectors());
 
-    //handlers setup from context
-    log.info("jetty setup.");
   }
 
-  protected void setupConnectors(Server server, List<ConnectorProperties> connectorPropertiesList) {
+  protected void createConnectors(Server server,
+      List<ConnectorProperties> connectorPropertiesList) {
     if (server == null) {
       throw new JettyException("Server instance can't be null.");
     }
@@ -63,24 +63,29 @@ public class JettyServer {
       ConnectorProperties connectorProperties = connectorPropertiesList.get(i);
       connectors.add(createConnector(server, connectorProperties));
     }
-
-    //add connectors to server
+    //add all connectors to server
     server.setConnectors(connectors.toArray(new Connector[0]));
   }
 
-  protected Connector createConnector(Server server, ConnectorProperties connectorProperties) {
-    HttpConfigProperties httpConfigProperties = connectorProperties.getHttpConfig();
-    Connector connector = null;
-    if (httpConfigProperties.getSecureScheme() == null || httpConfigProperties.getSecureScheme()
-        .equals(HttpScheme.HTTP)) {
-      connector = httpConnector(server, connectorProperties);
+  protected Connector createConnector(Server server, ConnectorProperties connectorProps) {
+    Optional<HttpConfigProperties> optionalHttpConfig = connectorProps.getHttpConfig();
+    Connector connector;
+    if (optionalHttpConfig.isPresent()) {
+      HttpConfigProperties httpConfigProps = optionalHttpConfig.get();
+      Optional<SSLProperties> optionalSSL = httpConfigProps.getSsl();
+      connector = optionalSSL.map(
+              sslProperties -> getConnectorHttpsConfig(server, connectorProps,
+                  httpConfigProps, sslProperties)).
+          orElseGet(() -> getConnectorHttpConfig(server, connectorProps, httpConfigProps));
     } else {
-      connector = httpsConnector(server, connectorProperties);
+      connector = getConnectorNoHttpConfig(server, connectorProps);
     }
     return connector;
   }
 
-  private ServerConnector httpConnector(Server server, ConnectorProperties connectorProperties) {
+
+  private ServerConnector getConnectorNoHttpConfig(Server server,
+      ConnectorProperties connectorProperties) {
     HttpConfiguration httpConfig = new HttpConfiguration();
 
     // The ConnectionFactory for HTTP/1.1.
@@ -104,8 +109,34 @@ public class JettyServer {
     return connector;
   }
 
-  private ServerConnector httpsConnector(Server server, ConnectorProperties connectorProperties) {
-    SSLProperties sslProperties = connectorProperties.getHttpConfig().getSsl();
+  private ServerConnector getConnectorHttpConfig(Server server,
+      ConnectorProperties connectorProperties, HttpConfigProperties httpConfigProperties) {
+    HttpConfiguration httpConfig = createHttpConfiguration(httpConfigProperties);
+
+    // The ConnectionFactory for HTTP/1.1.
+    HttpConnectionFactory httpFactory = new HttpConnectionFactory(httpConfig);
+
+    // The ConnectionFactory for clear-text HTTP/2.
+    HTTP2CServerConnectionFactory http2Factory = new HTTP2CServerConnectionFactory(httpConfig);
+
+    //http connector
+    ServerConnector connector = new ServerConnector(server, httpFactory, http2Factory);
+    if (StringUtils.isNotEmpty(connectorProperties.getName())) {
+      connector.setName(connectorProperties.getName());
+    }
+    if (StringUtils.isNotEmpty(connectorProperties.getHost())) {
+      connector.setHost(connectorProperties.getHost());
+    }
+    if (connectorProperties.getPort() != 0) {
+      connector.setPort(connectorProperties.getPort());
+    }
+    connector.setIdleTimeout(getTimeout(connectorProperties.getIdleTimeout()));
+    return connector;
+  }
+
+  private ServerConnector getConnectorHttpsConfig(Server server,
+      ConnectorProperties connectorProperties,
+      HttpConfigProperties httpConfigProperties, SSLProperties sslProperties) {
     if (sslProperties == null) {
       throw new JettyException("SSL configuration not found.");
     }
@@ -119,7 +150,8 @@ public class JettyServer {
     sslContextFactory.setKeyManagerPassword(sslProperties.getKeyPassword());
 
     // SSL HTTP Configuration
-    HttpConfiguration httpsConfig = new HttpConfiguration();
+    HttpConfiguration httpConfig = createHttpConfiguration(httpConfigProperties);
+    HttpConfiguration httpsConfig = new HttpConfiguration(httpConfig);
     httpsConfig.addCustomizer(new SecureRequestCustomizer());
 
     // Configure the connector to speak HTTP/1.1 and HTTP/2.
@@ -166,14 +198,15 @@ public class JettyServer {
 
   protected HttpConfiguration createHttpConfiguration(HttpConfigProperties httpConfigProperties) {
     HttpConfiguration httpConfig = new HttpConfiguration();
-    httpConfig.setSecureScheme(HttpScheme.HTTPS.asString());
-    httpConfig.setSecurePort(httpConfigProperties.getSecurePort());
-    httpConfig.setOutputBufferSize(32768);
-    httpConfig.setRequestHeaderSize(8192);
-    httpConfig.setResponseHeaderSize(8192);
-    httpConfig.setSendServerVersion(false);
-    httpConfig.setSendDateHeader(false);
-    httpConfig.setSendXPoweredBy(false);
+
+    //set values
+    httpConfigProperties.getSecureScheme().ifPresent(httpConfig::setSecureScheme);
+    httpConfigProperties.getSecurePort().ifPresent(httpConfig::setSecurePort);
+    httpConfigProperties.getOutputBufferSize().ifPresent(httpConfig::setOutputBufferSize);
+    httpConfigProperties.getRequestHeaderSize().ifPresent(httpConfig::setRequestHeaderSize);
+    httpConfigProperties.getResponseHeaderSize().ifPresent(httpConfig::setResponseHeaderSize);
+    httpConfigProperties.getSendServerVersion().ifPresent(httpConfig::setSendServerVersion);
+    httpConfigProperties.getSendDateHeader().ifPresent(httpConfig::setSendDateHeader);
     return httpConfig;
   }
 

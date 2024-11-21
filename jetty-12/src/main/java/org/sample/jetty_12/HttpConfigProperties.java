@@ -1,6 +1,6 @@
 package org.sample.jetty_12;
 
-import java.util.HashMap;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,33 +12,16 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class HttpConfigProperties extends HashMap<String, Object> {
+public class HttpConfigProperties {
 
-  protected static final String SECURE_SCHEME_KEY = "secureScheme";
-  protected static final String SECURE_PORT_KEY = "securePort";
-  private static final String RESPONSE_HEADER_SIZE = "responseHeaderSize";
-  private static final String REQUEST_HEADER_SIZE = "requestHeaderSize";
-  private static final String OUTPUT_BUFFER_SIZE = "outputBufferSize";
+  protected Optional<SSLProperties> ssl = Optional.empty();
+  protected Optional<String> secureScheme = Optional.empty();
+  protected Optional<Integer> securePort = Optional.empty();
+  protected Optional<Integer> responseHeaderSize = Optional.empty();
+  protected Optional<Integer> requestHeaderSize = Optional.empty();
+  protected Optional<Integer> outputBufferSize = Optional.empty();
+  protected Optional<Boolean> sendServerVersion = Optional.empty();
+  protected Optional<Boolean> sendDateHeader = Optional.empty();
 
-  protected SSLProperties ssl;
 
-  public String getSecureScheme() {
-    return (String) get(SECURE_SCHEME_KEY);
-  }
-
-  public Integer getSecurePort() {
-    return (Integer) get(SECURE_PORT_KEY);
-  }
-
-  public int getResponseHeaderSize() {
-    return (Integer) get(RESPONSE_HEADER_SIZE);
-  }
-
-  public int getRequestHeaderSize() {
-    return (Integer) get(REQUEST_HEADER_SIZE);
-  }
-
-  public int getOutputBufferSize() {
-    return (Integer) get(OUTPUT_BUFFER_SIZE);
-  }
 }
