@@ -19,7 +19,7 @@ jettyServer:
       idleTimeout:
         duration: 11
         timeUnit: SECONDS
-      httpConfig:
+      http:
         secureScheme: https
         securePort: 8443
         ssl:

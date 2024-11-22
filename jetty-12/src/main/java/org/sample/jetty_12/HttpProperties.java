@@ -4,6 +4,7 @@ import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.eclipse.jetty.http.HttpVersion;
 
 /**
  * @author gentjan kolicaj
@@ -13,11 +14,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-public class HttpConfigProperties {
+public class HttpProperties {
 
   protected Optional<SSLProperties> ssl = Optional.empty();
   protected Optional<String> secureScheme = Optional.empty();
   protected Optional<Integer> securePort = Optional.empty();
+  protected Optional<HttpVersion> version = Optional.empty();
   protected Optional<Integer> responseHeaderSize = Optional.empty();
   protected Optional<Integer> requestHeaderSize = Optional.empty();
   protected Optional<Integer> outputBufferSize = Optional.empty();

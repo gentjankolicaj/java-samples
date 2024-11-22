@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.conscrypt.OpenSSLProvider;
 import org.eclipse.jetty.alpn.server.ALPNServerConnectionFactory;
+import org.eclipse.jetty.http.HttpVersion;
 import org.eclipse.jetty.http2.server.HTTP2CServerConnectionFactory;
 import org.eclipse.jetty.http2.server.HTTP2ServerConnectionFactory;
 import org.eclipse.jetty.server.Connector;
@@ -92,34 +93,96 @@ public class JettyServer {
   }
 
   protected Connector createConnector(Server server, ConnectorProperties connectorProps) {
-    Optional<HttpConfigProperties> optionalHttpConfig = connectorProps.getHttpConfig();
+    Optional<HttpProperties> optionalHttpProperties = connectorProps.getHttp();
     Connector connector;
-    if (optionalHttpConfig.isPresent()) {
-      HttpConfigProperties httpConfigProps = optionalHttpConfig.get();
-      Optional<SSLProperties> optionalSSL = httpConfigProps.getSsl();
-      connector = optionalSSL.map(
-              sslProperties -> getConnectorHttpsConfig(server, connectorProps,
-                  httpConfigProps, sslProperties)).
-          orElseGet(() -> getConnectorHttpConfig(server, connectorProps, httpConfigProps));
+    if (optionalHttpProperties.isPresent()) {
+      HttpProperties httpProps = optionalHttpProperties.get();
+      if (httpProps.getVersion().isPresent()) {
+        HttpVersion httpVersion = httpProps.getVersion().get();
+        if (HttpVersion.HTTP_1_0.equals(httpVersion)) {
+          connector = getConnectorHttp11(server, connectorProps, httpProps);
+        } else if (HttpVersion.HTTP_1_1.equals(httpVersion)) {
+          connector = getConnectorHttp11(server, connectorProps, httpProps);
+        } else if (HttpVersion.HTTP_2.equals(httpVersion)) {
+          connector = getConnectorHttp2(server, connectorProps, httpProps);
+        } else {
+          connector = getConnectorHttpUnsecure(server, connectorProps);
+        }
+      } else {
+        connector = getConnectorHttpUnsecure(server, connectorProps);
+      }
     } else {
-      connector = getConnectorNoHttpConfig(server, connectorProps);
+      connector = getConnectorHttpUnsecure(server, connectorProps);
     }
     return connector;
   }
 
+  private ServerConnector getConnectorHttp11(Server server,
+      ConnectorProperties connectorProperties, HttpProperties httpProperties) {
+    HttpConfiguration httpConfig = createHttpConfiguration(httpProperties);
 
-  private ServerConnector getConnectorNoHttpConfig(Server server,
+    Optional<SSLProperties> optionalSSL = httpProperties.getSsl();
+    ServerConnector connector;
+    if (optionalSSL.isPresent()) {
+      SSLProperties sslProperties = optionalSSL.get();
+
+      // Add the SecureRequestCustomizer because TLS is used.
+      httpConfig.addCustomizer(new SecureRequestCustomizer());
+
+      // The ConnectionFactory for HTTP/1.1.
+      HttpConnectionFactory http11 = new HttpConnectionFactory(httpConfig);
+
+      //KeyStore resource
+      Resource keyStoreResource = findKeyStore(sslProperties.getKeyStoreFile(),
+          ResourceFactory.of(server));
+
+      // Configure the SslContextFactory with the keyStore information.
+      SslContextFactory.Server sslContextFactory = new SslContextFactory.Server();
+      sslContextFactory.setKeyStoreResource(keyStoreResource);
+      sslContextFactory.setKeyStorePassword(sslProperties.getKeyStorePassword());
+      sslContextFactory.setKeyManagerPassword(sslProperties.getKeyPassword());
+
+      // The ConnectionFactory for TLS.
+      SslConnectionFactory tls = new SslConnectionFactory(sslContextFactory, http11.getProtocol());
+
+      // The ServerConnector instance.
+      connector = new ServerConnector(server, tls, http11);
+    } else {
+
+      // The ConnectionFactory for HTTP/1.1.
+      HttpConnectionFactory http11 = new HttpConnectionFactory(httpConfig);
+
+      // The ServerConnector instance.
+      connector = new ServerConnector(server, http11);
+    }
+
+    // ServerConnector setup
+    if (StringUtils.isNotEmpty(connectorProperties.getName())) {
+      connector.setName(connectorProperties.getName());
+    }
+    if (StringUtils.isNotEmpty(connectorProperties.getHost())) {
+      connector.setHost(connectorProperties.getHost());
+    }
+    if (connectorProperties.getPort() != 0) {
+      connector.setPort(connectorProperties.getPort());
+    }
+    connector.setIdleTimeout(getTimeout(connectorProperties.getIdleTimeout()));
+    return connector;
+
+  }
+
+  private ServerConnector getConnectorHttpUnsecure(Server server,
       ConnectorProperties connectorProperties) {
     HttpConfiguration httpConfig = new HttpConfiguration();
 
     // The ConnectionFactory for HTTP/1.1.
-    HttpConnectionFactory httpFactory = new HttpConnectionFactory(httpConfig);
+    HttpConnectionFactory http11 = new HttpConnectionFactory(httpConfig);
 
     // The ConnectionFactory for clear-text HTTP/2.
-    HTTP2CServerConnectionFactory http2Factory = new HTTP2CServerConnectionFactory(httpConfig);
+    HTTP2CServerConnectionFactory http2 = new HTTP2CServerConnectionFactory(httpConfig);
 
     //http connector
-    ServerConnector connector = new ServerConnector(server, httpFactory, http2Factory);
+    ServerConnector connector = new ServerConnector(server, http11, http2);
     if (StringUtils.isNotEmpty(connectorProperties.getName())) {
       connector.setName(connectorProperties.getName());
     }
@@ -133,64 +196,52 @@ public class JettyServer {
     return connector;
   }
 
-  private ServerConnector getConnectorHttpConfig(Server server,
-      ConnectorProperties connectorProperties, HttpConfigProperties httpConfigProperties) {
-    HttpConfiguration httpConfig = createHttpConfiguration(httpConfigProperties);
+  private ServerConnector getConnectorHttp2(Server server,
+      ConnectorProperties connectorProperties, HttpProperties httpProperties) {
+    HttpConfiguration httpConfig = createHttpConfiguration(httpProperties);
 
-    // The ConnectionFactory for HTTP/1.1.
-    HttpConnectionFactory httpFactory = new HttpConnectionFactory(httpConfig);
+    Optional<SSLProperties> optionalSSL = httpProperties.getSsl();
+    ServerConnector connector;
+    if (optionalSSL.isPresent()) {
+      SSLProperties sslProperties = optionalSSL.get();
 
-    // The ConnectionFactory for clear-text HTTP/2.
-    HTTP2CServerConnectionFactory http2Factory = new HTTP2CServerConnectionFactory(httpConfig);
+      // Add the SecureRequestCustomizer because TLS is used.
+      httpConfig.addCustomizer(new SecureRequestCustomizer());
 
-    //http connector
-    ServerConnector connector = new ServerConnector(server, httpFactory, http2Factory);
-    if (StringUtils.isNotEmpty(connectorProperties.getName())) {
-      connector.setName(connectorProperties.getName());
+      //KeyStore resource
+      Resource keyStoreResource = findKeyStore(sslProperties.getKeyStoreFile(),
+          ResourceFactory.of(server));
+
+      // SSL Context Factory
+      SslContextFactory.Server sslContextFactory = new SslContextFactory.Server();
+      sslContextFactory.setKeyStoreResource(keyStoreResource);
+      sslContextFactory.setKeyStorePassword(sslProperties.getKeyStorePassword());
+      sslContextFactory.setKeyManagerPassword(sslProperties.getKeyPassword());
+
+      //Configure TLS
+      //Because of java.lang.IllegalStateException: Connection rejected: No ALPN Processor
+      // for sun.security.ssl.SSLEngineImpl from [org.eclipse.jetty.alpn.conscrypt.server.ConscryptServerALPNProcessor@ce5a68e]
+      configureTLS(sslContextFactory);
+
+      // Configure the Connector to speak HTTP/1.1 and HTTP/2.
+      HttpConnectionFactory http11 = new HttpConnectionFactory(httpConfig);
+      HTTP2ServerConnectionFactory http2 = new HTTP2ServerConnectionFactory(httpConfig);
+      ALPNServerConnectionFactory alpn = new ALPNServerConnectionFactory();
+      alpn.setDefaultProtocol(http11.getProtocol());
+      SslConnectionFactory ssl = new SslConnectionFactory(sslContextFactory, alpn.getProtocol());
+
+      connector = new ServerConnector(server, ssl, alpn, http2, http11);
+    } else {
+
+      // The ConnectionFactory for HTTP/1.1.
+      HttpConnectionFactory http11 = new HttpConnectionFactory(httpConfig);
+
+      // The ConnectionFactory for clear-text HTTP/2.
+      HTTP2CServerConnectionFactory http2 = new HTTP2CServerConnectionFactory(httpConfig);
+
+      //ServerConnector instance
+      connector = new ServerConnector(server, http11, http2);
     }
-    if (StringUtils.isNotEmpty(connectorProperties.getHost())) {
-      connector.setHost(connectorProperties.getHost());
-    }
-    if (connectorProperties.getPort() != 0) {
-      connector.setPort(connectorProperties.getPort());
-    }
-    connector.setIdleTimeout(getTimeout(connectorProperties.getIdleTimeout()));
-    return connector;
-  }
-
-  private ServerConnector getConnectorHttpsConfig(Server server,
-      ConnectorProperties connectorProperties, HttpConfigProperties httpConfigProperties,
-      SSLProperties sslProperties) {
-    if (sslProperties == null) {
-      throw new JettyException("SSL configuration not found.");
-    }
-    Resource keyStoreResource = findKeyStore(sslProperties.getKeyStoreFile(),
-        ResourceFactory.of(server));
-
-    // SSL Context Factory
-    SslContextFactory.Server sslContextFactory = new SslContextFactory.Server();
-    sslContextFactory.setKeyStoreResource(keyStoreResource);
-    sslContextFactory.setKeyStorePassword(sslProperties.getKeyStorePassword());
-    sslContextFactory.setKeyManagerPassword(sslProperties.getKeyPassword());
-
-    //Configure TLS
-    //Because of java.lang.IllegalStateException: Connection rejected: No ALPN Processor
-    // for sun.security.ssl.SSLEngineImpl from [org.eclipse.jetty.alpn.conscrypt.server.ConscryptServerALPNProcessor@ce5a68e]
-    configureTLS(sslContextFactory);
-
-
-    // SSL HTTP Configuration
-    HttpConfiguration httpsConfig = createHttpConfiguration(httpConfigProperties);
-    httpsConfig.addCustomizer(new SecureRequestCustomizer());
-
-    // Configure the Connector to speak HTTP/1.1 and HTTP/2.
-    HttpConnectionFactory h1 = new HttpConnectionFactory(httpsConfig);
-    HTTP2ServerConnectionFactory h2 = new HTTP2ServerConnectionFactory(httpsConfig);
-    ALPNServerConnectionFactory alpn = new ALPNServerConnectionFactory();
-    alpn.setDefaultProtocol(h1.getProtocol());
-    SslConnectionFactory ssl = new SslConnectionFactory(sslContextFactory, alpn.getProtocol());
-
-    ServerConnector connector = new ServerConnector(server, ssl, alpn, h2, h1);
     if (StringUtils.isNotEmpty(connectorProperties.getName())) {
       connector.setName(connectorProperties.getName());
     }
@@ -227,17 +278,17 @@ public class JettyServer {
   }
 
 
-  protected HttpConfiguration createHttpConfiguration(HttpConfigProperties httpConfigProperties) {
+  protected HttpConfiguration createHttpConfiguration(HttpProperties httpProperties) {
     HttpConfiguration httpConfig = new HttpConfiguration();
 
     //set values
-    httpConfigProperties.getSecureScheme().ifPresent(httpConfig::setSecureScheme);
-    httpConfigProperties.getSecurePort().ifPresent(httpConfig::setSecurePort);
-    httpConfigProperties.getOutputBufferSize().ifPresent(httpConfig::setOutputBufferSize);
-    httpConfigProperties.getRequestHeaderSize().ifPresent(httpConfig::setRequestHeaderSize);
-    httpConfigProperties.getResponseHeaderSize().ifPresent(httpConfig::setResponseHeaderSize);
-    httpConfigProperties.getSendServerVersion().ifPresent(httpConfig::setSendServerVersion);
-    httpConfigProperties.getSendDateHeader().ifPresent(httpConfig::setSendDateHeader);
+    httpProperties.getSecureScheme().ifPresent(httpConfig::setSecureScheme);
+    httpProperties.getSecurePort().ifPresent(httpConfig::setSecurePort);
+    httpProperties.getOutputBufferSize().ifPresent(httpConfig::setOutputBufferSize);
+    httpProperties.getRequestHeaderSize().ifPresent(httpConfig::setRequestHeaderSize);
+    httpProperties.getResponseHeaderSize().ifPresent(httpConfig::setResponseHeaderSize);
+    httpProperties.getSendServerVersion().ifPresent(httpConfig::setSendServerVersion);
+    httpProperties.getSendDateHeader().ifPresent(httpConfig::setSendDateHeader);
     return httpConfig;
   }
 

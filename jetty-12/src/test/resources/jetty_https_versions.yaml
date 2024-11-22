@@ -15,13 +15,12 @@ jettyServer:
   connectors:
     - name: first-connector
       host: 127.0.0.1
-      port: 8443
+      port: 8444
       idleTimeout:
         duration: 11
         timeUnit: SECONDS
       http:
-        secureScheme: https
-        securePort: 8443
+        version: "HTTP_1_1"
         ssl:
           keyStoreFile: ssl/keystore.p12  # Keystore file name in path
           keyStorePassword: "1234567" # Keystore password
@@ -31,13 +30,12 @@ jettyServer:
         responseHeaderSize: 8192
     - name: second-connector
       host: 127.0.0.1
-      port: 8444
+      port: 8445
       idleTimeout:
         duration: 11
         timeUnit: SECONDS
       http:
-        secureScheme: https
-        securePort: 8444
+        version: "HTTP_2"
         ssl:
           keyStoreFile: ssl/keystore.p12  # Keystore file name in path
           keyStorePassword: "1234567" # Keystore password
@@ -45,5 +43,3 @@ jettyServer:
         outputBufferSize: 32768
         requestHeaderSize: 8192
         responseHeaderSize: 8192
-
-
