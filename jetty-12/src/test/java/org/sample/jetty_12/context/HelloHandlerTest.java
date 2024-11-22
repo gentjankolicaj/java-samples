@@ -48,8 +48,8 @@ class HelloHandlerTest {
     assertThat(response.body()).contains("hello world");
 
     Awaitility.await()
-        .timeout(Duration.ofSeconds(4))
-        .pollDelay(Duration.ofSeconds(3))
+        .timeout(Duration.ofSeconds(2))
+        .pollDelay(Duration.ofSeconds(1))
         .untilAsserted(() -> {
           jettyServer.stop();
         });
@@ -69,11 +69,10 @@ class HelloHandlerTest {
     jettyServer.start();
 
     Awaitility.await()
-        .timeout(Duration.ofSeconds(24))
-        .pollDelay(Duration.ofSeconds(23))
+        .timeout(Duration.ofSeconds(2))
+        .pollDelay(Duration.ofSeconds(1))
         .untilAsserted(() -> {
           jettyServer.stop();
-          ;
         });
 
     //blocking join until close is called.

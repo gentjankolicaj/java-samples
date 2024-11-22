@@ -9,6 +9,7 @@ import java.net.http.HttpClient.Version;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
+import javax.net.ssl.SSLContext;
 import lombok.extern.slf4j.Slf4j;
 import org.awaitility.Awaitility;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
@@ -19,7 +20,7 @@ import org.junit.jupiter.api.Test;
  * @Date: 11/21/24 10:47 PM
  */
 @Slf4j
-class JettyServerTest {
+class JettyServerTest extends SSLTest {
 
 
   @Test
@@ -139,21 +140,27 @@ class JettyServerTest {
 
     jettyServer.start();
 
-    // Create a HttpClient instance
-    HttpClient client = HttpClient.newHttpClient();
-    String scheme = "https";
-    String host = "localhost";
-    int port = 8444;
-    String path = "";
+    // Create a custom SSLContext that trusts all certificates
+    SSLContext sslContext = createSSLContext(DUMMY_TRUST_MANAGER);
 
-    // Create a http/1.1 request
+    // Build the HttpClient with the custom SSLContext
+    HttpClient httpsClient = HttpClient.newBuilder()
+        .sslContext(sslContext)
+        .build();
+
+    String scheme = "https";
+    String host = "127.0.0.1";
+    int port = 8444;
+    String path = "/";
+
+    // Create a https/1.1 request
     HttpRequest request = HttpRequest.newBuilder()
         .uri(URI.create(String.format("%s://%s:%d%s", scheme, host, port, path)))
         .GET()
         .version(Version.HTTP_1_1)
         .build();
-    HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-    assertThat(response.statusCode()).isEqualTo(404);
+    HttpResponse<String> response = httpsClient.send(request, HttpResponse.BodyHandlers.ofString());
+    assertThat(response.statusCode()).isEqualTo(400);
     assertThat(response.version()).isEqualTo(Version.HTTP_1_1);
 
     // Create a http/2 request
@@ -164,8 +171,9 @@ class JettyServerTest {
         .GET()
         .version(Version.HTTP_2)
         .build();
-    HttpResponse<String> response2 = client.send(request2, HttpResponse.BodyHandlers.ofString());
-    assertThat(response2.statusCode()).isEqualTo(404);
+    HttpResponse<String> response2 = httpsClient.send(request2,
+        HttpResponse.BodyHandlers.ofString());
+    assertThat(response2.statusCode()).isEqualTo(400);
     assertThat(response2.version()).isEqualTo(Version.HTTP_2);
 
     Awaitility.await()

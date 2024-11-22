@@ -258,6 +258,7 @@ public class JettyServer {
   protected void configureTLS(SslContextFactory.Server sslContextFactory) {
     // https://jetty.org/docs/jetty/12/programming-guide/server/http.html#connector-protocol-tls-conscrypt
     Security.addProvider(new OpenSSLProvider());
+    sslContextFactory.setProvider("Conscrypt");
   }
 
 
