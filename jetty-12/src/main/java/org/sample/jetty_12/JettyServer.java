@@ -28,6 +28,7 @@ import org.eclipse.jetty.util.resource.Resources;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
 
+
 /**
  * @author gentjan kolicaj
  * @Date: 11/21/24 6:51 PM
@@ -50,6 +51,7 @@ public class JettyServer {
     this.serverProperties = serverProperties;
     this.contextHandlers = new ContextHandlerCollection(contextHandlers);
   }
+
 
   private void bootstrap() {
     //Thread pool setup

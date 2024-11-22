@@ -1,93 +1,92 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns="http://maven.apache.org/POM/4.0.0"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <artifactId>java-samples</artifactId>
-    <groupId>org.sample</groupId>
-    <version>1.0-SNAPSHOT</version>
-  </parent>
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.sample</groupId>
+		<artifactId>java-samples</artifactId>
+		<version>1.0-SNAPSHOT</version>
+	</parent>
 
-  <artifactId>jetty-12</artifactId>
-  <name>jetty-12</name>
-  <version>1.0-SNAPSHOT</version>
-  <packaging>jar</packaging>
+	<artifactId>jetty-12</artifactId>
+	<version>1.0-SNAPSHOT</version>
+	<packaging>jar</packaging>
+	<name>jetty-12</name>
 
-  <properties>
-    <java.version>17</java.version>
-    <maven.compiler.source>17</maven.compiler.source>
-    <maven.compiler.target>17</maven.compiler.target>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <jetty.version>12.0.15</jetty.version>
-  </properties>
+	<properties>
+		<java.version>17</java.version>
+		<jetty.version>12.0.15</jetty.version>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+	</properties>
 
-<repositories>
-   <repository>
-       <id>JitPack</id>
-       <url>https://jitpack.io</url>
-   </repository>
-</repositories>
+	<repositories>
+		<repository>
+			<id>JitPack</id>
+			<url>https://jitpack.io</url>
+		</repository>
+	</repositories>
 
-  <dependencyManagement>
-    <dependencies>
-     <dependency>
-         <groupId>org.eclipse.jetty</groupId>
-         <artifactId>jetty-bom</artifactId>
-         <version>${jetty.version}</version>
-         <scope>import</scope>
-         <type>pom</type>
-     </dependency>
-    </dependencies>
-  </dependencyManagement>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<type>pom</type>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-bom</artifactId>
+				<version>${jetty.version}</version>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
-  <dependencies>
-        <!-- jetty 12 -->
-       <dependency>
-          <groupId>org.eclipse.jetty</groupId>
-          <artifactId>jetty-server</artifactId>
-       </dependency>
-       <dependency>
-            <groupId>org.eclipse.jetty.http2</groupId>
-            <artifactId>jetty-http2-server</artifactId>
-       </dependency>
-       <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-alpn-server</artifactId>
-       </dependency>
-       <dependency>
-           <groupId>org.eclipse.jetty</groupId>
-           <artifactId>jetty-alpn-conscrypt-server</artifactId>
-       </dependency>
-
-
-    <!-- jakarta dependencies -->
-    <dependency>
-      <groupId>jakarta.servlet</groupId>
-      <artifactId>jakarta.servlet-api</artifactId>
-      <version>6.0.0</version>
-      <scope>provided</scope>
-    </dependency>
-
-  <!-- jdev dependencies -->
+	<dependencies>
+		<!-- jetty 12 -->
 		<dependency>
-  	    <groupId>com.github.gentjankolicaj</groupId>
-  	    <artifactId>jdev-jackson</artifactId>
-  	    <version>main-715465d8b9-1</version>
-  	</dependency>
-  	<dependency>
-  	    <groupId>com.github.gentjankolicaj</groupId>
-  	    <artifactId>jdev-primitive</artifactId>
-  	    <version>main-2319784550-1</version>
-  	</dependency>
-	<dependency>
-	    <groupId>com.github.gentjankolicaj</groupId>
-	    <artifactId>jdev-test</artifactId>
-	    <version>main-f4124c59ad-1</version>
-	    <scope>test</scope>
-	</dependency>
- </dependencies>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-server</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jetty.http2</groupId>
+			<artifactId>jetty-http2-server</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-alpn-server</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-alpn-conscrypt-server</artifactId>
+		</dependency>
+
+		<!-- jakarta dependencies -->
+		<dependency>
+			<groupId>jakarta.servlet</groupId>
+			<artifactId>jakarta.servlet-api</artifactId>
+			<version>6.0.0</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- jdev dependencies -->
+		<dependency>
+			<groupId>com.github.gentjankolicaj</groupId>
+			<artifactId>jdev-jackson</artifactId>
+			<version>main-715465d8b9-1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.gentjankolicaj</groupId>
+			<artifactId>jdev-primitive</artifactId>
+			<version>main-2319784550-1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.gentjankolicaj</groupId>
+			<artifactId>jdev-test</artifactId>
+			<version>main-f4124c59ad-1</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 
 </project>

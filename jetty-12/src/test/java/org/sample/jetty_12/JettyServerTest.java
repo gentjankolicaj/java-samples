@@ -138,6 +138,7 @@ class JettyServerTest extends SSLTest {
     JettyServer jettyServer = new JettyServer(jettyProperties.getJettyServer(),
         (ContextHandlerCollection) null);
 
+    //start jetty server
     jettyServer.start();
 
     // Create a custom SSLContext that trusts all certificates
