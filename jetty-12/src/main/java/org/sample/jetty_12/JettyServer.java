@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.conscrypt.OpenSSLProvider;
@@ -20,6 +19,8 @@ import org.eclipse.jetty.server.SecureRequestCustomizer;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.SslConnectionFactory;
+import org.eclipse.jetty.server.handler.ContextHandler;
+import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.util.resource.ResourceFactory;
 import org.eclipse.jetty.util.resource.Resources;
@@ -31,23 +32,44 @@ import org.eclipse.jetty.util.thread.QueuedThreadPool;
  * @Date: 11/21/24 6:51 PM
  */
 @Slf4j
-@RequiredArgsConstructor
 public class JettyServer {
 
   private static final long DEFAULT_TIMEOUT = TimeUnit.SECONDS.toMillis(5);
   protected final JettyServerProperties serverProperties;
+  protected final ContextHandlerCollection contextHandlers;
   protected Server server;
 
-  private void setup() {
+  public JettyServer(JettyServerProperties serverProperties,
+      ContextHandlerCollection contextHandlers) {
+    this.serverProperties = serverProperties;
+    this.contextHandlers = contextHandlers;
+  }
+
+  public JettyServer(JettyServerProperties serverProperties, ContextHandler... contextHandlers) {
+    this.serverProperties = serverProperties;
+    this.contextHandlers = new ContextHandlerCollection(contextHandlers);
+  }
+
+  private void bootstrap() {
     //Thread pool setup
-    QueuedThreadPool threadPool = createThreadPool(serverProperties.getThreadPool());
+    final QueuedThreadPool threadPool = createThreadPool(this.serverProperties.getThreadPool());
 
     //server setup
-    server = createServer(threadPool, serverProperties);
+    this.server = createServer(threadPool, this.serverProperties);
 
     //connector setup
-    createConnectors(server, serverProperties.getConnectors());
+    createConnectors(this.server, this.serverProperties.getConnectors());
 
+    //context handlers setup
+    setupHandlers(this.server, this.contextHandlers);
+  }
+
+  protected void setupHandlers(Server server, ContextHandlerCollection contextHandlers) {
+    if (contextHandlers == null) {
+      log.warn("Context handlers not set.");
+    } else {
+      server.setHandler(contextHandlers);
+    }
   }
 
   protected void createConnectors(Server server,
@@ -185,7 +207,6 @@ public class JettyServer {
   protected void configureTLS(SslContextFactory.Server sslContextFactory) {
     // https://jetty.org/docs/jetty/12/programming-guide/server/http.html#connector-protocol-tls-conscrypt
     Security.addProvider(new OpenSSLProvider());
-    sslContextFactory.setProvider("Conscrypt");
   }
 
 
@@ -244,7 +265,7 @@ public class JettyServer {
 
 
   public void start() throws Exception {
-    setup();
+    bootstrap();
     if (server != null) {
       server.start();
     }
