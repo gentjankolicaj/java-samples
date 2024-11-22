@@ -18,7 +18,7 @@ public class App {
       @Override
       public Integer call() throws Exception {
 
-        return new Integer("101");
+        return Integer.valueOf("101");
       }
 
     });

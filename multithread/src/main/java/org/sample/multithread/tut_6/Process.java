@@ -2,7 +2,7 @@ package org.sample.multithread.tut_6;
 
 public class Process implements Runnable {
 
-  private int id;
+  private final int id;
 
   public Process(int id) {
     this.id = id;
@@ -10,7 +10,7 @@ public class Process implements Runnable {
 
   @Override
   public void run() {
-    System.out.println("++>Started :" + toString());
+    System.out.println("++>Started :" + this);
 
     try {
       Thread.sleep(4000);
@@ -19,7 +19,7 @@ public class Process implements Runnable {
       e.printStackTrace();
     }
 
-    System.out.println("-->Ended :" + toString());
+    System.out.println("-->Ended :" + this);
 
   }
 

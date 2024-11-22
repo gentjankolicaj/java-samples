@@ -25,8 +25,7 @@ public class Client {
     while (inObject == null) {
       inObject = in.readObject();
     }
-    if (inObject instanceof Request) {
-      Request request = (Request) inObject;
+    if (inObject instanceof Request request) {
       List<Packet> packets = new ArrayList<>(request.getPackets());
       Response response = new Response(1, Status.OK);
       out.writeObject(response);
@@ -55,8 +54,7 @@ public class Client {
       inObject = in.readObject();
     } while (inObject == null);
 
-    if (inObject instanceof Response) {
-      Response response = (Response) inObject;
+    if (inObject instanceof Response response) {
       if (response.getStatus().name().equals(Status.OK.name())) {
         for (int i = 0; i < packetList.size(); i++) {
           Packet packet = packetList.get(i);

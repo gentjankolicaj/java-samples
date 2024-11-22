@@ -8,12 +8,12 @@ import org.sample.process.exception.CmdException;
 public class CmdUtil {
 
   public static String prepareCmd(String cmd, String... options) throws CmdException {
-      if (cmd == null || cmd.length() == 0) {
-          throw new CmdException("Command " + cmd + " not valid.");
-      }
+    if (cmd == null || cmd.length() == 0) {
+      throw new CmdException("Command " + cmd + " not valid.");
+    }
 
     StringBuilder stringBuilder = new StringBuilder(cmd);
-    if (options != null && options.length != 0) {
+    if (options != null) {
       for (String option : options) {
         stringBuilder.append(" " + option);
       }
@@ -23,11 +23,11 @@ public class CmdUtil {
 
   public static CmdOutput execute(boolean runtime, String cmd, String... options)
       throws CmdException {
-      if (runtime) {
-          return executeWithRuntime(cmd, options);
-      } else {
-          return executeWithProcessBuilder(cmd, options);
-      }
+    if (runtime) {
+      return executeWithRuntime(cmd, options);
+    } else {
+      return executeWithProcessBuilder(cmd, options);
+    }
   }
 
   public static CmdOutput executeWithProcessBuilder(String cmd, String... options)

@@ -5,8 +5,8 @@ import java.util.LinkedList;
 public class Process {
 
   private final int LIMIT = 10;
-  private LinkedList<Integer> list = new LinkedList<Integer>();
-  private Object lock = new Object();// I use this object intrinsic lock to synchronize access
+  private final LinkedList<Integer> list = new LinkedList<Integer>();
+  private final Object lock = new Object();// I use this object intrinsic lock to synchronize access
 
   public void produce() throws InterruptedException {
 

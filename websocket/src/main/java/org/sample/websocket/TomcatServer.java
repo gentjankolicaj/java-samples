@@ -13,6 +13,7 @@ import org.apache.catalina.startup.Tomcat;
  */
 @Getter
 public class TomcatServer {
+
   protected String contextPath = "";
   protected String docBase = null;
   private Tomcat tomcat;

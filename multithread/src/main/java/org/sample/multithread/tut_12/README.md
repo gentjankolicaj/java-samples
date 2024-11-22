@@ -4,8 +4,8 @@ for some sort of reason,so they can't continue to call incoming method.
 
 1.Deadlocks are more likely to occur when i have multiple locks and I lock those locks in different
 order,
-in this way different threads lock different locks but none of the locks can lock all the lock needed to call the shared resource.
-
+in this way different threads lock different locks but none of the locks can lock all the lock
+needed to call the shared resource.
 
 How to avoid deadlocks:
 

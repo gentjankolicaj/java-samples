@@ -23,22 +23,22 @@ public class ParserCombinators {
 
 
   private void skipWhitespace() {
-      while (pos < input.length() && (input.charAt(pos) == ' ' || input.charAt(pos) == '\n')) {
-          ++pos;
-      }
+    while (pos < input.length() && (input.charAt(pos) == ' ' || input.charAt(pos) == '\n')) {
+      ++pos;
+    }
   }
 
   private boolean parseStringLit() {
-      if (pos >= input.length()) {
-          return false;
-      }
-      if (input.charAt(pos) != '"') {
-          return false;
-      }
+    if (pos >= input.length()) {
+      return false;
+    }
+    if (input.charAt(pos) != '"') {
+      return false;
+    }
     int last = input.substring(pos + 1).indexOf('"');
-      if (last < 0) {
-          return false;
-      }
+    if (last < 0) {
+      return false;
+    }
     stack.push(input.substring(pos + 1, pos + last + 1));
     pos += last + 2;
     skipWhitespace();
@@ -46,9 +46,9 @@ public class ParserCombinators {
   }
 
   private boolean parseNumber() {
-      if (pos >= input.length()) {
-          return false;
-      }
+    if (pos >= input.length()) {
+      return false;
+    }
     Scanner scanner = new Scanner(input.substring(pos));
     String num = scanner.useDelimiter("[^0-9]").next();
     if (num.length() > 0) {
@@ -60,13 +60,13 @@ public class ParserCombinators {
   }
 
   private boolean parseChar(char c) {
-      if (pos >= input.length()) {
-          return false;
-      }
+    if (pos >= input.length()) {
+      return false;
+    }
     boolean success = input.charAt(pos) == c;
-      if (!success) {
-          return false;
-      }
+    if (!success) {
+      return false;
+    }
     ++pos;
     skipWhitespace();
     return true;
@@ -107,9 +107,9 @@ public class ParserCombinators {
 
   // (PAIR ("," PAIR)* )?
   private boolean parsePairs() {
-      if (parsePair()) {
-          parsePairTails();
-      }
+    if (parsePair()) {
+      parsePairTails();
+    }
     return true;
   }
 
@@ -117,9 +117,9 @@ public class ParserCombinators {
   private boolean parsePair() {
     int pos0 = pos;
     boolean success = parseStringLit() && parseChar(':') && parseValue();
-      if (!success) {
-          pos = pos0;
-      }
+    if (!success) {
+      pos = pos0;
+    }
     return success;
   }
 
@@ -145,9 +145,9 @@ public class ParserCombinators {
       return false;
     }
     ArrayList<Object> array = new ArrayList<>();
-      while (stack.size() > stack0) {
-          array.add(stack.pop());
-      }
+    while (stack.size() > stack0) {
+      array.add(stack.pop());
+    }
     Collections.reverse(array);
     stack.push(array);
     return true;
@@ -155,9 +155,9 @@ public class ParserCombinators {
 
   // (VALUE ("," VALUE)* )?
   private boolean parseValues() {
-      if (parseValue()) {
-          parseValueTails();
-      }
+    if (parseValue()) {
+      parseValueTails();
+    }
     return true;
   }
 
@@ -288,9 +288,9 @@ public class ParserCombinators {
     @Override
     public boolean parse() {
       for (Parser var : parsers) {
-          if (var.parse()) {
-              return true;
-          }
+        if (var.parse()) {
+          return true;
+        }
       }
       return false;
     }
@@ -309,9 +309,9 @@ public class ParserCombinators {
     public boolean parse() {
       int stack0 = stack.size();
       boolean success = child.parse();
-        if (!success) {
-            return false;
-        }
+      if (!success) {
+        return false;
+      }
       Map<String, Object> map = new HashMap<>();
       while (stack.size() > stack0) {
         Object value = stack.pop();
@@ -335,9 +335,9 @@ public class ParserCombinators {
     public boolean parse() {
       int stack0 = stack.size();
       boolean success = child.parse();
-        if (!success) {
-            return false;
-        }
+      if (!success) {
+        return false;
+      }
       List<Object> list = new ArrayList<>();
       while (stack.size() > stack0) {
         list.add(stack.pop());

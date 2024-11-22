@@ -70,7 +70,7 @@ public class ChatEndpoint {
    * Method called on client sent binary message
    *
    * @param byteBuffer byte buffer sent by websocket peers.
-   * @param last flag to establish if buffer received is the last.
+   * @param last       flag to establish if buffer received is the last.
    */
   @OnMessage
   public void onMessage(ByteBuffer byteBuffer, boolean last) {

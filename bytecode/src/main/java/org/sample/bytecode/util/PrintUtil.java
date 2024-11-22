@@ -11,7 +11,7 @@ public class PrintUtil {
 
 
   public static <T> void print(T... args) {
-    if (args != null && args.length != 0) {
+    if (args != null) {
       for (T t : args) {
         log.info("{}", t);
       }

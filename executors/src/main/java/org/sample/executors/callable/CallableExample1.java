@@ -57,8 +57,7 @@ public class CallableExample1 {
     @Override
     public String call() throws Exception {
       Thread.sleep(1000);
-      return new StringBuilder(id).append("|").append(this.getClass().getCanonicalName())
-          .toString();
+      return "|" + this.getClass().getCanonicalName();
     }
   }
 }

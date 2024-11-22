@@ -30,7 +30,7 @@ public class BlockingQueueExample {
   @Slf4j
   static class Producer implements Runnable {
 
-    private BlockingQueue<Integer> queue;
+    private final BlockingQueue<Integer> queue;
 
     public Producer(BlockingQueue<Integer> queue) {
       this.queue = queue;
@@ -56,7 +56,7 @@ public class BlockingQueueExample {
   @Slf4j
   static class Consumer implements Runnable {
 
-    private BlockingQueue<Integer> queue;
+    private final BlockingQueue<Integer> queue;
 
     public Consumer(BlockingQueue<Integer> queue) {
       this.queue = queue;

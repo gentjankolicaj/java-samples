@@ -8,8 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * CountDownLatch is :
  * <br>1.Class for synchronization aid that allows one or more threads to wait until a set of
- * operations being
- * performed in other threads completes.
+ * operations being performed in other threads completes.
  * <br>2.CDL is initialized with a given count and counter can't be reset.
  * <br>3.wait() method blocks waiting threads until current count reaches 0 due to invocations of
  * countDown()

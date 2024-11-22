@@ -41,10 +41,9 @@ import org.sample.websocket.chat_json.message.UserListMessage;
 public class JSONChatEndpoint {
 
   protected static final String ENDPOINT_URI = "/ws/chat_json";
+  private static final List<User> chatUsers = new CopyOnWriteArrayList<>();
+  private static final List<Message> chatMessages = new CopyOnWriteArrayList<>();
   protected static List<JSONChatEndpoint> clientEndpoints = new CopyOnWriteArrayList<>();
-  private static List<User> chatUsers = new CopyOnWriteArrayList<>();
-  private static List<Message> chatMessages = new CopyOnWriteArrayList<>();
-
   private Session session;
   private ServerEndpointConfig config;
   private ByteArrayOutputStream baos;

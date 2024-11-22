@@ -15,10 +15,10 @@ import org.sample.tomcat_embed_11.servlet.TomcatServlet;
 @Getter
 public class TomcatServer {
 
+  private final ConnectorProperties connectorProperties;
   protected String contextPath = "";
   protected String docBase = null;
   private Tomcat tomcat;
-  private final ConnectorProperties connectorProperties;
   private Connector connector;
   private Class<? extends TomcatWebSocketConfig> websocketConfig;
   private TomcatServlet[] servlets;

@@ -6,7 +6,7 @@ import java.util.concurrent.BlockingQueue;
 
 public class App {
 
-  private static BlockingQueue<Integer> queue = new ArrayBlockingQueue(13);
+  private static final BlockingQueue<Integer> queue = new ArrayBlockingQueue(13);
 
   public static void main(String[] args) {
     // I create thread objects

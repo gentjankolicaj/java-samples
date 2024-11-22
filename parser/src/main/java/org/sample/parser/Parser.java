@@ -13,19 +13,19 @@ public class Parser {
   }
 
   private void skipWhitespace() {
-      while (pos < input.length() && (input.charAt(pos) == ' ' || input.charAt(pos) == '\n')) {
-          ++pos;
-      }
+    while (pos < input.length() && (input.charAt(pos) == ' ' || input.charAt(pos) == '\n')) {
+      ++pos;
+    }
   }
 
   private boolean parseString() {
-      if (input.charAt(pos) != '"') {
-          return false;
-      }
+    if (input.charAt(pos) != '"') {
+      return false;
+    }
     int last = input.substring(pos + 1).indexOf('"');
-      if (last < 0) {
-          return false;
-      }
+    if (last < 0) {
+      return false;
+    }
 
     pos = pos + last + 2;
     skipWhitespace();
@@ -41,9 +41,9 @@ public class Parser {
 
   private boolean parseChar(char c) {
     boolean success = input.charAt(pos) == c;
-      if (!success) {
-          return false;
-      }
+    if (!success) {
+      return false;
+    }
     ++pos;
     skipWhitespace();
     return true;
@@ -56,25 +56,25 @@ public class Parser {
   private boolean parseObject() {
     int pos0 = pos;
     boolean success = parseChar('{') && parsePairs() && parseChar('}');
-      if (!success) {
-          pos = pos0;
-      }
+    if (!success) {
+      pos = pos0;
+    }
     return success;
   }
 
   private boolean parseArray() {
     int pos0 = pos;
     boolean success = parseChar('[') && parseValues() && parseChar(']');
-      if (!success) {
-          pos = pos0;
-      }
+    if (!success) {
+      pos = pos0;
+    }
     return success;
   }
 
   private boolean parseValues() {
-      if (parseValue()) {
-          parseValueTails();
-      }
+    if (parseValue()) {
+      parseValueTails();
+    }
     return true;
   }
 
@@ -90,9 +90,9 @@ public class Parser {
   }
 
   private boolean parsePairs() {
-      if (parsePair()) {
-          parsePairTails();
-      }
+    if (parsePair()) {
+      parsePairTails();
+    }
     return true;
   }
 
@@ -110,9 +110,9 @@ public class Parser {
   private boolean parsePair() {
     int pos0 = pos;
     boolean success = parseString() && parseChar(':') && parseValue();
-      if (!success) {
-          pos = pos0;
-      }
+    if (!success) {
+      pos = pos0;
+    }
     return success;
   }
 }

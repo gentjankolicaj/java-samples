@@ -4,7 +4,7 @@ import java.util.concurrent.Semaphore;
 
 public class Connection {
 
-  private static Connection instance = new Connection();
+  private static final Connection instance = new Connection();
   Semaphore sem = new Semaphore(5); // 5 available permits/or connections allowed
   private int count;
 

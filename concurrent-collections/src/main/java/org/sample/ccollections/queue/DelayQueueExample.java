@@ -41,7 +41,7 @@ public class DelayQueueExample {
   @Slf4j
   static class Producer implements Runnable {
 
-    private BlockingQueue<Element> queue;
+    private final BlockingQueue<Element> queue;
 
     public Producer(BlockingQueue<Element> queue) {
       this.queue = queue;
@@ -68,7 +68,7 @@ public class DelayQueueExample {
   @Slf4j
   static class Consumer implements Runnable {
 
-    private BlockingQueue<Element> queue;
+    private final BlockingQueue<Element> queue;
 
     public Consumer(BlockingQueue<Element> queue) {
       this.queue = queue;

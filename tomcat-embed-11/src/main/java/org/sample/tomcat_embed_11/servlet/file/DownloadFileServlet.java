@@ -87,7 +87,7 @@ public class DownloadFileServlet extends TomcatServlet {
       sos.flush();
       fis.close();
     } catch (IOException ioe) {
-        log.error("", ioe);
+      log.error("", ioe);
     }
   }
 

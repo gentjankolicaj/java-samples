@@ -6,7 +6,7 @@ import java.util.concurrent.TimeUnit;
 
 class Processor implements Runnable {
 
-  private int id;
+  private final int id;
 
   public Processor(int id) {
     this.id = id;

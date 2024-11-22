@@ -7,10 +7,10 @@ import java.util.Random;
 //Every java object has only one intrinsic lock that can be aquired by one thread alone
 public class Worker {
 
-  private Random random = new Random();
+  private final Random random = new Random();
 
-  private List<Integer> list1 = new ArrayList<>();
-  private List<Integer> list2 = new ArrayList<>();
+  private final List<Integer> list1 = new ArrayList<>();
+  private final List<Integer> list2 = new ArrayList<>();
 
 
   public synchronized void stageOne() {

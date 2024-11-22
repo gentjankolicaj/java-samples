@@ -7,9 +7,9 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class Runner {
 
+  private final Lock lock = new ReentrantLock();
+  private final Condition cond = lock.newCondition();
   private int count = 0;
-  private Lock lock = new ReentrantLock();
-  private Condition cond = lock.newCondition();
 
   public void increment() {
     for (int i = 0; i < 10000; i++) {

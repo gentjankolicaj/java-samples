@@ -9,7 +9,7 @@ public class PrintUtil {
 
 
   public static <T> void print(T... args) {
-    if (args != null && args.length != 0) {
+    if (args != null) {
       for (T t : args) {
         log.info("{}", t);
       }
@@ -27,7 +27,7 @@ public class PrintUtil {
   }
 
   public static <T extends CmdOutput> void print(T... args) {
-    if (args != null && args.length != 0) {
+    if (args != null) {
       for (CmdOutput cmdOutput : args) {
         log.info("Command : " + cmdOutput.getCmd());
         print(cmdOutput.getOutput());

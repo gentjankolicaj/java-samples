@@ -10,4 +10,5 @@
 
 6.If second thread tries to acquire same intrinsic lock,it has to wait.
 
-7.synchronized keyword is placed at methods or blocks of code.with the purpose to help in intrinsic lock acquiescence when multiple thread are trying to access shared resources
+7.synchronized keyword is placed at methods or blocks of code.with the purpose to help in intrinsic
+lock acquiescence when multiple thread are trying to access shared resources

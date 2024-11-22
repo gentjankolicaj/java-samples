@@ -4,8 +4,8 @@ import java.util.concurrent.CountDownLatch;
 
 public class Process implements Runnable {
 
-  private CountDownLatch latch;
-  private int id;
+  private final CountDownLatch latch;
+  private final int id;
 
 
   public Process(CountDownLatch latch, int id) {
@@ -17,7 +17,7 @@ public class Process implements Runnable {
 
   @Override
   public void run() {
-    System.out.println("++> Started " + toString());
+    System.out.println("++> Started " + this);
 
     try {
       Thread.sleep(3000);
