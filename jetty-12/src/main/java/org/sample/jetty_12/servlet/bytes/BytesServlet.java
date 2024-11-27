@@ -1,6 +1,7 @@
 package org.sample.jetty_12.servlet.bytes;
 
 
+import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
@@ -10,24 +11,16 @@ import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import lombok.extern.slf4j.Slf4j;
-import org.sample.jetty_12.servlet.JettyServlet;
 
 /**
  * @author gentjan kolicaj
  * @Date: 11/14/24 9:13 PM
  */
 @Slf4j
-public class BytesServlet extends JettyServlet {
+public class BytesServlet extends HttpServlet {
 
-  @Override
-  public String getPattern() {
-    return "/bytes";
-  }
+  public static final String SERVLET_PATH = "/bytes";
 
-  @Override
-  public String getName() {
-    return getClass().getSimpleName();
-  }
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -49,6 +42,7 @@ public class BytesServlet extends JettyServlet {
     log.info("request url: {}", req.getRequestURL());
     log.info("request servlet path: {}", req.getServletPath());
     log.info("request headers: {}", req.getHeaderNames());
+    log.warn("request path info: {}", req.getPathInfo());
   }
 
 

@@ -1,6 +1,6 @@
 package org.sample.jetty_12.servlet.html;
 
-import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -12,28 +12,18 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.sample.jetty_12.servlet.JettyServlet;
 
 /**
  * @author gentjan kolicaj
  * @Date: 11/14/24 9:13 PM
  */
 @Slf4j
-public class HtmlServlet extends JettyServlet {
+public class HtmlServlet extends HttpServlet {
+
+  protected static final String SERVLET_PATH = "/html";
 
   @Override
-  public String getPattern() {
-    return "/html";
-  }
-
-  @Override
-  public String getName() {
-    return getClass().getSimpleName();
-  }
-
-  @Override
-  protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-      throws ServletException, IOException {
+  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
     Reader reader = req.getReader();
     PrintWriter writer = resp.getWriter();
 

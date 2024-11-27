@@ -3,33 +3,25 @@ package org.sample.jetty_12.servlet.file;
 
 import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
-import org.sample.jetty_12.servlet.JettyServlet;
 
 /**
  * @author gentjan kolicaj
  * @Date: 11/15/24 9:13 PM
  */
 @Slf4j
-public class ReadFileServlet extends JettyServlet {
+public class ReadFileServlet extends HttpServlet {
+
+  protected static final String SERVLET_PATH = "/read_file";
 
   public static String getServerFile() {
     return ReadFileServlet.class.getResource("/file/secret_file.txt").getPath();
-  }
-
-  @Override
-  public String getPattern() {
-    return "/read_file";
-  }
-
-  @Override
-  public String getName() {
-    return getClass().getSimpleName();
   }
 
   @Override

@@ -3,6 +3,7 @@ package org.sample.jetty_12.servlet.bytes;
 
 import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
@@ -10,24 +11,15 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import lombok.extern.slf4j.Slf4j;
-import org.sample.jetty_12.servlet.JettyServlet;
 
 /**
  * @author gentjan kolicaj
  * @Date: 11/15/24 9:13 PM
  */
 @Slf4j
-public class InputStreamServlet extends JettyServlet {
+public class InputStreamServlet extends HttpServlet {
 
-  @Override
-  public String getPattern() {
-    return "/input_stream";
-  }
-
-  @Override
-  public String getName() {
-    return getClass().getSimpleName();
-  }
+  protected static final String SERVLET_PATH = "/input_stream";
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -49,6 +41,7 @@ public class InputStreamServlet extends JettyServlet {
     log.info("request url: {}", req.getRequestURL());
     log.info("request servlet path: {}", req.getServletPath());
     log.info("request headers: {}", req.getHeaderNames());
+    log.warn("request path info: {}", req.getPathInfo());
   }
 
 

@@ -3,35 +3,27 @@ package org.sample.jetty_12.servlet.file;
 
 import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
-import org.sample.jetty_12.servlet.JettyServlet;
 
 /**
  * @author gentjan kolicaj
  * @Date: 11/15/24 9:13 PM
  */
 @Slf4j
-public class DownloadFileServlet extends JettyServlet {
+public class DownloadFileServlet extends HttpServlet {
+
+  public static final String SERVLET_PATH = "/download_file";
 
   private static final String filename = "secret_file.txt";
 
-  static String getServerFile() {
+  public static String getServerFile() {
     return DownloadFileServlet.class.getResource("/file/" + filename).getPath();
-  }
-
-  @Override
-  public String getPattern() {
-    return "/download_file";
-  }
-
-  @Override
-  public String getName() {
-    return getClass().getSimpleName();
   }
 
   @Override

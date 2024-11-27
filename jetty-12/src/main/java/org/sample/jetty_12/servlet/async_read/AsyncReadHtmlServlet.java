@@ -1,6 +1,7 @@
 package org.sample.jetty_12.servlet.async_read;
 
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -13,24 +14,15 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.sample.jetty_12.servlet.JettyServlet;
 
 /**
  * @author gentjan kolicaj
  * @Date: 11/14/24 9:13 PM
  */
 @Slf4j
-public class AsyncReadHtmlServlet extends JettyServlet {
+public class AsyncReadHtmlServlet extends HttpServlet {
 
-  @Override
-  public String getPattern() {
-    return "/async_read_html";
-  }
-
-  @Override
-  public String getName() {
-    return getClass().getSimpleName();
-  }
+  public static final String SERVLET_PATH = "/async_read_html";
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp)
