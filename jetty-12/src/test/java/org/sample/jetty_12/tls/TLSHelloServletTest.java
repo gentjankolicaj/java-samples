@@ -16,6 +16,10 @@ import javax.net.ssl.SSLContext;
 import org.awaitility.Awaitility;
 import org.eclipse.jetty.ee10.servlet.DefaultServlet;
 import org.eclipse.jetty.ee10.servlet.ServletContextHandler;
+import org.eclipse.jetty.ee10.servlet.security.ConstraintAware;
+import org.eclipse.jetty.ee10.servlet.security.ConstraintMapping;
+import org.eclipse.jetty.security.Constraint;
+import org.eclipse.jetty.security.SecurityHandler;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.sample.jetty_12.JettyProperties;
@@ -39,7 +43,7 @@ class TLSHelloServletTest extends SSLTest {
     // Setup the basic application "context" for this application at "/"
     // This is also known as the handler tree (in jetty speak)
     ServletContextHandler servletContextHandler = new ServletContextHandler(
-        ServletContextHandler.SESSIONS);
+        ServletContextHandler.SECURITY);
     servletContextHandler.setContextPath("/");
 
     //add servlets
@@ -53,6 +57,18 @@ class TLSHelloServletTest extends SSLTest {
     EnumSet<DispatcherType> dispatches = EnumSet.allOf(DispatcherType.class);
     servletContextHandler.addFilter(TLSApiKeyFilter.class, TLSHelloServlet.SERVLET_PATH,
         dispatches);
+
+    // Setup security constraint
+    SecurityHandler security = servletContextHandler.getSecurityHandler();
+    if (security instanceof ConstraintAware constraint) {
+      ConstraintMapping mapping = new ConstraintMapping();
+      mapping.setPathSpec("/*");
+      Constraint dc = new Constraint.Builder()
+          .transport(Constraint.Transport.SECURE)
+          .build();
+      mapping.setConstraint(dc);
+      constraint.addConstraintMapping(mapping);
+    }
 
     //============================================================================
     //jetty server creation

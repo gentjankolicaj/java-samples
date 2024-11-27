@@ -91,7 +91,7 @@ class HelloHandlerTest extends SSLTest {
         .version(Version.HTTP_2)
         .build();
     HttpResponse<String> response = httpsClient.send(request, HttpResponse.BodyHandlers.ofString());
-    assertThat(response.statusCode()).isEqualTo(400);
+    assertThat(response.statusCode()).isEqualTo(200);
     assertThat(response.version()).isEqualTo(Version.HTTP_2);
 
     Awaitility.await()

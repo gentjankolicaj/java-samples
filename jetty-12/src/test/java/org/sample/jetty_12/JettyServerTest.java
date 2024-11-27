@@ -13,6 +13,7 @@ import javax.net.ssl.SSLContext;
 import lombok.extern.slf4j.Slf4j;
 import org.awaitility.Awaitility;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -22,11 +23,17 @@ import org.junit.jupiter.api.Test;
 @Slf4j
 class JettyServerTest extends SSLTest {
 
+  JettyServer jettyServer;
+
+  @AfterEach
+  void testClean() throws Exception {
+    jettyServer.stop();
+  }
 
   @Test
   void jettyYaml() throws Exception {
     JettyProperties jettyProperties = YamlConfigurations.load(JettyProperties.class, "/jetty.yaml");
-    JettyServer jettyServer = new JettyServer(jettyProperties.getJettyServer(),
+    jettyServer = new JettyServer(jettyProperties.getJettyServer(),
         (ContextHandlerCollection) null);
 
     jettyServer.start();
@@ -46,7 +53,7 @@ class JettyServerTest extends SSLTest {
   void jettySSLYaml() throws Exception {
     JettyProperties jettyProperties = YamlConfigurations.load(JettyProperties.class,
         "/jetty_ssl.yaml");
-    JettyServer jettyServer = new JettyServer(jettyProperties.getJettyServer(),
+    jettyServer = new JettyServer(jettyProperties.getJettyServer(),
         (ContextHandlerCollection) null);
 
     jettyServer.start();
@@ -66,7 +73,7 @@ class JettyServerTest extends SSLTest {
   void jettySSLMultipleConnectorsYaml() throws Exception {
     JettyProperties jettyProperties = YamlConfigurations.load(JettyProperties.class,
         "/jetty_ssl_multiple_connectors.yaml");
-    JettyServer jettyServer = new JettyServer(jettyProperties.getJettyServer(),
+    jettyServer = new JettyServer(jettyProperties.getJettyServer(),
         (ContextHandlerCollection) null);
 
     jettyServer.start();
@@ -86,7 +93,7 @@ class JettyServerTest extends SSLTest {
   void jettyHttpVersionsYaml() throws Exception {
     JettyProperties jettyProperties = YamlConfigurations.load(JettyProperties.class,
         "/jetty_http_versions.yaml");
-    JettyServer jettyServer = new JettyServer(jettyProperties.getJettyServer(),
+    jettyServer = new JettyServer(jettyProperties.getJettyServer(),
         (ContextHandlerCollection) null);
 
     jettyServer.start();
@@ -135,7 +142,7 @@ class JettyServerTest extends SSLTest {
   void jettyHttpsVersionsYaml() throws Exception {
     JettyProperties jettyProperties = YamlConfigurations.load(JettyProperties.class,
         "/jetty_https_versions.yaml");
-    JettyServer jettyServer = new JettyServer(jettyProperties.getJettyServer(),
+    jettyServer = new JettyServer(jettyProperties.getJettyServer(),
         (ContextHandlerCollection) null);
 
     //start jetty server
@@ -161,7 +168,7 @@ class JettyServerTest extends SSLTest {
         .version(Version.HTTP_1_1)
         .build();
     HttpResponse<String> response = httpsClient.send(request, HttpResponse.BodyHandlers.ofString());
-    assertThat(response.statusCode()).isEqualTo(400);
+    assertThat(response.statusCode()).isEqualTo(404);
     assertThat(response.version()).isEqualTo(Version.HTTP_1_1);
 
     // Create a http/2 request
@@ -174,7 +181,7 @@ class JettyServerTest extends SSLTest {
         .build();
     HttpResponse<String> response2 = httpsClient.send(request2,
         HttpResponse.BodyHandlers.ofString());
-    assertThat(response2.statusCode()).isEqualTo(400);
+    assertThat(response2.statusCode()).isEqualTo(404);
     assertThat(response2.version()).isEqualTo(Version.HTTP_2);
 
     Awaitility.await()
