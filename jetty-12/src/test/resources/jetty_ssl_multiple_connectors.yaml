@@ -17,7 +17,7 @@ jettyServer:
       host: 127.0.0.1
       port: 8443
       idleTimeout:
-        duration: 11
+        duration: 120
         timeUnit: SECONDS
       http:
         secureScheme: https
@@ -33,7 +33,7 @@ jettyServer:
       host: 127.0.0.1
       port: 8444
       idleTimeout:
-        duration: 11
+        duration: 120
         timeUnit: SECONDS
       http:
         secureScheme: https

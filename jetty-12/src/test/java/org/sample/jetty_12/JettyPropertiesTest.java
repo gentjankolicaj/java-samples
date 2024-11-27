@@ -43,7 +43,7 @@ class JettyPropertiesTest {
     assertThat(connectorProps.getHost()).isEqualTo("127.0.0.1");
     assertThat(connectorProps.getPort()).isEqualTo(8080);
     assertThat(connectorProps.getIdleTimeout()).isNotNull();
-    assertThat(connectorProps.getIdleTimeout().duration()).isEqualTo(11);
+    assertThat(connectorProps.getIdleTimeout().duration()).isEqualTo(120);
 
     //http config
     HttpProperties httpProperties = connectorProps.getHttp().get();
@@ -79,7 +79,7 @@ class JettyPropertiesTest {
     assertThat(connectorProps.getHost()).isEqualTo("127.0.0.1");
     assertThat(connectorProps.getPort()).isEqualTo(8443);
     assertThat(connectorProps.getIdleTimeout()).isNotNull();
-    assertThat(connectorProps.getIdleTimeout().duration()).isEqualTo(11);
+    assertThat(connectorProps.getIdleTimeout().duration()).isEqualTo(120);
 
     //http config
     HttpProperties httpProperties = connectorProps.getHttp().get();
@@ -121,7 +121,7 @@ class JettyPropertiesTest {
     assertThat(connectorProps.getHost()).isEqualTo("127.0.0.1");
     assertThat(connectorProps.getPort()).isEqualTo(8080);
     assertThat(connectorProps.getIdleTimeout()).isNotNull();
-    assertThat(connectorProps.getIdleTimeout().duration()).isEqualTo(11);
+    assertThat(connectorProps.getIdleTimeout().duration()).isEqualTo(120);
 
     //http config
     Optional<HttpProperties> optional = connectorProps.getHttp();
@@ -158,7 +158,7 @@ class JettyPropertiesTest {
     assertThat(connectorProps.getHost()).isEqualTo("127.0.0.1");
     assertThat(connectorProps.getPort()).isEqualTo(8443);
     assertThat(connectorProps.getIdleTimeout()).isNotNull();
-    assertThat(connectorProps.getIdleTimeout().duration()).isEqualTo(11);
+    assertThat(connectorProps.getIdleTimeout().duration()).isEqualTo(120);
 
     //http config
     HttpProperties httpProperties = connectorProps.getHttp().get();
@@ -179,7 +179,7 @@ class JettyPropertiesTest {
     assertThat(connectorProps2.getHost()).isEqualTo("127.0.0.1");
     assertThat(connectorProps2.getPort()).isEqualTo(8444);
     assertThat(connectorProps2.getIdleTimeout()).isNotNull();
-    assertThat(connectorProps2.getIdleTimeout().duration()).isEqualTo(11);
+    assertThat(connectorProps2.getIdleTimeout().duration()).isEqualTo(120);
 
     //second http config properties
     HttpProperties httpProperties2 = connectorProps2.getHttp().get();
@@ -223,7 +223,7 @@ class JettyPropertiesTest {
     assertThat(connectorProps.getHost()).isEqualTo("127.0.0.1");
     assertThat(connectorProps.getPort()).isEqualTo(8081);
     assertThat(connectorProps.getIdleTimeout()).isNotNull();
-    assertThat(connectorProps.getIdleTimeout().duration()).isEqualTo(11);
+    assertThat(connectorProps.getIdleTimeout().duration()).isEqualTo(120);
 
     //first http config
     HttpProperties httpProperties = connectorProps.getHttp().get();
@@ -239,7 +239,7 @@ class JettyPropertiesTest {
     assertThat(connectorProps2.getHost()).isEqualTo("127.0.0.1");
     assertThat(connectorProps2.getPort()).isEqualTo(8082);
     assertThat(connectorProps2.getIdleTimeout()).isNotNull();
-    assertThat(connectorProps2.getIdleTimeout().duration()).isEqualTo(11);
+    assertThat(connectorProps2.getIdleTimeout().duration()).isEqualTo(120);
 
     //second http config properties
     HttpProperties httpProperties2 = connectorProps2.getHttp().get();

@@ -1,4 +1,4 @@
-package org.sample.jetty_12.context;
+package org.sample.jetty_12.handler;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
