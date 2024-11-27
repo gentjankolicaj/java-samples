@@ -62,6 +62,13 @@
 			<artifactId>jetty-alpn-conscrypt-server</artifactId>
 		</dependency>
 
+		<!-- added web app dependencies -->
+		<dependency>
+			<groupId>org.eclipse.jetty.ee10</groupId>
+			<artifactId>jetty-ee10-webapp</artifactId>
+			<version>${jetty.version}</version>
+		</dependency>
+
 		<!-- jakarta dependencies -->
 		<dependency>
 			<groupId>jakarta.servlet</groupId>
