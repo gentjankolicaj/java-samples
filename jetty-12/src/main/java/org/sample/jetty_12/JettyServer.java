@@ -155,7 +155,8 @@ public class JettyServer {
       SSLProperties sslProperties = optionalSSL.get();
 
       // Add the SecureRequestCustomizer because TLS is used.
-      httpConfig.addCustomizer(new SecureRequestCustomizer());
+      // Note: disabled sniHostCheck
+      httpConfig.addCustomizer(new SecureRequestCustomizer(false));
 
       // The ConnectionFactory for HTTP/1.1.
       HttpConnectionFactory http11 = new HttpConnectionFactory(httpConfig);
@@ -234,7 +235,8 @@ public class JettyServer {
       SSLProperties sslProperties = optionalSSL.get();
 
       // Add the SecureRequestCustomizer because TLS is used.
-      httpConfig.addCustomizer(new SecureRequestCustomizer());
+      // Note: disabled sniHostCheck
+      httpConfig.addCustomizer(new SecureRequestCustomizer(false));
 
       //KeyStore resource
       Resource keyStoreResource = findKeyStore(sslProperties.getKeyStoreFile(),
