@@ -1,4 +1,4 @@
-package org.sample.jetty_12.context;
+package org.sample.jetty_12.handler;
 
 import lombok.RequiredArgsConstructor;
 import org.eclipse.jetty.http.HttpHeader;
@@ -24,4 +24,5 @@ public class HelloHandler extends Handler.Abstract {
     response.write(true, BufferUtil.toBuffer(message), callback);
     return true;
   }
+
 }

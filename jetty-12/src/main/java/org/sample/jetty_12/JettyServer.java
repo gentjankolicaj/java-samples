@@ -2,14 +2,17 @@ package org.sample.jetty_12;
 
 import java.security.Security;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.conscrypt.OpenSSLProvider;
 import org.eclipse.jetty.alpn.server.ALPNServerConnectionFactory;
+import org.eclipse.jetty.ee10.webapp.WebAppContext;
 import org.eclipse.jetty.http.HttpVersion;
 import org.eclipse.jetty.http2.server.HTTP2CServerConnectionFactory;
 import org.eclipse.jetty.http2.server.HTTP2ServerConnectionFactory;
@@ -49,7 +52,19 @@ public class JettyServer {
 
   public JettyServer(JettyServerProperties serverProperties, ContextHandler... contextHandlers) {
     this.serverProperties = serverProperties;
+    if (ArrayUtils.isEmpty(contextHandlers)) {
+      throw new IllegalArgumentException("ContextHandler's can't be empty !");
+    }
     this.contextHandlers = new ContextHandlerCollection(contextHandlers);
+  }
+
+  public JettyServer(JettyServerProperties serverProperties, WebAppContext... webAppContexts) {
+    this.serverProperties = serverProperties;
+    if (ArrayUtils.isEmpty(webAppContexts)) {
+      throw new IllegalArgumentException("WebAppContexts can't be empty !");
+    }
+    this.contextHandlers = new ContextHandlerCollection();
+    Arrays.stream(webAppContexts).forEach(this.contextHandlers::addHandler);
   }
 
 
