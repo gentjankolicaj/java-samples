@@ -1,4 +1,4 @@
-package org.sample.jetty_12.servlet;
+package org.sample.jetty_12.tls;
 
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,9 +18,9 @@ import lombok.extern.slf4j.Slf4j;
  * @Date: 11/14/24 9:13 PM
  */
 @Slf4j
-public class HelloWorldServlet extends HttpServlet {
+public class TLSHelloServlet extends HttpServlet {
 
-  public static final String SERVLET_PATH = "/hello_world";
+  public static final String SERVLET_PATH = "/tls_hello";
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -63,7 +63,7 @@ public class HelloWorldServlet extends HttpServlet {
 
     public void run() {
       log.info("writing to response:");
-      String formatedHtml = String.format(html, HelloWorldServlet.class.getSimpleName(),
+      String formatedHtml = String.format(html, TLSHelloServlet.class.getSimpleName(),
           getClass().getSimpleName(),
           LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
       writer.println(formatedHtml);
