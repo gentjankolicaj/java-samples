@@ -12,44 +12,54 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 import lombok.extern.slf4j.Slf4j;
 import org.awaitility.Awaitility;
-import org.eclipse.jetty.ee10.webapp.WebAppContext;
+import org.eclipse.jetty.ee10.servlet.DefaultServlet;
+import org.eclipse.jetty.ee10.servlet.ServletContextHandler;
+import org.eclipse.jetty.ee10.servlet.ServletHolder;
 import org.junit.jupiter.api.Test;
 
 /**
  * @author gentjan kolicaj
  * @Date: 11/21/24 10:47 PM
  */
+@SuppressWarnings("all")
 @Slf4j
-class WebAppContextTest {
+class ServletContextHandlerTest {
 
 
   @Test
-  void noWebAppContext() throws Exception {
+  void noServletContextHandlers() throws Exception {
     JettyProperties jettyProperties = YamlConfigurations.load(JettyProperties.class,
         "/jetty_http_versions.yaml");
 
     assertThatThrownBy(() -> new JettyServer(jettyProperties.getJettyServer(),
-        (WebAppContext[]) null)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("WebAppContexts can't be empty !");
+        (ServletContextHandler[]) null)).isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("ServletContextHandlers can't be empty !");
 
     assertThatThrownBy(() -> new JettyServer(jettyProperties.getJettyServer(),
-        new WebAppContext[0])).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("WebAppContexts can't be empty !");
+        new ServletContextHandler[0])).isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("ServletContextHandlers can't be empty !");
   }
 
-
   @Test
-  void webAppContext() throws Exception {
+  void defaultServlet() throws Exception {
     JettyProperties jettyProperties = YamlConfigurations.load(JettyProperties.class,
         "/jetty_http_versions.yaml");
 
-    //create webapp (WAR) config
-    WebAppContext webAppA = new WebAppContext();
-    webAppA.setContextPath("/a");
-    webAppA.setWar("./src/test/resources/webapps/webapp-a");
+    // Setup the basic application "context" for this application at "/"
+    // This is also known as the handler tree (in jetty speak)
+    ServletContextHandler servletContextHandler = new ServletContextHandler(
+        ServletContextHandler.SESSIONS);
+    servletContextHandler.setContextPath("/");
+
+    // Lastly, the default servlet for root content (always needed, to satisfy servlet spec)
+    // It is important that this is last.
+    ServletHolder holderDef = new ServletHolder("default", DefaultServlet.class);
+    holderDef.setInitParameter("dirAllowed", "true");
+    servletContextHandler.addServlet(holderDef, "/");
 
     //jetty server creation
-    JettyServer jettyServer = new JettyServer(jettyProperties.getJettyServer(), webAppA);
+    JettyServer jettyServer = new JettyServer(jettyProperties.getJettyServer(),
+        servletContextHandler);
     jettyServer.start();
 
     // Create a HttpClient instance
@@ -57,7 +67,7 @@ class WebAppContextTest {
     String scheme = "http";
     String host = "localhost";
     int port = 8081;
-    String path = "/a/";
+    String path = "/";
 
     // Create a http/1.1 request
     HttpRequest request = HttpRequest.newBuilder()
@@ -66,9 +76,8 @@ class WebAppContextTest {
         .version(Version.HTTP_1_1)
         .build();
     HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-    assertThat(response.statusCode()).isEqualTo(200);
+    assertThat(response.statusCode()).isEqualTo(404);
     assertThat(response.version()).isEqualTo(Version.HTTP_1_1);
-    assertThat(response.body()).contains("Welcome to WebApp-A");
 
     // Create a http/2 request
     //change port because http2 is on different port & connector
@@ -79,9 +88,8 @@ class WebAppContextTest {
         .version(Version.HTTP_2)
         .build();
     HttpResponse<String> response2 = client.send(request2, HttpResponse.BodyHandlers.ofString());
-    assertThat(response2.statusCode()).isEqualTo(200);
+    assertThat(response2.statusCode()).isEqualTo(404);
     assertThat(response2.version()).isEqualTo(Version.HTTP_2);
-    assertThat(response2.body()).contains("Welcome to WebApp-A");
 
     Awaitility.await()
         .timeout(Duration.ofSeconds(2))

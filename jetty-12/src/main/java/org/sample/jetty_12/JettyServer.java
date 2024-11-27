@@ -12,6 +12,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.conscrypt.OpenSSLProvider;
 import org.eclipse.jetty.alpn.server.ALPNServerConnectionFactory;
+import org.eclipse.jetty.ee10.servlet.ServletContextHandler;
 import org.eclipse.jetty.ee10.webapp.WebAppContext;
 import org.eclipse.jetty.http.HttpVersion;
 import org.eclipse.jetty.http2.server.HTTP2CServerConnectionFactory;
@@ -65,6 +66,16 @@ public class JettyServer {
     }
     this.contextHandlers = new ContextHandlerCollection();
     Arrays.stream(webAppContexts).forEach(this.contextHandlers::addHandler);
+  }
+
+  public JettyServer(JettyServerProperties serverProperties,
+      ServletContextHandler... servletContextHandlers) {
+    this.serverProperties = serverProperties;
+    if (ArrayUtils.isEmpty(servletContextHandlers)) {
+      throw new IllegalArgumentException("ServletContextHandlers can't be empty !");
+    }
+    this.contextHandlers = new ContextHandlerCollection();
+    Arrays.stream(servletContextHandlers).forEach(this.contextHandlers::addHandler);
   }
 
 
