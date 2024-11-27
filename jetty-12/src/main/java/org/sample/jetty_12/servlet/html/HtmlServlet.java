@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class HtmlServlet extends HttpServlet {
 
-  protected static final String SERVLET_PATH = "/html";
+  public static final String SERVLET_PATH = "/html";
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -63,7 +63,7 @@ public class HtmlServlet extends HttpServlet {
         <!DOCTYPE html>
         <html>
         <head>
-        <title>tomcat-embed-11-html</title>
+        <title>jetty-12-html</title>
         </head>
         <body>
         <h1>Servlet classname: %s</h1>

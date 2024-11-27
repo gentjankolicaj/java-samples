@@ -1,6 +1,5 @@
-package org.sample.jetty_12.servlet.async_read;
+package org.sample.jetty_12.servlet;
 
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -11,7 +10,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,26 +18,25 @@ import lombok.extern.slf4j.Slf4j;
  * @Date: 11/14/24 9:13 PM
  */
 @Slf4j
-public class AsyncReadHtmlServlet extends HttpServlet {
+public class HelloWorldServlet extends HttpServlet {
 
-  public static final String SERVLET_PATH = "/async_read_html";
+  public static final String SERVLET_PATH = "/hello";
 
   @Override
-  protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-      throws ServletException, IOException {
+  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
     Reader reader = req.getReader();
     PrintWriter writer = resp.getWriter();
 
-    //read async from request
-    CompletableFuture.runAsync(new ReadTask(reader));
+    //read from request
+    new ReadTask(reader).run();
 
-    //write from response
+    //write  from response
     new WriteTask(writer).run();
   }
 
 
   @RequiredArgsConstructor
-  static class ReadTask implements Runnable {
+  static class ReadTask {
 
     private final Reader reader;
 
@@ -57,27 +54,16 @@ public class AsyncReadHtmlServlet extends HttpServlet {
     }
   }
 
+
   @RequiredArgsConstructor
   static class WriteTask {
 
     private final PrintWriter writer;
-    private final String html = """
-        <!DOCTYPE html>
-        <html>
-        <head>
-        <title>jetty-12-html</title>
-        </head>
-        <body>
-        <h1>Servlet classname: %s</h1>
-        <p>Task classname: %s</p>
-        <p>DateTime: %s</p>
-        </body>
-        </html>
-        """;
+    private final String html = "Hello World";
 
     public void run() {
       log.info("writing to response:");
-      String formatedHtml = String.format(html, AsyncReadHtmlServlet.class.getSimpleName(),
+      String formatedHtml = String.format(html, HelloWorldServlet.class.getSimpleName(),
           getClass().getSimpleName(),
           LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
       writer.println(formatedHtml);

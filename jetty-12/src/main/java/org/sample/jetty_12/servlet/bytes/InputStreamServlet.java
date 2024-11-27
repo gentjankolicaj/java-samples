@@ -65,7 +65,7 @@ public class InputStreamServlet extends HttpServlet {
           <!DOCTYPE html>
           <html>
           <head>
-          <title>tomcat-embed-11-html</title>
+            <title>jetty-12-html</title>
           </head>
           <body>
           <h1>Testing byte streams from ServletInputStream/ServletOutputStream</h1>
