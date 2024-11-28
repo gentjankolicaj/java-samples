@@ -156,6 +156,7 @@ public class JettyServer {
 
       // Add the SecureRequestCustomizer because TLS is used.
       // Note: disabled sniHostCheck
+      //https://stackoverflow.com/questions/69945173/org-eclipse-jetty-http-badmessageexception-400-invalid-sni
       httpConfig.addCustomizer(new SecureRequestCustomizer(false));
 
       // The ConnectionFactory for HTTP/1.1.
@@ -236,6 +237,7 @@ public class JettyServer {
 
       // Add the SecureRequestCustomizer because TLS is used.
       // Note: disabled sniHostCheck
+      // https://stackoverflow.com/questions/69945173/org-eclipse-jetty-http-badmessageexception-400-invalid-sni
       httpConfig.addCustomizer(new SecureRequestCustomizer(false));
 
       //KeyStore resource
