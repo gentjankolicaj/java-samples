@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns="http://maven.apache.org/POM/4.0.0"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -34,9 +33,16 @@
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
-				<type>pom</type>
 				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-bom</artifactId>
+				<version>${jetty.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<type>pom</type>
+				<groupId>org.eclipse.jetty.ee10</groupId>
+				<artifactId>jetty-ee10-bom</artifactId>
 				<version>${jetty.version}</version>
 				<scope>import</scope>
 			</dependency>
@@ -62,18 +68,14 @@
 			<artifactId>jetty-alpn-conscrypt-server</artifactId>
 		</dependency>
 
-		<!-- added web app dependencies -->
+		<!-- jetty + ee dependencies -->
 		<dependency>
 			<groupId>org.eclipse.jetty.ee10</groupId>
 			<artifactId>jetty-ee10-webapp</artifactId>
-			<version>${jetty.version}</version>
 		</dependency>
-
-		<!-- websocket dependencies -->
 		<dependency>
 			<groupId>org.eclipse.jetty.ee10.websocket</groupId>
 			<artifactId>jetty-ee10-websocket-jakarta-server</artifactId>
-			<version>${jetty.version}</version>
 		</dependency>
 
 		<!-- jdev dependencies -->
