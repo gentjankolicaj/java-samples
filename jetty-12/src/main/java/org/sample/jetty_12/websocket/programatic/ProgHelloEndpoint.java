@@ -15,11 +15,11 @@ import lombok.extern.slf4j.Slf4j;
  * @author gentjan kolicaj
  * @Date: 11/27/24 10:56 PM
  */
-@ServerEndpoint(ProgHelloEndpoint.WEBSOCKET_URI)
+@ServerEndpoint(ProgHelloEndpoint.URI)
 @Slf4j
 public class ProgHelloEndpoint extends Endpoint {
 
-  protected static final String WEBSOCKET_URI = "/prog_hello";
+  protected static final String URI = "/prog_hello";
   private Session session;
 
 

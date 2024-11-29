@@ -51,7 +51,7 @@ class TimeEndpointTest extends WSTest {
     String scheme = "ws";
     String host = "localhost";
     int port = 8081;
-    String path = TimeEndpoint.WEBSOCKET_URI;
+    String path = TimeEndpoint.URI;
 
     //Create web socket client endpoint & web socket container
     JakartaClientEndpoint clientEndpoint = new JakartaClientEndpoint();

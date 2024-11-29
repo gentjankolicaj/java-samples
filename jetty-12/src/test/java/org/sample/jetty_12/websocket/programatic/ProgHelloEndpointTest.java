@@ -49,7 +49,7 @@ class ProgHelloEndpointTest extends WSTest {
 
           //create hello endpoint
           ServerEndpointConfig endpointConfig = ServerEndpointConfig.Builder
-              .create(ProgHelloEndpoint.class, ProgHelloEndpoint.WEBSOCKET_URI).build();
+              .create(ProgHelloEndpoint.class, ProgHelloEndpoint.URI).build();
           //Add endpoint config to server container
           wsContainer.addEndpoint(endpointConfig);
         });
@@ -61,7 +61,7 @@ class ProgHelloEndpointTest extends WSTest {
     String scheme = "ws";
     String host = "localhost";
     int port = 8081;
-    String path = ProgHelloEndpoint.WEBSOCKET_URI;
+    String path = ProgHelloEndpoint.URI;
 
     //Create web socket client & web socket container
     JakartaClientEndpoint clientEndpoint = new JakartaClientEndpoint();

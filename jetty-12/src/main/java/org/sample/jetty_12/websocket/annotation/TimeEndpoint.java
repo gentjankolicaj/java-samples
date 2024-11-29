@@ -16,11 +16,11 @@ import lombok.extern.slf4j.Slf4j;
  * @author gentjan kolicaj
  * @Date: 11/27/24 10:50 PM
  */
-@ServerEndpoint(TimeEndpoint.WEBSOCKET_URI)
+@ServerEndpoint(TimeEndpoint.URI)
 @Slf4j
 public class TimeEndpoint {
 
-  protected static final String WEBSOCKET_URI = "/time";
+  protected static final String URI = "/time";
   private Session session;
 
   @OnOpen

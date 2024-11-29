@@ -48,7 +48,7 @@ class ProgTimeEndpointTest extends WSTest {
 
           //create time endpoint
           ServerEndpointConfig endpointConfig = ServerEndpointConfig.Builder
-              .create(ProgTimeEndpoint.class, ProgTimeEndpoint.WEBSOCKET_URI).build();
+              .create(ProgTimeEndpoint.class, ProgTimeEndpoint.URI).build();
           //Add endpoint config to server container
           wsContainer.addEndpoint(endpointConfig);
         });
@@ -60,7 +60,7 @@ class ProgTimeEndpointTest extends WSTest {
     String scheme = "ws";
     String host = "localhost";
     int port = 8081;
-    String path = ProgTimeEndpoint.WEBSOCKET_URI;
+    String path = ProgTimeEndpoint.URI;
 
     //Create web socket client endpoint & web socket container
     JakartaClientEndpoint clientEndpoint = new JakartaClientEndpoint();

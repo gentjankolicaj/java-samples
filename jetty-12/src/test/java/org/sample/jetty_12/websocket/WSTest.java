@@ -15,13 +15,14 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketError;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketOpen;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import org.sample.jetty_12.SSLTest;
 
 /**
  * @author gentjan kolicaj
  * @Date: 11/28/24 7:03 PM
  */
 @Slf4j
-public class WSTest {
+public class WSTest extends SSLTest {
 
 
   @ClientEndpoint

@@ -1,6 +1,6 @@
 package org.sample.jetty_12.websocket.annotation;
 
-import static org.sample.jetty_12.websocket.annotation.HelloEndpoint.WEBSOCKET_URI;
+import static org.sample.jetty_12.websocket.annotation.HelloEndpoint.URI;
 
 import jakarta.websocket.CloseReason;
 import jakarta.websocket.OnClose;
@@ -16,11 +16,11 @@ import lombok.extern.slf4j.Slf4j;
  * @author gentjan kolicaj
  * @Date: 11/27/24 10:56 PM
  */
-@ServerEndpoint(WEBSOCKET_URI)
+@ServerEndpoint(URI)
 @Slf4j
 public class HelloEndpoint {
 
-  public static final String WEBSOCKET_URI = "/hello";
+  public static final String URI = "/hello";
   private Session session;
 
   @OnOpen

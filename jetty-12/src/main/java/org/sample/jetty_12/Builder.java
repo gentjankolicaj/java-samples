@@ -5,6 +5,7 @@ import jakarta.servlet.Filter;
 import jakarta.servlet.Servlet;
 import jakarta.websocket.server.ServerEndpointConfig;
 import java.util.EnumSet;
+import org.eclipse.jetty.ee10.websocket.server.JettyWebSocketCreator;
 
 /**
  * @author gentjan kolicaj
@@ -62,6 +63,15 @@ public interface Builder<T> {
      *                     registered.
      */
     WebSocketBuilder<T> endpoint(ServerEndpointConfig serverConfig);
+
+
+    /**
+     * Deploys the given annotated endpoint with jetty apis
+     *
+     * @param creator  jetty websocket endpoint creator impl
+     * @param pathSpec websocket endpoint path
+     */
+    WebSocketBuilder<T> jettyApiEndpoint(JettyWebSocketCreator creator, String pathSpec);
 
   }
 

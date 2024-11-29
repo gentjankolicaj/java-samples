@@ -11,8 +11,8 @@ jettyServer:
     minThreads: 4
     maxThreads: 50
     reservedThreads: 1
-    idleTimeout: 10000 # in milliseconds
-    stopTimeout: 10000 # in milliseconds
+    idleTimeout: 60000 # in milliseconds
+    stopTimeout: 60000 # in milliseconds
   connectors:
     - name: first-connector
       host: 127.0.0.1

@@ -44,7 +44,7 @@ class JettyHelloEndpointTest extends WSTest {
     // Add WebSocket server endpoints
     //Here we use specific jetty websocket api
     JettyWebSocketServletContainerInitializer.configure(contextHandler, (context, configurator) -> {
-      configurator.addMapping(JettyHelloEndpoint.WEBSOCKET_URI,
+      configurator.addMapping(JettyHelloEndpoint.URI,
           JettyHelloEndpoint.getWebSocketCreator());
     });
 
@@ -55,7 +55,7 @@ class JettyHelloEndpointTest extends WSTest {
     String scheme = "ws";
     String host = "localhost";
     int port = 8081;
-    String path = JettyHelloEndpoint.WEBSOCKET_URI;
+    String path = JettyHelloEndpoint.URI;
 
     //Create jetty websocket client endpoint
     WebSocketClient webSocketClient = new WebSocketClient();

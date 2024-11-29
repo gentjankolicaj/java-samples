@@ -45,7 +45,7 @@ class JWTFilterTest extends WSTest {
 
     //Add filter for websocket endpoint uri
     EnumSet<DispatcherType> dispatchers = EnumSet.allOf(DispatcherType.class);
-    context.addFilter(JWTFilter.class, HelloEndpoint.WEBSOCKET_URI, dispatchers);
+    context.addFilter(JWTFilter.class, HelloEndpoint.URI, dispatchers);
 
     // Add WebSocket server endpoints
     JakartaWebSocketServletContainerInitializer.configure(context,
@@ -58,7 +58,7 @@ class JWTFilterTest extends WSTest {
     String scheme = "ws";
     String host = "localhost";
     int port = 8081;
-    String path = HelloEndpoint.WEBSOCKET_URI;
+    String path = HelloEndpoint.URI;
 
     //Create web socket client endpoint & web socket container
     JakartaClientEndpoint clientEndpoint = new JakartaClientEndpoint();

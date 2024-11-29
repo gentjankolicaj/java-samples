@@ -13,6 +13,8 @@ import org.apache.commons.lang3.tuple.MutablePair;
 import org.eclipse.jetty.ee10.servlet.DefaultServlet;
 import org.eclipse.jetty.ee10.servlet.ServletContextHandler;
 import org.eclipse.jetty.ee10.websocket.jakarta.server.config.JakartaWebSocketServletContainerInitializer;
+import org.eclipse.jetty.ee10.websocket.server.JettyWebSocketCreator;
+import org.eclipse.jetty.ee10.websocket.server.config.JettyWebSocketServletContainerInitializer;
 import org.sample.jetty_12.Builder.ServletBuilder;
 import org.sample.jetty_12.Builder.WebSocketBuilder;
 
@@ -124,6 +126,7 @@ public abstract class JettyBuilder {
     //websocket fields
     private final Set<Class<?>> endpointClasses = new HashSet<>();
     private final Set<ServerEndpointConfig> serverEndpointConfigs = new HashSet<>();
+    private final Map<JettyWebSocketCreator, String> jettyApiEndpointClasses = new HashMap<>();
     private int options = 0;
     private String contextPath = "/";
 
@@ -172,6 +175,13 @@ public abstract class JettyBuilder {
     }
 
     @Override
+    public JettyWebSocketBuilderImpl jettyApiEndpoint(JettyWebSocketCreator creator,
+        String pathSpec) {
+      this.jettyApiEndpointClasses.put(creator, pathSpec);
+      return this;
+    }
+
+    @Override
     public JettyWebSocketBuilderImpl endpoint(ServerEndpointConfig serverConfig) {
       this.serverEndpointConfigs.add(serverConfig);
       return this;
@@ -179,50 +189,60 @@ public abstract class JettyBuilder {
 
     @Override
     public ServletContextHandler build() {
-      ServletContextHandler context = new ServletContextHandler(options);
-      context.setContextPath(contextPath);
+      ServletContextHandler servletContextHandler = new ServletContextHandler(options);
+      servletContextHandler.setContextPath(contextPath);
 
       //Add servlets
       servlets.forEach((k, v) -> {
         if (k != null && v != null) {
-          context.addServlet(k, v);
+          servletContextHandler.addServlet(k, v);
         }
       });
 
       //Add filters with default dispatcher
       filters.forEach((key, value) -> {
         if (key != null && value != null) {
-          context.addFilter(key, value, defaultDispatchers);
+          servletContextHandler.addFilter(key, value, defaultDispatchers);
         }
       });
 
       //Add filters with explicit dispatchers
       filtersWithDispatchers.forEach((key, value) -> {
         if (key != null && value != null && (value.getLeft() != null && value.getRight() != null)) {
-          context.addFilter(key, value.getLeft(), value.getRight());
+          servletContextHandler.addFilter(key, value.getLeft(), value.getRight());
         }
       });
 
       // Lastly, the default servlet for root content (always needed, to satisfy servlet spec)
-      context.addServlet(DefaultServlet.class, "/");
+      servletContextHandler.addServlet(DefaultServlet.class, "/");
 
       //=================================================
-      //Add websocket endpoints
+      //Add jakarta websocket endpoints
 
       //Add annotated endpoints
       endpointClasses.forEach(endpoint ->
-          JakartaWebSocketServletContainerInitializer.configure(context,
+          JakartaWebSocketServletContainerInitializer.configure(servletContextHandler,
               (servletContext, serverContainer) -> serverContainer.addEndpoint(endpoint))
       );
 
       //Add programmatic endpoints
       serverEndpointConfigs.forEach(serverEndpointConfig ->
-          JakartaWebSocketServletContainerInitializer.configure(context,
+          JakartaWebSocketServletContainerInitializer.configure(servletContextHandler,
               (servletContext, serverContainer) -> serverContainer.addEndpoint(
                   serverEndpointConfig))
       );
 
-      return context;
+      //=================================================
+      //Add jetty api websocket endpoints
+      jettyApiEndpointClasses.forEach((key, value) -> {
+        if (key != null && value != null) {
+          JettyWebSocketServletContainerInitializer.configure(servletContextHandler,
+              (context, configurator) -> {
+                configurator.addMapping(value, key);
+              });
+        }
+      });
+      return servletContextHandler;
     }
   }
 

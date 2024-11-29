@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.conscrypt.OpenSSLProvider;
+import org.conscrypt.Conscrypt;
 import org.eclipse.jetty.alpn.server.ALPNServerConnectionFactory;
 import org.eclipse.jetty.ee10.servlet.ServletContextHandler;
 import org.eclipse.jetty.ee10.webapp.WebAppContext;
@@ -310,8 +310,7 @@ public class JettyServer {
 
   protected void configureTLS(SslContextFactory.Server sslContextFactory) {
     // https://jetty.org/docs/jetty/12/programming-guide/server/http.html#connector-protocol-tls-conscrypt
-    Security.addProvider(new OpenSSLProvider());
-    sslContextFactory.setProvider("Conscrypt");
+    Security.insertProviderAt(Conscrypt.newProvider(), 1);
   }
 
 
