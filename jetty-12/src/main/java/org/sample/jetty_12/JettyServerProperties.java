@@ -1,6 +1,7 @@
 package org.sample.jetty_12;
 
 import java.util.List;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,6 +20,7 @@ public class JettyServerProperties {
   protected boolean stopAtShutdown;
   protected long stopTimeout;
   protected boolean gzipEnabled;
+  protected Optional<Boolean> securedRedirect = Optional.empty();
   protected ThreadPoolProperties threadPool;
   protected List<ConnectorProperties> connectors;
 

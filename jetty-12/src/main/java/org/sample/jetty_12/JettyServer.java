@@ -18,6 +18,7 @@ import org.eclipse.jetty.http.HttpVersion;
 import org.eclipse.jetty.http2.server.HTTP2CServerConnectionFactory;
 import org.eclipse.jetty.http2.server.HTTP2ServerConnectionFactory;
 import org.eclipse.jetty.server.Connector;
+import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.HttpConfiguration;
 import org.eclipse.jetty.server.HttpConnectionFactory;
 import org.eclipse.jetty.server.SecureRequestCustomizer;
@@ -26,6 +27,7 @@ import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.SslConnectionFactory;
 import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
+import org.eclipse.jetty.server.handler.SecuredRedirectHandler;
 import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.util.resource.ResourceFactory;
 import org.eclipse.jetty.util.resource.Resources;
@@ -49,6 +51,15 @@ public class JettyServer {
       ContextHandlerCollection contextHandlers) {
     this.serverProperties = serverProperties;
     this.contextHandlers = contextHandlers;
+  }
+
+  public JettyServer(JettyServerProperties serverProperties, Handler... handlers) {
+    this.serverProperties = serverProperties;
+    if (ArrayUtils.isEmpty(handlers)) {
+      throw new IllegalArgumentException("Handler's can't be empty !");
+    }
+    this.contextHandlers = new ContextHandlerCollection();
+    Arrays.stream(handlers).forEach(this.contextHandlers::addHandler);
   }
 
   public JettyServer(JettyServerProperties serverProperties, ContextHandler... contextHandlers) {
@@ -90,14 +101,24 @@ public class JettyServer {
     createConnectors(this.server, this.serverProperties.getConnectors());
 
     //context handlers setup
-    setupHandlers(this.server, this.contextHandlers);
+    setupHandlers(this.server, this.contextHandlers, this.serverProperties);
+
   }
 
-  protected void setupHandlers(Server server, ContextHandlerCollection contextHandlers) {
+  protected void setupHandlers(Server server, ContextHandlerCollection contextHandlers,
+      JettyServerProperties jettyServerProperties) {
     if (contextHandlers == null) {
       log.warn("Context handlers not set.");
     } else {
       server.setHandler(contextHandlers);
+
+      //set handler to secured redirect
+      if (jettyServerProperties.getSecuredRedirect().isPresent()) {
+        Boolean securedRedirect = jettyServerProperties.getSecuredRedirect().get();
+        if (securedRedirect) {
+          server.setHandler(new SecuredRedirectHandler());
+        }
+      }
     }
   }
 

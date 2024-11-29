@@ -4,6 +4,7 @@ jettyServer:
   stopAtShutdown: true
   stopTimeout: 10000 # in milliseconds
   gzipEnabled: true
+  securedRedirect: true
   threadPool:
     poolName: jetty-pool
     daemonThreads: true
