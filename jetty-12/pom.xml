@@ -33,10 +33,10 @@
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
+				<type>pom</type>
 				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-bom</artifactId>
 				<version>${jetty.version}</version>
-				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
 			<dependency>
