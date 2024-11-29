@@ -64,7 +64,7 @@ class ProgHelloEndpointTest extends WSTest {
     String path = ProgHelloEndpoint.WEBSOCKET_URI;
 
     //Create web socket client & web socket container
-    WSClientEndpoint clientEndpoint = new WSClientEndpoint();
+    JakartaClientEndpoint clientEndpoint = new JakartaClientEndpoint();
     WebSocketContainer webSocketContainer = ContainerProvider.getWebSocketContainer();
 
     //Create http/1.1 client websocket session
@@ -81,14 +81,15 @@ class ProgHelloEndpointTest extends WSTest {
     //Create http/2 client websocket session
     //change port because http2 is on different port & connector
     port = 8082;
-    Session session2 = webSocketContainer.connectToServer(clientEndpoint,
+    JakartaClientEndpoint clientEndpoint2 = new JakartaClientEndpoint();
+    Session session2 = webSocketContainer.connectToServer(clientEndpoint2,
         URI.create(String.format("%s://%s:%d%s", scheme, host, port, path)));
 
     //wait for websocket messages to arrive at queue
-    Awaitility.await().until(() -> !clientEndpoint.getTextQueue().isEmpty());
+    Awaitility.await().until(() -> !clientEndpoint2.getTextQueue().isEmpty());
 
     //check if queue contains string with 2024 date (which it does because of pushing server thread).
-    assertThat(clientEndpoint.getTextQueue().pollFirst()).contains("Hello");
+    assertThat(clientEndpoint2.getTextQueue().pollFirst()).contains("Hello");
     session2.close(new CloseReason(CloseCodes.NORMAL_CLOSURE, "http/2 test finished"));
 
     //async for stopping server

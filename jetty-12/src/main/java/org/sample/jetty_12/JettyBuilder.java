@@ -121,12 +121,11 @@ public abstract class JettyBuilder {
     private final Map<Class<? extends Filter>, String> filters = new HashMap<>();
     private final Map<Class<? extends Filter>, MutablePair<String, EnumSet<DispatcherType>>> filtersWithDispatchers = new HashMap<>();
     private final EnumSet<DispatcherType> defaultDispatchers = EnumSet.allOf(DispatcherType.class);
-    private int options = 0;
-    private String contextPath = "/";
     //websocket fields
     private final Set<Class<?>> endpointClasses = new HashSet<>();
     private final Set<ServerEndpointConfig> serverEndpointConfigs = new HashSet<>();
-
+    private int options = 0;
+    private String contextPath = "/";
 
     @Override
     public JettyWebSocketBuilderImpl sessionOption() {
