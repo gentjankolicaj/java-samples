@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Java samples with packages,libs or api on different maven modules.
+Java samples with packages,libraries,frameworks or api on different maven modules.
 
 ### Projects :
 
@@ -27,6 +27,7 @@ Java samples with packages,libs or api on different maven modules.
 - [jetty-12](/jetty-12)
 - [virtual-thread (loom-project)](/virtual-thread)
 - [websocket](/websocket)
+- [pekko](/pekko)
 
 
 
