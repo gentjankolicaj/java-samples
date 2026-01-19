@@ -1,4 +1,4 @@
-package org.sample.ccollections.synch;
+package org.sample.ccollections.sync;
 
 import java.util.ArrayList;
 import java.util.Collections;

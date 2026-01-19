@@ -6,25 +6,22 @@ import org.sample.bytecode.cmd.CmdOutput;
 
 
 @Slf4j
-
 public class PrintUtil {
 
 
-  public static <T> void print(T... args) {
-    if (args != null) {
-      for (T t : args) {
-        log.info("{}", t);
-      }
-    }
-  }
-
   public static void print(List<? extends CmdOutput> list) {
-    if (list != null && list.size() != 0) {
+    if (list != null && !list.isEmpty()) {
       for (CmdOutput output : list) {
-        log.info("Command : " + output.getCmd());
-        print(output.getOutput());
+        log.info("Command : {}", output.getCmd());
+        String[] outputValues = output.getOutput();
+        if (outputValues != null) {
+          for (String outputValue : outputValues) {
+            log.info("{}", outputValue);
+          }
+        }
         log.info("\n\n");
       }
     }
   }
+
 }

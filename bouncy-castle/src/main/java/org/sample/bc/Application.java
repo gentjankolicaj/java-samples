@@ -7,7 +7,7 @@ import javax.crypto.spec.IvParameterSpec;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class App {
+public class Application {
 
   public static void main(String[] args) throws GeneralSecurityException {
     String input = "Hello world !!!`1234567890-=+_)(*&^%$#@!~{}|?><S:";
