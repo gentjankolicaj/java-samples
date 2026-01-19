@@ -5,10 +5,9 @@ import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * This example show the problem that arises when multiple threads perform operations on
- * un-synchronized collections. Problems : 1.Race condition 2.Inconsistency Note: At this example
- * somehow threads are not starting in parallel & list is consistent when I run locally.Usually an
- * exception would be thrown.
+ * This example show the problem that arises when multiple threads perform operations on un-synchronized collections. Problems : 1.Race
+ * condition 2.Inconsistency Note: At this example somehow threads are not starting in parallel & list is consistent when I run
+ * locally.Usually an exception would be thrown.
  */
 @Slf4j
 public class App {

@@ -3,8 +3,8 @@ package org.sample.thread.inconsistency;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * This class is an example of inconsistency that happens when increment of a variable is not atomic
- * Note : operation (++) itself is atomic but method is called by multiple threads.
+ * This class is an example of inconsistency that happens when increment of a variable is not atomic Note : operation (++) itself is atomic
+ * but method is called by multiple threads.
  */
 @Slf4j
 public class App {

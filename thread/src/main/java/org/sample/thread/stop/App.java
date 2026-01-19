@@ -3,15 +3,12 @@ package org.sample.thread.stop;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * In this sample I use volatile keyword to read/write variable on RAM, and based on the variable
- * value thread terminates. 1.By using the volatile keyword we guarantee that CPU is not going to
- * cache that variable value. 2.We get the latest value of variable from RAM
+ * In this sample I use volatile keyword to read/write variable on RAM, and based on the variable value thread terminates. 1.By using the
+ * volatile keyword we guarantee that CPU is not going to cache that variable value. 2.We get the latest value of variable from RAM
  * <p>
- * Note: it might work even without volatile keyword, but we have not guaranteed of latest
- * value=>loop never ends
+ * Note: it might work even without volatile keyword, but we have not guaranteed of latest value=>loop never ends
  * <p>
- * About thread.stop:
- * 1.https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Thread.html#stop()
+ * About thread.stop: 1.https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Thread.html#stop()
  * 2.https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/doc-files/threadPrimitiveDeprecation.html
  */
 @Slf4j

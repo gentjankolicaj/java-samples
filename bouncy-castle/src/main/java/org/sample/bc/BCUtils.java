@@ -414,11 +414,10 @@ public class BCUtils {
    *
    * @param password                 password input
    * @param salt                     salt parameter
-   * @param costParameter            N – CPU/Memory cost parameter. Must be larger than 1, a power
-   *                                 of 2 and less than 2^(128 * r / 8).
+   * @param costParameter            N – CPU/Memory cost parameter. Must be larger than 1, a power of 2 and less than 2^(128 * r / 8).
    * @param blockSize                the block size, must be >= 1.
-   * @param parallelizationParameter Parallelization parameter. Must be a positive integer less than
-   *                                 or equal to Integer.MAX_VALUE / (128 * r * 8).
+   * @param parallelizationParameter Parallelization parameter. Must be a positive integer less than or equal to Integer.MAX_VALUE / (128 *
+   *                                 r * 8).
    * @param keyLength                the length of the key to generate.
    * @return Password based key derived SCRYPT
    */
@@ -590,8 +589,7 @@ public class BCUtils {
    * @param secretKeyAlgorithm     algorithm for secret key
    * @param aPrivateKey            Party A's private key.
    * @param bPublicKey             Party B's public key.
-   * @param algorithmParameterSpec Algorithm parameter spec (Maybe it can be DHUParameterSpec |
-   *                               MQVParameterSpec...)
+   * @param algorithmParameterSpec Algorithm parameter spec (Maybe it can be DHUParameterSpec | MQVParameterSpec...)
    * @return the generated secret key.
    */
   public static SecretKey generateSecretKey(String keyAgreementAlgorithm, String secretKeyAlgorithm,

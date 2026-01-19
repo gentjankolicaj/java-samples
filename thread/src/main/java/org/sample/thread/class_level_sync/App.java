@@ -3,8 +3,7 @@ package org.sample.thread.class_level_sync;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * This class is an example of consistency that happens when we use synchronized keyword causing to
- * acquire class INTRINSIC LOCK
+ * This class is an example of consistency that happens when we use synchronized keyword causing to acquire class INTRINSIC LOCK
  */
 @Slf4j
 public class App {
@@ -12,16 +11,14 @@ public class App {
   public static int counter = 0;
 
   /**
-   * We make sure this method is executed only by a single thread at a given time using class level
-   * intrinsic lock
+   * We make sure this method is executed only by a single thread at a given time using class level intrinsic lock
    */
   public static synchronized void increment1() {
     counter++;
   }
 
   /**
-   * We make sure this method is executed only by a single thread at a given time using class level
-   * intrinsic lock
+   * We make sure this method is executed only by a single thread at a given time using class level intrinsic lock
    */
   public static void increment2() {
     //class level lock

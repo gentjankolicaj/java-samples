@@ -8,8 +8,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.eclipse.jetty.util.StringUtil;
 
 /**
- * The Servlet designated responsible for Error Handling. This Servlet is designed to only respond
- * during a Dispatch with {@link DispatcherType#ERROR}
+ * The Servlet designated responsible for Error Handling. This Servlet is designed to only respond during a Dispatch with
+ * {@link DispatcherType#ERROR}
  */
 public class ErrorServlet extends HttpServlet {
 

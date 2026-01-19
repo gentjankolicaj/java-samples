@@ -33,8 +33,8 @@ enum Downloader {
  * <br>2.Process/Thread blocks itself till resource is released
  * <br>3.Maintains a set of permits
  * <br>
- * -acquire(): if a permit is available then takes it -release(): adds a permit Note: if we set
- * fairness to true=> every single thread is going to access resources
+ * -acquire(): if a permit is available then takes it -release(): adds a permit Note: if we set fairness to true=> every single thread is
+ * going to access resources
  */
 @Slf4j
 public class App {

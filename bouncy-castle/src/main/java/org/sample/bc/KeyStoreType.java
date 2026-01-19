@@ -5,8 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 /**
  * For more on java 11 security specs : <a
- * href="https://docs.oracle.com/en/java/javase/11/docs/specs/security/standard-names.html#keystore-types">Java
- * 11 security specs</a>
+ * href="https://docs.oracle.com/en/java/javase/11/docs/specs/security/standard-names.html#keystore-types">Java 11 security specs</a>
  */
 @Getter
 @RequiredArgsConstructor

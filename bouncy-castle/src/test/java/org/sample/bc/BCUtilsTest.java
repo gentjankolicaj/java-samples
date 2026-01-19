@@ -559,8 +559,7 @@ class BCUtilsTest {
   }
 
   /**
-   * Basic Unified Diffie-Hellman example showing use of two key pairs per party in the protocol,
-   * with one set being regarded as ephemeral.
+   * Basic Unified Diffie-Hellman example showing use of two key pairs per party in the protocol, with one set being regarded as ephemeral.
    */
   @Test
   void DHUGenerateSecretKey() throws GeneralSecurityException {
@@ -591,8 +590,7 @@ class BCUtilsTest {
   }
 
   /**
-   * Basic Diffie-Hellman MQV example showing use of two key pairs per party in the protocol, with
-   * one set being regarded as ephemeral.
+   * Basic Diffie-Hellman MQV example showing use of two key pairs per party in the protocol, with one set being regarded as ephemeral.
    */
   @Test
   void MQVGenerateSecretKey() throws GeneralSecurityException {

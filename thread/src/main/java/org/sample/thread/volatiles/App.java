@@ -9,9 +9,8 @@ public class App {
 
   private final Lock lock = new ReentrantLock();
   /**
-   * Read are performed directly on memory(RAM) not on CPU caches.Also, CPU doesn't cache this
-   * variable. 1.Variables can be stored on RAM without volatile keyword 2.Multiple threads may use
-   * same cache , if are being run on same CPU core.
+   * Read are performed directly on memory(RAM) not on CPU caches.Also, CPU doesn't cache this variable. 1.Variables can be stored on RAM
+   * without volatile keyword 2.Multiple threads may use same cache , if are being run on same CPU core.
    */
   private volatile int counter = 0;
 
@@ -33,8 +32,7 @@ public class App {
   }
 
   /**
-   * This method uses reentrant lock for more explicit monitor lock operations.I could have used
-   * synchronized(this){}
+   * This method uses reentrant lock for more explicit monitor lock operations.I could have used synchronized(this){}
    */
   public void increment() {
     lock.lock();

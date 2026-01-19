@@ -37,8 +37,8 @@ public class BCAsymmetricCrypto {
   }
 
   /**
-   * Instance is used for encrypt/decrypt with public-private keys.Invoking this constructor sets up
-   * for encrypting with private-key and decrypting with public-key.
+   * Instance is used for encrypt/decrypt with public-private keys.Invoking this constructor sets up for encrypting with private-key and
+   * decrypting with public-key.
    *
    * @param transformation cipher transformation
    * @param keyPair        public-private key pair

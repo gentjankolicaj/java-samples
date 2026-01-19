@@ -10,8 +10,7 @@ import java.util.Set;
  * @author gentjan kolicaj
  * @Date: 11/7/24 11:47 AM
  * <p>
- * This implementation is used when war is deployed in tomcat.Tomcat uses this to find Endpoint
- * classes.
+ * This implementation is used when war is deployed in tomcat.Tomcat uses this to find Endpoint classes.
  */
 public class EndpointsConfiguration implements ServerApplicationConfig {
 

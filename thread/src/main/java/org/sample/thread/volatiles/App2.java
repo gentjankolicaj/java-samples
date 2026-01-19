@@ -3,12 +3,10 @@ package org.sample.thread.volatiles;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * In this sample I use volatile keyword to read/write variable on RAM, and based on the variable
- * value thread terminates. 1.By using the volatile keyword we guarantee that CPU is not going to
- * cache that variable value. 2.We get the latest value of variable
+ * In this sample I use volatile keyword to read/write variable on RAM, and based on the variable value thread terminates. 1.By using the
+ * volatile keyword we guarantee that CPU is not going to cache that variable value. 2.We get the latest value of variable
  * <p>
- * Note: it might work even without volatile keyword, but we have not guaranteed of latest
- * value=>loop never ends
+ * Note: it might work even without volatile keyword, but we have not guaranteed of latest value=>loop never ends
  */
 @Slf4j
 public class App2 {

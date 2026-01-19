@@ -6,8 +6,8 @@ import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * This example shows creation of synchronized list using Collections.class. Some methods of
- * Collections class for synchronized collections:
+ * This example shows creation of synchronized list using Collections.class. Some methods of Collections class for synchronized
+ * collections:
  * <br> 1.synchronizedCollection(T t) where T is of type Collection
  * <br>2.synchronizedSet(T t) where T is of type Set
  * <br>3.synchronizedList(T t) where T is of type Lis

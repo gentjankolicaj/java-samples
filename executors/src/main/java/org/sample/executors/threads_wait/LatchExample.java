@@ -13,8 +13,7 @@ import lombok.extern.slf4j.Slf4j;
  * <br>3.wait() method blocks waiting threads until current count reaches 0 due to invocations of
  * countDown()
  * <br>4.countDown() decreases counter of CDL
- * <a
- * href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/CountDownLatch.html">link</a>
+ * <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/CountDownLatch.html">link</a>
  */
 @Slf4j
 public class LatchExample {

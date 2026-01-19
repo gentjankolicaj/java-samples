@@ -11,8 +11,8 @@ import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Callable interface : We usually use Callable interface when : 1.We want to return a result after
- * thread terminated. 2.We want to execute task concurrently but retrieve results
+ * Callable interface : We usually use Callable interface when : 1.We want to return a result after thread terminated. 2.We want to execute
+ * task concurrently but retrieve results
  */
 @Slf4j
 public class CallableExample1 {

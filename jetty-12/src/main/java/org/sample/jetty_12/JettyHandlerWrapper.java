@@ -38,8 +38,7 @@ public class JettyHandlerWrapper extends ContextHandler {
   /**
    * @param handler       jetty handler
    * @param contextPath   jetty handler path
-   * @param connectorName jetty connector name with added prefix `@` Ex: @ +
-   *                      connectorName=@connectorName
+   * @param connectorName jetty connector name with added prefix `@` Ex: @ + connectorName=@connectorName
    */
   public JettyHandlerWrapper(Handler handler, String contextPath, String connectorName) {
     super(handler, contextPath);
@@ -49,8 +48,7 @@ public class JettyHandlerWrapper extends ContextHandler {
   /**
    * @param handler        jetty handler
    * @param contextPath    jetty handler path
-   * @param connectorNames jetty connector name with added prefix `@` Ex: @ +
-   *                       connectorA=@connectorA
+   * @param connectorNames jetty connector name with added prefix `@` Ex: @ + connectorA=@connectorA
    */
   public JettyHandlerWrapper(Handler handler, String contextPath, List<String> connectorNames) {
     super(handler, contextPath);

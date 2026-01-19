@@ -5,9 +5,8 @@ import java.util.concurrent.locks.ReentrantLock;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * ReentrantLock is a class that implements interface Lock.ReentrantLock provides mutual exclusion
- * lock with behaviours and semantics as implicit monitor lock accessed using synchronized keyword
- * on methods & statements
+ * ReentrantLock is a class that implements interface Lock.ReentrantLock provides mutual exclusion lock with behaviours and semantics as
+ * implicit monitor lock accessed using synchronized keyword on methods & statements
  */
 @Slf4j
 public class App {

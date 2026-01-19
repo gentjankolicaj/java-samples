@@ -6,10 +6,9 @@ import java.util.concurrent.locks.ReentrantLock;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * This is an example of Livelock. Both thread fall into Livelock, and they are active state,they
- * just can't proceed with further execution. Both threads attempt to acquire a lock which is owned
- * by another thread. 1.In Deadlock threads are in Waiting/Blocked state , but can't proceed further
- * 2.In Livelock threads are in active state, but can't proceed further
+ * This is an example of Livelock. Both thread fall into Livelock, and they are active state,they just can't proceed with further execution.
+ * Both threads attempt to acquire a lock which is owned by another thread. 1.In Deadlock threads are in Waiting/Blocked state , but can't
+ * proceed further 2.In Livelock threads are in active state, but can't proceed further
  */
 @Slf4j
 public class App {

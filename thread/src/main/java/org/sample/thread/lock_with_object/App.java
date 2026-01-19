@@ -3,8 +3,7 @@ package org.sample.thread.lock_with_object;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * This class is an example of consistency that happens when we use synchronized keyword causing to
- * acquire object INTRINSIC LOCK example :
+ * This class is an example of consistency that happens when we use synchronized keyword causing to acquire object INTRINSIC LOCK example :
  * <br>public synchronized void print(){}
  * <br> public void print(){
  * <br>synchronized(this/object){
@@ -54,8 +53,7 @@ public class App {
   }
 
   /**
-   * We make sure this method is executed only by a single thread at a given time using object level
-   * intrinsic lock
+   * We make sure this method is executed only by a single thread at a given time using object level intrinsic lock
    */
   public void increment1() {
     //object level lock
@@ -65,8 +63,7 @@ public class App {
   }
 
   /**
-   * We make sure this method is executed only by a single thread at a given time using object level
-   * intrinsic lock
+   * We make sure this method is executed only by a single thread at a given time using object level intrinsic lock
    */
   public void increment2() {
     //object level lock

@@ -56,11 +56,9 @@ public interface Builder<T> {
     WebSocketBuilder<T> endpoint(Class<?> endpointClass);
 
     /**
-     * Deploys the given endpoint described by the provided configuration into this
-     * ServerContainer.
+     * Deploys the given endpoint described by the provided configuration into this ServerContainer.
      *
-     * @param serverConfig the configuration instance representing the logical endpoint that will be
-     *                     registered.
+     * @param serverConfig the configuration instance representing the logical endpoint that will be registered.
      */
     WebSocketBuilder<T> endpoint(ServerEndpointConfig serverConfig);
 
