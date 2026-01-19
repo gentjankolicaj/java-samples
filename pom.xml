@@ -52,6 +52,7 @@
 		<module>pekko</module>
 	</modules>
 
+	<dependencyManagement>
 	<dependencies>
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
@@ -102,7 +103,7 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-
+	</dependencyManagement>
 
 	<build>
 		<pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
