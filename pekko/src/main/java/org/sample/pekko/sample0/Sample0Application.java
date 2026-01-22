@@ -16,7 +16,8 @@ public class Sample0Application {
 
   public static void main(String[] args) {
     //create actor system with guardian actor
-    final ActorSystem<GreeterGuardian.SayHello> actorSystem = ActorSystem.create(GreeterGuardian.create(), "greeter-guardian");
+    final ActorSystem<GreeterGuardian.SayHello> actorSystem = ActorSystem.create(
+        GreeterGuardian.create(), "greeter-guardian");
 
     //greeter-guardian send message
     actorSystem.tell(new SayHello("greeter-bot", "hello bot-0"));

@@ -33,7 +33,9 @@ public class GreeterBot extends AbstractBehavior<Greeted> {
 
   private Behavior<Greeted> onGreeted(Greeted message) {
     greetCounter++;
-    getContext().getLog().info("GreetCounter '{}' whom: '{}' from: '{}'", greetCounter, message.whom(), message.from());
+    getContext().getLog()
+        .info("GreetCounter '{}' whom: '{}' from: '{}'", greetCounter, message.whom(),
+            message.from());
     if (greetCounter == maxGreet) {
       return Behaviors.stopped();
     } else {
