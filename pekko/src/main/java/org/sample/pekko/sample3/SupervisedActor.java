@@ -10,13 +10,13 @@ import org.apache.pekko.actor.typed.javadsl.Receive;
 
 public class SupervisedActor extends AbstractBehavior<String> {
 
-  static Behavior<String> create() {
-    return Behaviors.setup(SupervisedActor::new);
-  }
-
   private SupervisedActor(ActorContext<String> context) {
     super(context);
     getContext().getLog().info("Supervised actor started.");
+  }
+
+  static Behavior<String> create() {
+    return Behaviors.setup(SupervisedActor::new);
   }
 
   @Override

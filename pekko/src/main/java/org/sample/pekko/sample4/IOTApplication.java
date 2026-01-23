@@ -2,16 +2,19 @@ package org.sample.pekko.sample4;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.pekko.actor.typed.ActorSystem;
+import org.sample.pekko.sample4.IOTSupervisor.CreateIOTDeviceCommand;
+import org.sample.pekko.sample4.IOTSupervisor.SupervisorCommand;
 
 @Slf4j
 public class IOTApplication {
 
-  public static void main(String[] args){
-    try(ActorSystem<String> actorSystem=ActorSystem.create(IOTSupervisor.create(),IOTSupervisor.name())){
+  public static void main(String[] args) {
+    try (ActorSystem<SupervisorCommand> actorSystem = ActorSystem.create(IOTSupervisor.create(), IOTSupervisor.name())) {
 
-      actorSystem.tell("hello");
-
-      actorSystem.tell("world");
+      actorSystem.tell(new CreateIOTDeviceCommand("0", "0"));
+      actorSystem.tell(new CreateIOTDeviceCommand("1", "0"));
+      actorSystem.tell(new CreateIOTDeviceCommand("2", "0"));
+      actorSystem.tell(new CreateIOTDeviceCommand("3", "0"));
 
       log.info(">>> Press ENTER to finish <<<");
       System.in.read(); //blocking read
