@@ -10,7 +10,7 @@ import org.apache.pekko.actor.typed.javadsl.Behaviors;
 import org.apache.pekko.actor.typed.javadsl.Receive;
 
 
-public class IOTDevice extends AbstractBehavior<IOTDevice.Command> {
+public class Device extends AbstractBehavior<Device.Command> {
 
 
   private final String deviceId;
@@ -18,41 +18,46 @@ public class IOTDevice extends AbstractBehavior<IOTDevice.Command> {
 
   private Optional<Double> lastTemperatureRead = Optional.empty();
 
-  public IOTDevice(ActorContext<IOTDevice.Command> actorContext, String deviceId, String groupId) {
+  public Device(ActorContext<Device.Command> actorContext, String deviceId, String groupId) {
     super(actorContext);
     this.deviceId = deviceId;
     this.groupId = groupId;
-    getContext().getLog().info("IOT device started.");
+    getContext().getLog().info("IOT device {}-{} started.", groupId, deviceId);
   }
 
-  public static Behavior<IOTDevice.Command> create(String deviceId, String groupId) {
-    return Behaviors.setup(context -> new IOTDevice(context, deviceId, groupId));
+  public static Behavior<Device.Command> create(String deviceId, String groupId) {
+    return Behaviors.setup(context -> new Device(context, deviceId, groupId));
   }
 
   @Override
-  public Receive<IOTDevice.Command> createReceive() {
+  public Receive<Device.Command> createReceive() {
     return newReceiveBuilder()
         .onMessage(RecordTemperature.class, this::onRecordTemperature)
         .onMessage(ReadTemperature.class, this::onReadTemperature)
+        .onMessage(Passivate.class, m -> Behaviors.stopped())
         .onSignal(PostStop.class, signal -> onPostStop())
         .build();
   }
 
-  private Behavior<IOTDevice.Command> onReadTemperature(ReadTemperature message) {
+  private Behavior<Device.Command> onReadTemperature(ReadTemperature message) {
     message.actorRef().tell(new RespondTemperature(message.requestId, lastTemperatureRead));
     return this;
   }
 
-  private Behavior<IOTDevice.Command> onRecordTemperature(RecordTemperature message) {
+  private Behavior<Device.Command> onRecordTemperature(RecordTemperature message) {
     getContext().getLog().info("Recorded temperature reading {} with {}", message.value, message.requestId);
     this.lastTemperatureRead = Optional.of(message.value());
     message.replyTo().tell(new RecordedTemperature(message.requestId));
     return this;
   }
 
-  private Behavior<IOTDevice.Command> onPostStop() {
+  private Behavior<Device.Command> onPostStop() {
     getContext().getLog().info("Device actor {}-{} stopped", groupId, deviceId);
     return this;
+  }
+
+  enum Passivate implements Command {
+    INSTANCE
   }
 
   public interface Command {

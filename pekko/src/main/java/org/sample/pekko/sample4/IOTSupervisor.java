@@ -40,7 +40,7 @@ public class IOTSupervisor extends AbstractBehavior<SupervisorCommand> {
     String deviceId = createIOTDeviceCommand.deviceId();
     String groupId = createIOTDeviceCommand.groupId();
     String actorName = String.format("iot-%s-%s", deviceId, groupId);
-    getContext().spawn(IOTDevice.create(deviceId, groupId), actorName);
+    getContext().spawn(Device.create(deviceId, groupId), actorName);
     return this;
   }
 
