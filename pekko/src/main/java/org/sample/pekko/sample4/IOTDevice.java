@@ -32,7 +32,7 @@ public class IOTDevice extends AbstractBehavior<IOTDevice.Command> {
   @Override
   public Receive<IOTDevice.Command> createReceive() {
     return newReceiveBuilder()
-        .onMessage(WriteTemperature.class, this::onWriteTemperature)
+        .onMessage(RecordTemperature.class, this::onRecordTemperature)
         .onMessage(ReadTemperature.class, this::onReadTemperature)
         .onSignal(PostStop.class, signal -> onPostStop())
         .build();
@@ -43,8 +43,10 @@ public class IOTDevice extends AbstractBehavior<IOTDevice.Command> {
     return this;
   }
 
-  private Behavior<IOTDevice.Command> onWriteTemperature(WriteTemperature message) {
+  private Behavior<IOTDevice.Command> onRecordTemperature(RecordTemperature message) {
+    getContext().getLog().info("Recorded temperature reading {} with {}", message.value, message.requestId);
     this.lastTemperatureRead = Optional.of(message.value());
+    message.replyTo().tell(new RecordedTemperature(message.requestId));
     return this;
   }
 
@@ -65,7 +67,11 @@ public class IOTDevice extends AbstractBehavior<IOTDevice.Command> {
 
   }
 
-  public record WriteTemperature(Double value) implements Command {
+  public record RecordTemperature(long requestId, Double value, ActorRef<RecordedTemperature> replyTo) implements Command {
+
+  }
+
+  public record RecordedTemperature(long requestId) implements Command {
 
   }
 
