@@ -25,7 +25,7 @@ public class DeviceManager extends AbstractBehavior<Command> {
 
   private DeviceManager(ActorContext<Command> context) {
     super(context);
-    context.getLog().info("DeviceManager started");
+    context.getLog().info("DeviceManager started.");
   }
 
   public static Behavior<Command> create() {
@@ -39,8 +39,7 @@ public class DeviceManager extends AbstractBehavior<Command> {
       ref.tell(trackMsg);
     } else {
       getContext().getLog().info("Creating device group actor for {}", groupId);
-      ActorRef<DeviceGroup.Command> groupActor =
-          getContext().spawn(DeviceGroup.create(groupId), "group-" + groupId);
+      ActorRef<DeviceGroup.Command> groupActor = getContext().spawn(DeviceGroup.create(groupId), "group-" + groupId);
       getContext().watchWith(groupActor, new DeviceGroupTerminated(groupId));
       groupActor.tell(trackMsg);
       groupIdToActor.put(groupId, groupActor);
@@ -58,7 +57,7 @@ public class DeviceManager extends AbstractBehavior<Command> {
     return this;
   }
 
-  private DeviceManager onTerminated(DeviceGroupTerminated t) {
+  private DeviceManager onDeviceGroupTerminated(DeviceGroupTerminated t) {
     getContext().getLog().info("Device group actor for {} has been terminated", t.groupId);
     groupIdToActor.remove(t.groupId);
     return this;
@@ -68,13 +67,13 @@ public class DeviceManager extends AbstractBehavior<Command> {
     return newReceiveBuilder()
         .onMessage(RequestTrackDevice.class, this::onTrackDevice)
         .onMessage(RequestDeviceList.class, this::onRequestDeviceList)
-        .onMessage(DeviceGroupTerminated.class, this::onTerminated)
+        .onMessage(DeviceGroupTerminated.class, this::onDeviceGroupTerminated)
         .onSignal(PostStop.class, signal -> onPostStop())
         .build();
   }
 
   private DeviceManager onPostStop() {
-    getContext().getLog().info("DeviceManager stopped");
+    getContext().getLog().info("DeviceManager stopped.");
     return this;
   }
 
@@ -91,8 +90,8 @@ public class DeviceManager extends AbstractBehavior<Command> {
 
   }
 
-  public record RequestDeviceList(long requestId, String groupId, ActorRef<ReplyDeviceList> replyTo) implements Command,
-      DeviceGroup.Command {
+  public record RequestDeviceList(long requestId, String groupId, ActorRef<ReplyDeviceList> replyTo)
+      implements Command, DeviceGroup.Command {
 
   }
 
@@ -100,7 +99,7 @@ public class DeviceManager extends AbstractBehavior<Command> {
 
   }
 
-  private record DeviceGroupTerminated(String groupId) implements Command {
+  public record DeviceGroupTerminated(String groupId) implements Command {
 
   }
 
