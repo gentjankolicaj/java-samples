@@ -47,19 +47,19 @@ public class DeviceManager extends AbstractBehavior<Command> {
     return this;
   }
 
-  private DeviceManager onRequestDeviceList(RequestDeviceList request) {
-    ActorRef<DeviceGroup.Command> ref = groupIdToActor.get(request.groupId);
+  private DeviceManager onRequestDeviceList(RequestDeviceList msg) {
+    ActorRef<DeviceGroup.Command> ref = groupIdToActor.get(msg.groupId);
     if (ref != null) {
-      ref.tell(request);
+      ref.tell(msg);
     } else {
-      request.replyTo.tell(new ReplyDeviceList(request.requestId, Collections.emptySet()));
+      msg.replyTo.tell(new ReplyDeviceList(msg.requestId, Collections.emptySet()));
     }
     return this;
   }
 
-  private DeviceManager onDeviceGroupTerminated(DeviceGroupTerminated t) {
-    getContext().getLog().info("Device group actor for {} has been terminated", t.groupId);
-    groupIdToActor.remove(t.groupId);
+  private DeviceManager onDeviceGroupTerminated(DeviceGroupTerminated msg) {
+    getContext().getLog().info("Device group actor for {} has been terminated", msg.groupId);
+    groupIdToActor.remove(msg.groupId);
     return this;
   }
 
