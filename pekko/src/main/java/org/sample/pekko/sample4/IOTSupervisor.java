@@ -31,33 +31,33 @@ public class IOTSupervisor extends AbstractBehavior<SupervisorCommand> {
   @Override
   public Receive<SupervisorCommand> createReceive() {
     return newReceiveBuilder()
-        .onMessage(CreateIOTDeviceCommand.class, this::onCreateIOTDevice)
+        .onMessage(CreateDeviceCommand.class, this::onCreateDevice)
         .onSignal(PostStop.class, this::onPostStop)
         .build();
   }
 
-  private Behavior<SupervisorCommand> onCreateIOTDevice(CreateIOTDeviceCommand createIOTDeviceCommand) {
-    String deviceId = createIOTDeviceCommand.deviceId();
-    String groupId = createIOTDeviceCommand.groupId();
+  private Behavior<SupervisorCommand> onCreateDevice(CreateDeviceCommand createDeviceCommand) {
+    String deviceId = createDeviceCommand.deviceId();
+    String groupId = createDeviceCommand.groupId();
     String actorName = String.format("iot-%s-%s", deviceId, groupId);
     getContext().spawn(Device.create(deviceId, groupId), actorName);
     return this;
   }
 
   private Behavior<SupervisorCommand> onPostStop(PostStop signal) {
-    getContext().getLog().info("IOT application stopped");
+    getContext().getLog().info("IOT application stopped.");
     return this;
   }
 
   //========================================================================================================================================
-  //Superviso message definition
+  //Supervisor message definition
   //========================================================================================================================================
 
   public interface SupervisorCommand {
 
   }
 
-  public record CreateIOTDeviceCommand(String deviceId, String groupId) implements SupervisorCommand {
+  public record CreateDeviceCommand(String deviceId, String groupId) implements SupervisorCommand {
 
   }
 }

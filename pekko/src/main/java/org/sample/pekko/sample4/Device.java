@@ -22,7 +22,7 @@ public class Device extends AbstractBehavior<Device.Command> {
     super(actorContext);
     this.deviceId = deviceId;
     this.groupId = groupId;
-    getContext().getLog().info("IOT device {}-{} started.", groupId, deviceId);
+    getContext().getLog().info("Device actor {}-{} started.", groupId, deviceId);
   }
 
   public static Behavior<Device.Command> create(String deviceId, String groupId) {
@@ -40,19 +40,19 @@ public class Device extends AbstractBehavior<Device.Command> {
   }
 
   private Behavior<Device.Command> onReadTemperature(ReadTemperature message) {
-    message.actorRef().tell(new RespondTemperature(message.requestId, lastTemperatureRead));
+    message.replyTo().tell(new RespondTemperature(message.requestId, lastTemperatureRead));
     return this;
   }
 
   private Behavior<Device.Command> onRecordTemperature(RecordTemperature message) {
-    getContext().getLog().info("Recorded temperature reading {} with {}", message.value, message.requestId);
+    getContext().getLog().info("Recorded temperature reading {} with {}.", message.value, message.requestId);
     this.lastTemperatureRead = Optional.of(message.value());
     message.replyTo().tell(new RecordedTemperature(message.requestId));
     return this;
   }
 
   private Behavior<Device.Command> onPostStop() {
-    getContext().getLog().info("Device actor {}-{} stopped", groupId, deviceId);
+    getContext().getLog().info("Device actor {}-{} stopped.", groupId, deviceId);
     return this;
   }
 
@@ -64,7 +64,7 @@ public class Device extends AbstractBehavior<Device.Command> {
 
   }
 
-  public record ReadTemperature(long requestId, ActorRef<RespondTemperature> actorRef) implements Command {
+  public record ReadTemperature(long requestId, ActorRef<RespondTemperature> replyTo) implements Command {
 
   }
 
