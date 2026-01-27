@@ -60,4 +60,6 @@ public class IOTSupervisor extends AbstractBehavior<SupervisorCommand> {
   public record CreateDeviceCommand(String deviceId, String groupId) implements SupervisorCommand {
 
   }
+
+
 }

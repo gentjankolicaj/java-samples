@@ -77,7 +77,23 @@ public class DeviceManager extends AbstractBehavior<Command> {
     return this;
   }
 
+  public enum TemperatureNotAvailable implements TemperatureReading {
+    INSTANCE
+  }
+
+  public enum DeviceNotAvailable implements TemperatureReading {
+    INSTANCE
+  }
+
+  public enum DeviceTimedOut implements TemperatureReading {
+    INSTANCE
+  }
+
   public interface Command {
+
+  }
+
+  public interface TemperatureReading {
 
   }
 
@@ -100,6 +116,19 @@ public class DeviceManager extends AbstractBehavior<Command> {
   }
 
   public record DeviceGroupTerminated(String groupId) implements Command {
+
+  }
+
+  public record RequestAllTemperatures(long requestId, String groupId, ActorRef<RespondAllTemperatures> replyTo)
+      implements DeviceGroupQuery.Command, DeviceGroup.Command, Command {
+
+  }
+
+  public record RespondAllTemperatures(long requestId, Map<String, TemperatureReading> temperatures) {
+
+  }
+
+  public record Temperature(double value) implements TemperatureReading {
 
   }
 

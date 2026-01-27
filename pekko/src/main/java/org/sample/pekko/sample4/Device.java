@@ -40,7 +40,7 @@ public class Device extends AbstractBehavior<Device.Command> {
   }
 
   private Behavior<Device.Command> onReadTemperature(ReadTemperature message) {
-    message.replyTo().tell(new RespondTemperature(message.requestId, lastTemperatureRead));
+    message.replyTo().tell(new RespondTemperature(message.requestId, deviceId, lastTemperatureRead));
     return this;
   }
 
@@ -56,19 +56,19 @@ public class Device extends AbstractBehavior<Device.Command> {
     return this;
   }
 
-  public interface Command {
-
-  }
-
   enum Passivate implements Command {
     INSTANCE
+  }
+
+  public interface Command {
+
   }
 
   public record ReadTemperature(long requestId, ActorRef<RespondTemperature> replyTo) implements Command {
 
   }
 
-  public record RespondTemperature(long requestId, Optional<Double> value) implements Command {
+  public record RespondTemperature(long requestId, String deviceId, Optional<Double> value) implements Command {
 
   }
 

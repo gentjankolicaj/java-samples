@@ -3,6 +3,8 @@ package org.sample.pekko.sample4;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.pekko.actor.testkit.typed.javadsl.ActorTestKit;
@@ -12,8 +14,13 @@ import org.junit.jupiter.api.Test;
 import org.sample.pekko.sample4.DeviceGroup.Command;
 import org.sample.pekko.sample4.DeviceManager.DeviceRegistered;
 import org.sample.pekko.sample4.DeviceManager.ReplyDeviceList;
+import org.sample.pekko.sample4.DeviceManager.RequestAllTemperatures;
 import org.sample.pekko.sample4.DeviceManager.RequestDeviceList;
 import org.sample.pekko.sample4.DeviceManager.RequestTrackDevice;
+import org.sample.pekko.sample4.DeviceManager.RespondAllTemperatures;
+import org.sample.pekko.sample4.DeviceManager.Temperature;
+import org.sample.pekko.sample4.DeviceManager.TemperatureNotAvailable;
+import org.sample.pekko.sample4.DeviceManager.TemperatureReading;
 
 /**
  *
@@ -120,6 +127,41 @@ class DeviceGroupTest {
           assertEquals(Stream.of("device2").collect(Collectors.toSet()), r.ids());
           return null;
         });
+  }
+
+  @Test
+  public void testCollectTemperaturesFromAllActiveDevices() {
+    TestProbe<DeviceRegistered> registeredProbe = testKit.createTestProbe(DeviceRegistered.class);
+    ActorRef<DeviceGroup.Command> groupActor = testKit.spawn(DeviceGroup.create("group"));
+
+    groupActor.tell(new RequestTrackDevice("group", "device1", registeredProbe.getRef()));
+    ActorRef<Device.Command> deviceActor1 = registeredProbe.receiveMessage().device();
+
+    groupActor.tell(new RequestTrackDevice("group", "device2", registeredProbe.getRef()));
+    ActorRef<Device.Command> deviceActor2 = registeredProbe.receiveMessage().device();
+
+    groupActor.tell(new RequestTrackDevice("group", "device3", registeredProbe.getRef()));
+    ActorRef<Device.Command> deviceActor3 = registeredProbe.receiveMessage().device();
+
+    // Check that the device actors are working
+    TestProbe<Device.RecordedTemperature> recordProbe = testKit.createTestProbe(Device.RecordedTemperature.class);
+    deviceActor1.tell(new Device.RecordTemperature(0L, 1.0, recordProbe.getRef()));
+    assertEquals(0L, recordProbe.receiveMessage().requestId());
+    deviceActor2.tell(new Device.RecordTemperature(1L, 2.0, recordProbe.getRef()));
+    assertEquals(1L, recordProbe.receiveMessage().requestId());
+    // No temperature for device 3
+
+    TestProbe<RespondAllTemperatures> allTempProbe = testKit.createTestProbe(RespondAllTemperatures.class);
+    groupActor.tell(new RequestAllTemperatures(0L, "group", allTempProbe.getRef()));
+    RespondAllTemperatures response = allTempProbe.receiveMessage();
+    assertEquals(0L, response.requestId());
+
+    Map<String, TemperatureReading> expectedTemperatures = new HashMap<>();
+    expectedTemperatures.put("device1", new Temperature(1.0));
+    expectedTemperatures.put("device2", new Temperature(2.0));
+    expectedTemperatures.put("device3", TemperatureNotAvailable.INSTANCE);
+
+    assertEquals(expectedTemperatures, response.temperatures());
   }
 
 }

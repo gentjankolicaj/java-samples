@@ -1,5 +1,6 @@
 package org.sample.pekko.sample4;
 
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.pekko.actor.typed.ActorRef;
@@ -37,9 +38,28 @@ public class DeviceGroup extends AbstractBehavior<DeviceGroup.Command> {
     return newReceiveBuilder()
         .onMessage(DeviceManager.RequestTrackDevice.class, this::onTrackDevice)
         .onMessage(DeviceManager.RequestDeviceList.class, msg -> msg.groupId().equals(groupId), this::onDeviceList)
+        .onMessage(DeviceManager.RequestAllTemperatures.class, msg -> msg.groupId().equals(groupId), this::onAllTemperatures)
         .onMessage(DeviceTerminated.class, this::onTerminated)
         .onSignal(PostStop.class, this::onPostStop)
         .build();
+  }
+
+  private DeviceGroup onAllTemperatures(DeviceManager.RequestAllTemperatures message) {
+    // since Java collections are mutable, we want to avoid sharing them between actors (since
+    // multiple Actors (threads)
+    // modifying the same mutable data-structure is not safe), and perform a defensive copy of the
+    // mutable map:
+    //
+    // Feel free to use your favourite immutable data-structures library with Pekko in Java
+    // applications!
+    Map<String, ActorRef<Device.Command>> deviceActorsCopy = new HashMap<>(this.deviceActors);
+
+    getContext()
+        .spawnAnonymous(
+            DeviceGroupQuery.create(
+                deviceActorsCopy, message.requestId(), message.replyTo(), Duration.ofSeconds(3)));
+
+    return this;
   }
 
   private Behavior<DeviceGroup.Command> onTrackDevice(DeviceManager.RequestTrackDevice message) {
