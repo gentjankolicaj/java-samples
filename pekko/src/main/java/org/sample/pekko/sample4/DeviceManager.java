@@ -32,40 +32,40 @@ public class DeviceManager extends AbstractBehavior<Command> {
     return Behaviors.setup(DeviceManager::new);
   }
 
-  private DeviceManager onTrackDevice(RequestTrackDevice trackMsg) {
-    String groupId = trackMsg.groupId;
+  private DeviceManager onRequestTrackDevice(RequestTrackDevice message) {
+    String groupId = message.groupId;
     ActorRef<DeviceGroup.Command> ref = groupIdToActor.get(groupId);
     if (ref != null) {
-      ref.tell(trackMsg);
+      ref.tell(message);
     } else {
       getContext().getLog().info("Creating device group actor for {}", groupId);
       ActorRef<DeviceGroup.Command> groupActor = getContext().spawn(DeviceGroup.create(groupId), "group-" + groupId);
       getContext().watchWith(groupActor, new DeviceGroupTerminated(groupId));
-      groupActor.tell(trackMsg);
+      groupActor.tell(message);
       groupIdToActor.put(groupId, groupActor);
     }
     return this;
   }
 
-  private DeviceManager onRequestDeviceList(RequestDeviceList msg) {
-    ActorRef<DeviceGroup.Command> ref = groupIdToActor.get(msg.groupId);
+  private DeviceManager onRequestDeviceList(RequestDeviceList message) {
+    ActorRef<DeviceGroup.Command> ref = groupIdToActor.get(message.groupId);
     if (ref != null) {
-      ref.tell(msg);
+      ref.tell(message);
     } else {
-      msg.replyTo.tell(new ReplyDeviceList(msg.requestId, Collections.emptySet()));
+      message.replyTo.tell(new ReplyDeviceList(message.requestId, Collections.emptySet()));
     }
     return this;
   }
 
-  private DeviceManager onDeviceGroupTerminated(DeviceGroupTerminated msg) {
-    getContext().getLog().info("Device group actor for {} has been terminated", msg.groupId);
-    groupIdToActor.remove(msg.groupId);
+  private DeviceManager onDeviceGroupTerminated(DeviceGroupTerminated message) {
+    getContext().getLog().info("Device group actor for {} has been terminated", message.groupId);
+    groupIdToActor.remove(message.groupId);
     return this;
   }
 
   public Receive<Command> createReceive() {
     return newReceiveBuilder()
-        .onMessage(RequestTrackDevice.class, this::onTrackDevice)
+        .onMessage(RequestTrackDevice.class, this::onRequestTrackDevice)
         .onMessage(RequestDeviceList.class, this::onRequestDeviceList)
         .onMessage(DeviceGroupTerminated.class, this::onDeviceGroupTerminated)
         .onSignal(PostStop.class, signal -> onPostStop())

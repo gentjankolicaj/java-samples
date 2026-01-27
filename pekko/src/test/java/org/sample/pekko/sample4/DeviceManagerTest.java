@@ -23,7 +23,7 @@ class DeviceManagerTest {
   ActorTestKit actorTestKit = ActorTestKit.create();
 
   @Test
-  void onTrackDevice() {
+  void onRequestTrackDevice() {
     ActorRef<Command> deviceManager = actorTestKit.spawn(DeviceManager.create(), "device-manager");
 
     //Message probe

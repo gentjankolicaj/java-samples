@@ -56,19 +56,19 @@ public class Device extends AbstractBehavior<Device.Command> {
     return this;
   }
 
-  enum Passivate implements Command {
-    INSTANCE
-  }
-
   public interface Command {
 
+  }
+
+  enum Passivate implements Command {
+    INSTANCE
   }
 
   public record ReadTemperature(long requestId, ActorRef<RespondTemperature> replyTo) implements Command {
 
   }
 
-  public record RespondTemperature(long requestId, Optional<Double> value) {
+  public record RespondTemperature(long requestId, Optional<Double> value) implements Command {
 
   }
 

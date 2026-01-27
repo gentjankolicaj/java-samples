@@ -42,17 +42,17 @@ public class DeviceGroup extends AbstractBehavior<DeviceGroup.Command> {
         .build();
   }
 
-  private Behavior<DeviceGroup.Command> onTrackDevice(DeviceManager.RequestTrackDevice trackMsg) {
-    if (this.groupId.equals(trackMsg.groupId())) {
-      ActorRef<Device.Command> deviceActor = deviceActors.get(trackMsg.deviceId());
+  private Behavior<DeviceGroup.Command> onTrackDevice(DeviceManager.RequestTrackDevice message) {
+    if (this.groupId.equals(message.groupId())) {
+      ActorRef<Device.Command> deviceActor = deviceActors.get(message.deviceId());
       if (deviceActor != null) {
-        trackMsg.replyTo().tell(new DeviceRegistered(deviceActor));
+        message.replyTo().tell(new DeviceRegistered(deviceActor));
       } else {
-        getContext().getLog().info("Creating device actor for {}", trackMsg.deviceId());
-        deviceActor = getContext().spawn(Device.create(trackMsg.deviceId(), trackMsg.groupId()),
-            String.format("device-%s-%s", trackMsg.deviceId(), trackMsg.groupId()));
-        deviceActors.put(trackMsg.groupId(), deviceActor);
-        trackMsg.replyTo().tell(new DeviceRegistered(deviceActor));
+        getContext().getLog().info("Creating device actor for {}", message.deviceId());
+        deviceActor = getContext().spawn(Device.create(message.deviceId(), message.groupId()),
+            String.format("device-%s-%s", message.deviceId(), message.groupId()));
+        deviceActors.put(message.groupId(), deviceActor);
+        message.replyTo().tell(new DeviceRegistered(deviceActor));
       }
     } else {
       getContext().getLog().warn("Ignoring TrackDevice request for {}. This actor is responsible for {}.", groupId, this.groupId);
@@ -60,14 +60,14 @@ public class DeviceGroup extends AbstractBehavior<DeviceGroup.Command> {
     return this;
   }
 
-  private DeviceGroup onDeviceList(DeviceManager.RequestDeviceList msg) {
-    msg.replyTo().tell(new DeviceManager.ReplyDeviceList(msg.requestId(), deviceActors.keySet()));
+  private DeviceGroup onDeviceList(DeviceManager.RequestDeviceList message) {
+    message.replyTo().tell(new DeviceManager.ReplyDeviceList(message.requestId(), deviceActors.keySet()));
     return this;
   }
 
-  private DeviceGroup onTerminated(DeviceTerminated t) {
-    getContext().getLog().info("Device actor for {} has been terminated", t.deviceId);
-    deviceActors.remove(t.deviceId);
+  private DeviceGroup onTerminated(DeviceTerminated message) {
+    getContext().getLog().info("Device actor for {} has been terminated", message.deviceId);
+    deviceActors.remove(message.deviceId);
     return this;
   }
 
