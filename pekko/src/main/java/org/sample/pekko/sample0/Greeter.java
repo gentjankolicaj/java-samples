@@ -32,7 +32,7 @@ public class Greeter extends AbstractBehavior<Greet> {
     getContext().getLog().info("whom '{}' | replyTo: '{}'", greet.whom(), greet.replyTo());
 
     //get actor ref on message and resend message to him.
-    //greet.replyTo() returns actorRef of greeterBot.
+    //greet.replyTo() returns replyTo of greeterBot.
     greet.replyTo().tell(new Greeted(greet.whom(), getContext().getSelf()));
 
     return this;
