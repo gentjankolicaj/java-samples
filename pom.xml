@@ -40,11 +40,11 @@
 		<module>java-agent</module>
 		<module>javassist</module>
 		<module>liquibase</module>
-		<module>multithread</module>
+    <module>multithreading</module>
+		<module>multithreading-api</module>
 		<module>parser</module>
 		<module>process</module>
 		<module>socket</module>
-		<module>thread</module>
 		<module>tomcat-embed-11</module>
 		<module>jetty-12</module>
 		<module>virtual-thread</module>
