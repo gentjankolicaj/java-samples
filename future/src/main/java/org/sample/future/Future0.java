@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class FutureSample {
+public class Future0 {
 
   static final ExecutorService executorService = Executors.newWorkStealingPool();
 
@@ -20,7 +20,6 @@ public class FutureSample {
 
     Future<Integer> futureAdd = executorService.submit(add);
     Future<Integer> futureSubtract = executorService.submit(subtract);
-
     delayInSeconds(10);
   }
 

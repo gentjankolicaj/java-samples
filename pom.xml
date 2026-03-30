@@ -50,6 +50,7 @@
 		<module>virtual-thread</module>
 		<module>websocket</module>
 		<module>pekko</module>
+		<module>stream</module>
 	</modules>
 
 	<dependencyManagement>

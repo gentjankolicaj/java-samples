@@ -5,7 +5,7 @@ import java.util.concurrent.ExecutionException;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class CompletableFutureSample {
+public class CompletableFuture0 {
 
   static final String THREAD_MSG = "Thread : ";
 
@@ -30,7 +30,7 @@ public class CompletableFutureSample {
 
   static void sample1() {
     CompletableFuture<Integer> completableFuture = create();
-    completableFuture.thenAccept(CompletableFutureSample::print);
+    completableFuture.thenAccept(CompletableFuture0::print);
   }
 
   private static Integer calc() {
@@ -39,7 +39,7 @@ public class CompletableFutureSample {
   }
 
   public static CompletableFuture<Integer> create() {
-    return CompletableFuture.supplyAsync(CompletableFutureSample::calc);
+    return CompletableFuture.supplyAsync(CompletableFuture0::calc);
   }
 
   public static void print(int value) {
