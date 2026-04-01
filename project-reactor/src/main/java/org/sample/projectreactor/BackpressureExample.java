@@ -1,8 +1,8 @@
 package org.sample.projectreactor;
 
 import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.NonNull;
 import org.reactivestreams.Subscription;
-import reactor.core.Disposable;
 import reactor.core.publisher.BaseSubscriber;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -28,7 +28,7 @@ public class BackpressureExample {
     //Mono: After 0-1 item is emitted, next complete event is emitted.
     Mono<Integer> mono = Mono.just(-1);
     //1. First way of subscribing (with lambdas)
-    Disposable monoDisposable = mono.subscribe(event -> log.info("Lambda: Mono item emitted: {}", event),
+    mono.subscribe(event -> log.info("Lambda: Mono item emitted: {}", event),
         error -> log.error("Lambda: Mono failure-event:", error),
         () -> log.info("Lambda: Mono complete-event."));
     //2.Second way of subscribing (with custom subscriber instance)
@@ -48,11 +48,11 @@ public class BackpressureExample {
 
 
   //All subscriptions have a way of telling how much data is ok receiving (Backpressure)
-  //Need to ask with how many items you are ok with this way.
+  //You need to ask with how many items you are ok receiving.
   static class MySubscriber<T> extends BaseSubscriber<T> {
 
     @Override
-    public void hookOnSubscribe(Subscription subscription) {
+    public void hookOnSubscribe(@NonNull Subscription subscription) {
       log.info("MySubscriber: Subscription happened");
 
       //Request 1 item after subscription
@@ -61,7 +61,7 @@ public class BackpressureExample {
     }
 
     @Override
-    public void hookOnNext(T value) {
+    public void hookOnNext(@NonNull T value) {
       log.info("MySubscriber: Value {} received", value);
       //After first item is received
       //Request another one when publisher is ready.
