@@ -8,7 +8,7 @@ import java.util.stream.IntStream;
  * @since 4/1/26 10:19 AM
  *
  */
-public class PubSubApplication {
+public class PubSubSample {
 
   public static void main(String[] args) {
     //subscriber
