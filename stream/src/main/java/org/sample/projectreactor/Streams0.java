@@ -1,4 +1,4 @@
-package org.sample.stream;
+package org.sample.projectreactor;
 
 import java.util.stream.Stream;
 import lombok.AllArgsConstructor;

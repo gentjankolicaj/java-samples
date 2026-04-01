@@ -51,6 +51,7 @@
 		<module>websocket</module>
 		<module>pekko</module>
 		<module>stream</module>
+		<module>project-reactor</module>
 	</modules>
 
 	<dependencyManagement>
