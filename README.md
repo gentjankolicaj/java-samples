@@ -17,17 +17,20 @@ Java samples with packages,libraries,frameworks or api on different maven module
 - [heap-leak](/heap-leak)
 - [java-agent](/java-agent)
 - [javassist](/javassist)
-- [liquibase](/liquibase)
-- [multithread](/multithread)
-- [parser](/parser)
-- [process](/process)
-- [socket](/socket)
-- [thread](/thread)
-- [tomcat-embed-11](/tomcat-embed-11)
 - [jetty-12](/jetty-12)
+- [liquibase](/liquibase)
+- [multithreading](/multithreading)
+- [multithreading-api](/multithreading-api)
+- [parser](/parser)
+- [pekko](/pekko)
+- [process](/process)
+- [project-reactor](/project-reactor)
+- [socket](/socket)
+- [stream](/stream)
+- [tomcat-embed-11](/tomcat-embed-11)
 - [virtual-thread (loom-project)](/virtual-thread)
 - [websocket](/websocket)
-- [pekko](/pekko)
+
 
 
 
