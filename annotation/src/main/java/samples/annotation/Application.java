@@ -1,4 +1,4 @@
-package org.sample.annotation;
+package samples.annotation;
 
 import lombok.extern.slf4j.Slf4j;
 
