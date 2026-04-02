@@ -1,4 +1,4 @@
-package org.sample.vthread;
+package samples.virtualthread;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -9,7 +9,7 @@ public class VirtualThreads {
    * Note: platform & virtual threads are not the only ones running when jvm started. Jvm also has other threads like : 1.GC threads 2.JIT
    * threads 3.Main thread
    */
-  public static void main(String[] args) throws InterruptedException {
+  static void main(String[] args) throws InterruptedException {
     runPlatformThreads();
     runVirtualThreads();
   }
