@@ -23,7 +23,10 @@ public class MonoOperatorsSample {
     Mono.just(2).map(e -> e * 10).subscribe(e -> log.info("map:{}", e));
 
     //log: intermediate
-    Mono.just(3).map(e -> e * 3.14).log().block();
+    Mono.just(3).map(e -> e * 3.14).log();
+
+    //defaultIfEmpty: intermediate
+    Mono.empty().defaultIfEmpty(-1).subscribe(e -> log.info("defaultIfEmpty:{}", e));
 
   }
 

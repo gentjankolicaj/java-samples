@@ -23,7 +23,13 @@ public class FluxOperatorsSample {
     Flux.range(0, 10).map(e -> e * 10).subscribe(e -> log.info("map:{}", e));
 
     //log: intermediate
-    Flux.range(0, 10).map(e -> e * 3.14).log().blockLast();
+    Flux.range(0, 10).map(e -> e * 3.14).log();
+
+    //take: intermediate
+    Flux.range(0, 10).map(e -> e * 10).take(5).subscribe(e -> log.info("take:{}", e));
+
+    //defaultIfEmpty: intermediate
+    Flux.empty().log().defaultIfEmpty(-1).log().blockLast();
   }
 
 }
